@@ -1,9 +1,23 @@
-# SOURCE_REGISTER.md
+# Registre auditable des sources
 
-| Fichier | Type | runId | Rôle | Chapitres | Statut |
-|---|---|---|---|---|---|
-| `base_document_extrait.md` | Extraction du document historique | n/a | Base rédactionnelle et structure historique | Tous | Disponible |
-| Ajouter ici les exports Excel finaux | XLSX | À renseigner | Preuve quantitative | 4, 6, 7, 8 | À ajouter |
-| Ajouter ici les ABox correspondantes | TTL | À renseigner | Preuve ontologique et traçabilité | 3, 4, 5, 8 | À ajouter |
-| Ajouter ici le modèle ALP final | ALP | n/a | Vérification logique | Au besoin | À ajouter |
-| Ajouter ici les JSON de scénario | JSON | n/a | Conditions initiales | 2, 8 | À ajouter |
+Ce registre distingue présence physique, vérification d'intégrité et statut probatoire. Un artefact absent ne peut soutenir ni `IMPLEMENTE` ni `VALIDE_EXPERIMENTALEMENT`.
+
+| Identifiant interne | Chemin | Nom original | Nature | Scénario | runId | Rôle probatoire | Statut probatoire | Statut de vérification | SHA-256 | Chapitres autorisés |
+|---|---|---|---|---|---|---|---|---|---|---|
+| SRC-DOC-001 | `sources/base_document_extrait.md` | `base_document_extrait.md` | autre | Historique, rupture simultanée | NON_APPLICABLE | Base rédactionnelle secondaire et structure historique | OBSERVE_SECONDAIRE | PRESENT_INTEGRITE_VERIFIEE | `0729F1EEEF5AD45A249A98360394A5A33CBC9E4966CE9AD9F895E462AF6D5A5E` | Tous, sans validation quantitative |
+| SRC-DOC-002 | `SCONTO_SVU_Analyse_Traceable_Execution_Rupture_Stocks_FINAL(2).docx` | `SCONTO_SVU_Analyse_Traceable_Execution_Rupture_Stocks_FINAL(2).docx` | DOC | Historique, rupture simultanée | NON_VERIFIE | Document source historique | OBSERVE_SECONDAIRE | PRESENT_INTEGRITE_VERIFIEE_DEPUIS_GIT | `6B968098679488198DBCD7E4932F99F3893DB92100090E31F68C2A600B3C2B7D` | Tous, après extraction et contrôle |
+| SRC-DOC-003 | `Tableaux_flux_global_clarifies_agents_SCONTO_SVU (1).docx` | `Tableaux_flux_global_clarifies_agents_SCONTO_SVU (1).docx` | DOC | Historique, rupture simultanée | NON_VERIFIE | Document historique et tableaux de flux | OBSERVE_SECONDAIRE | PRESENT_INTEGRITE_VERIFIEE | `6B968098679488198DBCD7E4932F99F3893DB92100090E31F68C2A600B3C2B7D` | Chapitres 2 à 10 et annexes, après contrôle |
+| SRC-MODEL-001 | `sources/model/ABSENT_A_FOURNIR` | ABSENT_A_FOURNIR | ALP | Modèle consolidé | NON_APPLICABLE | Vérification des mécanismes, agents, ISA-95 et calculs | OBSERVE_SECONDAIRE tant que le modèle manque | ABSENT_A_FOURNIR | ABSENT_A_FOURNIR | Chapitres 2 à 9 et annexes |
+| SRC-MODEL-002 | `sources/model/ABSENT_A_FOURNIR` | ABSENT_A_FOURNIR | JSON | Configuration de référence | NON_APPLICABLE | Paramètres, stocks initiaux, politiques et échelle temporelle | OBSERVE_SECONDAIRE tant que la configuration manque | ABSENT_A_FOURNIR | ABSENT_A_FOURNIR | Chapitres 2, 4, 6 et 8 |
+| SRC-SD-A-JSON | `sources/runs/supplier_delay/run_A_reference/ABSENT_A_FOURNIR` | ABSENT_A_FOURNIR | JSON | Retard fournisseur, run A de référence | ABSENT_A_FOURNIR | Conditions initiales et absence de retard forcé | DISPONIBLE_NON_VALIDE | ABSENT_A_FOURNIR | ABSENT_A_FOURNIR | Chapitres 2 et 8 |
+| SRC-SD-A-XLSX | `sources/runs/supplier_delay/run_A_reference/ABSENT_A_FOURNIR` | ABSENT_A_FOURNIR | XLSX | Retard fournisseur, run A de référence | ABSENT_A_FOURNIR | Preuve runtime quantitative de référence | DISPONIBLE_NON_VALIDE | ABSENT_A_FOURNIR | ABSENT_A_FOURNIR | Chapitres 4 à 8 et annexes |
+| SRC-SD-A-TTL | `sources/runs/supplier_delay/run_A_reference/ABSENT_A_FOURNIR` | ABSENT_A_FOURNIR | TTL | Retard fournisseur, run A de référence | ABSENT_A_FOURNIR | Preuve ontologique synchronisée de référence | DISPONIBLE_NON_VALIDE | ABSENT_A_FOURNIR | ABSENT_A_FOURNIR | Chapitres 3 à 5, 8 et annexe E |
+| SRC-SD-B-JSON | `sources/runs/supplier_delay/run_B_delay/ABSENT_A_FOURNIR` | ABSENT_A_FOURNIR | JSON | Retard fournisseur, run B perturbé | ABSENT_A_FOURNIR | Configuration du retard déterministe | DISPONIBLE_NON_VALIDE | ABSENT_A_FOURNIR | ABSENT_A_FOURNIR | Chapitres 2, 5 et 8 |
+| SRC-SD-B-XLSX | `sources/runs/supplier_delay/run_B_delay/ABSENT_A_FOURNIR` | ABSENT_A_FOURNIR | XLSX | Retard fournisseur, run B perturbé | ABSENT_A_FOURNIR | Preuve runtime quantitative du retard et de sa propagation | DISPONIBLE_NON_VALIDE | ABSENT_A_FOURNIR | ABSENT_A_FOURNIR | Chapitres 4 à 8 et annexes |
+| SRC-SD-B-TTL | `sources/runs/supplier_delay/run_B_delay/ABSENT_A_FOURNIR` | ABSENT_A_FOURNIR | TTL | Retard fournisseur, run B perturbé | ABSENT_A_FOURNIR | Preuve ontologique synchronisée du scénario perturbé | DISPONIBLE_NON_VALIDE | ABSENT_A_FOURNIR | ABSENT_A_FOURNIR | Chapitres 3 à 5, 8 et annexe E |
+| SRC-HIST-XLSX | `sources/runs/historical/ABSENT_A_FOURNIR` | `SCONTO_SVU_RESULTS_ZENER_SA_Togo_RUN_1773129600000_1787078140245.xlsx`, nom rapporté par SRC-DOC-001 | XLSX | Historique, rupture, panne et goulot | ABSENT_A_FOURNIR | Preuve runtime annoncée pour la chronologie, VSM, AER, SCOR et PI | OBSERVE_SECONDAIRE | ABSENT_A_FOURNIR | ABSENT_A_FOURNIR | Chapitres 3 à 9 et annexes, après vérification |
+| SRC-HIST-TTL | `sources/runs/historical/ABSENT_A_FOURNIR` | `SCONTO_SVU_ABOX_ZENER_SA_Togo_RUN_1773129600000_1787078140245.ttl`, nom rapporté par SRC-DOC-001 | TTL | Historique, rupture, panne et goulot | ABSENT_A_FOURNIR | ABox annoncée pour la traçabilité historique | OBSERVE_SECONDAIRE | ABSENT_A_FOURNIR | ABSENT_A_FOURNIR | Chapitres 3 à 5, 8 et annexe E, après vérification |
+
+## Règle de mise à jour
+
+À la réception d'un artefact, remplacer les champs `ABSENT_A_FOURNIR`, calculer le SHA-256, contrôler le scénario et le `runId`, puis décider si son contenu peut recevoir le statut `VALIDE_EXPERIMENTALEMENT`. Le nom rapporté par une source secondaire ne vaut pas identification d'un fichier tant que l'artefact n'est pas présent.

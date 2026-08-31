@@ -1,0 +1,98 @@
+% Compilation requise : XeLaTeX
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{fontspec}
+\usepackage[french]{babel}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage[normalem]{ulem}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{siunitx}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{ifthen}
+
+\IfFontExistsTF{Times New Roman}{
+  \setmainfont{Times New Roman}
+}{
+  \setmainfont{TeX Gyre Termes}
+}
+
+\IfFontExistsTF{Arial}{
+  \newfontfamily\ArialFont{Arial}
+}{
+  \newfontfamily\ArialFont{TeX Gyre Heros}
+}
+
+\IfFontExistsTF{Arial Black}{
+  \newfontfamily\ArialBlackFont{Arial Black}
+}{
+  \newfontfamily\ArialBlackFont{TeX Gyre Heros}[BoldFont=* Bold]
+}
+
+\setstretch{1.12}
+\setlength{\parindent}{0.6cm}
+\setlength{\parskip}{0pt}
+\setlist{nosep,leftmargin=*}
+
+% Titres principaux : Arial Black, 13 pt, gras, ligne sous le titre.
+\titleformat{\chapter}[block]
+  {\ArialBlackFont\bfseries\fontsize{13}{15}\selectfont}
+  {\thechapter.}{0.6em}{}[\vspace{0.25ex}\titlerule]
+\titlespacing*{\chapter}{0pt}{-10pt}{16pt}
+
+% Sous-titres : Arial, 11 pt, gras.
+\titleformat{\section}
+  {\ArialFont\bfseries\fontsize{11}{13}\selectfont}
+  {\thesection}{0.6em}{}
+\titleformat{\subsection}
+  {\ArialFont\bfseries\fontsize{11}{13}\selectfont}
+  {\thesubsection}{0.6em}{}
+
+\captionsetup{font=small,labelfont=bf,justification=centering}
+\sisetup{locale=FR,detect-all}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black,
+  pdftitle={SCONTO-SVU : traçabilité décisionnelle et performance},
+  pdfauthor={}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small SCONTO-SVU : ZENER SA Togo}
+\fancyhead[R]{\small Validation et performance}
+\fancyfoot[C]{\small Page \thepage\ sur \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\newcommand{\FigureOrPlaceholder}[4][0.92\textwidth]{%
+  \begin{figure}[H]
+    \centering
+    \IfFileExists{#2}{%
+      \includegraphics[width=#1]{#2}%
+    }{%
+      \fbox{\parbox[c][5cm][c]{0.88\textwidth}{\centering
+        \textbf{Figure à fournir}\\[0.6em]
+        Fichier attendu : \texttt{#2}}}%
+    }%
+    \caption{#3}
+    \label{#4}
+  \end{figure}%
+}
+
+\newcommand{\Metric}[1]{\texttt{#1}}
+\newcommand{\Agent}[1]{\texttt{#1}}

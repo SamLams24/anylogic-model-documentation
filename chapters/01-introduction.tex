@@ -1,3 +1,59 @@
 \chapter{Introduction et cadre de l'analyse}
+\label{chap:introduction}
 
-% À migrer depuis le document de base selon DOCUMENT_PLAN.md et SOURCE_POLICY.md.
+\section{Contexte et finalité}
+
+SCONTO-SVU est un simulateur destiné à représenter le fonctionnement coordonné d'une chaîne logistique, depuis la réception d'une demande jusqu'à l'exécution des opérations et à l'évaluation de leurs effets. Son application à ZENER SA Togo porte sur une entreprise focale qui reçoit des matières de plusieurs fournisseurs, réalise les opérations de Make, puis livre un client. La difficulté étudiée ne réside pas seulement dans l'enchaînement de Source, Make et Deliver. Elle tient à la capacité du modèle à conserver la trace des décisions qui autorisent cet enchaînement, des agents qui les transforment et des événements qui prouvent leur exécution.
+
+Cette exigence de traçabilité répond à un problème classique des modèles de simulation riches. Un indicateur final peut être calculé correctement tout en restant difficile à interpréter si le lecteur ne sait pas quelle commande, quelle ressource ou quelle décision l'a produit. À l'inverse, une animation convaincante peut montrer un flux sans établir la quantité effectivement reçue, le statut de la commande ou le temps mesuré. Le rapport relie donc trois dimensions qui doivent rester distinctes: le comportement opérationnel, l'organisation décisionnelle et la chaîne de mesure.
+
+Le cas ZENER sert à examiner cette continuité sur une situation où le stock de produit fini ne permet pas une livraison directe. La politique autonome de stock crée alors un ordre interne de reconstitution. Si une matière est insuffisante, Source précède Make; la production crédite ensuite le stock de produit fini, la commande cliente est réévaluée et Deliver peut terminer le service. Un retard fournisseur contrôlé complète ce cas en montrant comment une information d'écart traverse les niveaux Source, Make et Deliver.
+
+\section{Objectifs de validation}
+
+La première question concerne la cohérence fonctionnelle. Le modèle doit distinguer une demande externe d'un ordre interne, empêcher le lancement de Make lorsque la matière manque, créditer le stock après production et décrémenter ce stock lors de la satisfaction du client. Ces mécanismes sont vérifiés dans le projet AnyLogic. Leur présence établit une capacité du modèle, mais ne suffit pas à démontrer leur comportement quantitatif dans toutes les exécutions.
+
+La deuxième question porte sur la continuité de la décision. Une orientation tactique doit être contextualisée par un coordinateur, traduite en tâche par le pilotage opérationnel, puis exécutée par un agent ou un poste identifiable. Le résultat suit le chemin inverse sous forme de confirmation ou de rapport. L'analyse cherche moins à compter les messages qu'à vérifier la transformation qu'ils opèrent entre deux niveaux.
+
+La troisième question concerne la continuité de la preuve. Les événements runtime produisent des observations physiques ou temporelles. La VSM organise ces observations, tandis que le pipeline de performance les associe à des métriques, à des attributs puis à un Performance Index, ou PI. Chaque transformation doit préserver l'unité, la provenance et le statut de la valeur. Une association interne ou un proxy ne devient pas une métrique SCOR officielle par simple emploi d'un code.
+
+Enfin, l'étude vérifie la réaction à un écart maîtrisé. Le retard appliqué au fournisseur de GPL dispose d'artefacts Excel et ABox synchronisés. Cette exécution permet d'établir une propagation structurée de l'information. Elle ne constitue ni une campagne statistique ni la preuve que le système optimise automatiquement l'ensemble de la chaîne.
+
+\section{Référentiels mobilisés}
+
+SCOR fournit le découpage métier stable utilisé pour lire les processus Plan, Source, Make, Deliver et Return. Le rapport conserve ces noms lorsqu'ils désignent les domaines du modèle. Il ne suppose toutefois pas que chaque indicateur interne est, de ce seul fait, une métrique normative SCOR. La qualification précise des associations appartient à l'analyse du pipeline de performance.
+
+La VSM donne une lecture opérationnelle des temps de traitement, des attentes, des encours et de la continuité des flux. Dans SCONTO-SVU, ces mesures sont produites à partir des événements runtime et consolidées sur le périmètre de l'entreprise focale. Elles forment une couche intermédiaire entre l'exécution et les attributs de performance.
+
+ISA-95 structure le contexte d'exécution. La hiérarchie relie les acteurs, les équipements et les postes auxquels les micro-activités sont affectées. Cette structure évite de réduire une opération à son seul nom: une même activité peut être replacée dans un site, une zone, un atelier, un centre de travail ou une cellule déterminée.
+
+L'architecture multi-agents complète ce cadre physique par une distribution de responsabilités. Les niveaux stratégique, tactique, coordination, pilotage opérationnel et exécution ne représentent pas cinq copies d'une même décision. Chacun change la granularité de l'information. L'AER fournit les messages typés qui rendent ces transformations observables, ainsi que les mécanismes de remontée d'écarts et de révision des plans.
+
+La chaîne de performance suit enfin une progression distincte: observation VSM, association à une métrique, normalisation, agrégation par attributs RL, RS, AG, CO et AM, puis calcul du PI. Le présent chapitre en fixe seulement la logique. Les métriques et leurs calculs seront traités après stabilisation des valeurs temporelles.
+
+\section{Périmètre et méthode de preuve}
+
+Le corpus combine quatre familles de sources. Le projet ALP prouve l'existence des mécanismes. Le JSON décrit la configuration du réseau, des matières, des stocks et des délais nominaux. L'export Excel fournit les traces et agrégats de l'exécution. L'ABox représente le même état de clôture sous forme d'individus et de relations RDF. Pour le scénario perturbé retenu, Excel et ABox portent le même identifiant d'exécution et le même instant de clôture. Cette synchronisation d'identité ne garantit pas à elle seule l'égalité de toutes les valeurs exportées.
+
+\begin{table}[H]
+  \centering
+  \caption{Niveaux de trace mobilisés dans l'analyse.}
+  \label{tab:niveaux-preuve}
+  \begin{tabularx}{\textwidth}{@{}L{0.23\textwidth}Y L{0.28\textwidth}@{}}
+    \toprule
+    Niveau & Question traitée & Source principale \\
+    \midrule
+    Configuration & Quelles entités et quels paramètres sont chargés? & JSON et structure du modèle \\
+    Événement runtime & Quel fait est enregistré et à quel instant simulé? & Traces Excel et événements ABox \\
+    Communication agent & Qui reçoit, transforme ou transmet l'information? & Messages AER Excel et ABox \\
+    Mesure VSM & Quelle observation est consolidée sur le flux? & Exécution brute et tableaux de bord \\
+    Métrique & Comment l'observation est-elle qualifiée et normalisée? & Pipeline de performance \\
+    Attribut & Comment les métriques sont-elles regroupées par dimension? & Agrégats RL, RS, AG, CO et AM \\
+    PI & Quelle synthèse multicritère résulte des attributs? & Pipeline d'agrégation global \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Cette hiérarchie empêche deux raccourcis. Un message prouve une communication, pas un transfert physique; une animation montre un état visuel, pas une valeur quantitative. De même, un mécanisme trouvé dans l'ALP reçoit le statut de fonctionnalité implémentée, alors qu'un résultat chiffré n'est retenu comme validation expérimentale que s'il apparaît dans un artefact primaire identifié et contrôlé.
+
+La rédaction principale utilise donc les noms de fichiers et les identifiants techniques seulement lorsqu'ils sont nécessaires à l'audit. Les détails d'intégrité sont conservés dans le registre des sources. Les valeurs dont la définition ou la concordance reste incertaine sont exclues du récit quantitatif, sans bloquer l'explication des mécanismes établis.

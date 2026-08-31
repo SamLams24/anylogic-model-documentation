@@ -1,3 +1,55 @@
 \chapter{Architecture multi-agents et chaîne de décision}
+\label{chap:architecture-agents}
 
-% À migrer depuis le document de base selon DOCUMENT_PLAN.md et SOURCE_POLICY.md.
+\section{Niveaux de responsabilité}
+
+L'architecture multi-agents distribue la décision selon cinq niveaux. Cette hiérarchie évite qu'une intention stratégique soit envoyée directement à un poste d'exécution sans être contextualisée. Elle permet aussi de faire remonter un résultat en conservant le domaine qui l'a produit et la responsabilité de chaque transformation.
+
+\begin{table}[H]
+  \centering
+  \caption{Niveaux de décision et responsabilités principales.}
+  \label{tab:niveaux-agents}
+  \begin{tabularx}{\textwidth}{@{}L{0.19\textwidth}L{0.27\textwidth}Y L{0.20\textwidth}@{}}
+    \toprule
+    Niveau & Identifiants représentatifs & Responsabilité & Preuve attendue \\
+    \midrule
+    Stratégique & \Agent{AS-sP1} & Reçoit la synthèse globale et porte l'orientation du réseau focal. & Rapport macro consolidé \\
+    Tactique & \Agent{AT-sP2}, \Agent{AT-sP3}, \Agent{AT-sP4}, \Agent{AT-sP5} & Planifie respectivement Source, Make, Deliver et Return; coordonne les dépendances entre domaines. & Plan ou révision de plan \\
+    Coordination & \Agent{CA-*} & Contextualise le plan tactique pour un processus et consolide les retours opérationnels. & Ordre de domaine et rapport consolidé \\
+    Pilotage opérationnel & \Agent{AOp-*} & Décompose l'ordre, affecte les tâches, surveille l'exécution et traite les exceptions. & Affectation, instruction ou exception \\
+    Exécution & \Agent{AOe-*} et postes & Réalise l'opération physique ou informationnelle et produit le fait runtime. & Début, fin, quantité ou accusé \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Les identifiants ne doivent être lus qu'après les responsabilités. \Agent{AS-sP1} représente le niveau stratégique de l'entreprise focale. Les agents tactiques \Agent{AT-sP2}, \Agent{AT-sP3}, \Agent{AT-sP4} et \Agent{AT-sP5} correspondent aux plans Source, Make, Deliver et Return. Les familles \Agent{CA-*}, \Agent{AOp-*} et \Agent{AOe-*} déclinent ensuite ces domaines à des granularités croissantes. La liste exhaustive des instances n'est pas nécessaire au raisonnement principal; elle relève de l'audit technique.
+
+\section{Descente de la décision et remontée du résultat}
+
+Une décision descendante change de forme à chaque niveau. Le tactique formule un objectif de domaine, par exemple rendre une matière disponible. Le coordinateur le transforme en ordre adapté au contexte Source. Le pilotage opérationnel choisit les tâches à exécuter et leurs destinataires. L'agent d'exécution réalise enfin l'achat, la réception, la production ou la livraison.
+
+La remontée ne répète pas simplement l'ordre initial. L'exécutant fournit un fait, tel qu'une réception ou une fin de production. Le pilote vérifie et agrège ce fait, le coordinateur construit un résultat de processus, puis le tactique met à jour le plan ou informe un autre domaine. Le stratégique reçoit une synthèse, pas le détail de chaque micro-activité.
+
+Ce mécanisme apparaît clairement dans la coordination inter-processus. Une indisponibilité de produit fini conduit Deliver à demander une faisabilité Make. Un manque de matière conduit Make à solliciter Source. Lorsque Source confirme \texttt{MaterialAvailable}, Make peut produire; lorsqu'il transmet \texttt{ProductAvailableForDelivery}, Deliver reprend la commande. Les échanges entre domaines s'effectuent au niveau tactique, tandis que leur réalisation traverse les niveaux de coordination et d'exécution.
+
+\section{Flux physique, message, animation et mesure}
+
+Quatre objets coexistent dans la simulation. Le flux physique représente une matière, un produit ou une entité métier qui change effectivement de position ou d'état. Le message agent transporte une demande, une décision, une alerte ou un rapport. L'animation rend un état visible à l'écran. La mesure enregistre une quantité, un temps ou un statut selon une règle définie.
+
+Ces objets peuvent se rapporter au même événement sans être interchangeables. Le message de disponibilité matière informe Make que la contrainte est levée; il ne constitue pas lui-même les 250 unités de GPL reçues. Un jeton animé peut montrer le déplacement d'un flux sans devoir entrer dans le WIP physique. De même, le nombre de messages émis par un agent n'est ni une durée ni une mesure d'importance organisationnelle.
+
+Cette séparation protège la chaîne de preuve. Une quantité reçue doit être vérifiée dans une trace physique ou un individu structuré. Une responsabilité doit être établie par l'architecture ou les messages. Une durée doit provenir de l'instrumentation correspondante et non de la seule différence entre deux lignes affichées.
+
+\section{Ancrage ISA-95 de l'exécution}
+
+La structure ISA-95 du modèle comprend 190 nœuds d'équipement et 71 affectations de micro-activités. Cette baseline est contrôlée de trois manières complémentaires. Le projet ALP contient une garde explicite sur les deux cardinalités; le JSON les déclare dans sa configuration; l'ABox de l'exécution expérimentale contient 190 sujets d'équipement et 71 relations d'affectation par \texttt{executedAt}. Elle peut donc être présentée comme une propriété vérifiée de la structure utilisée.
+
+L'intérêt de cette hiérarchie n'est pas le comptage en lui-même. Elle associe un acteur à son contexte physique, puis rattache la micro-activité au niveau d'équipement où elle s'exécute. Le lecteur peut ainsi relier une trace Make à l'entreprise focale, au secteur concerné et au poste qui a produit l'événement. Cette contextualisation facilite l'audit des mesures et évite d'attribuer à un acteur une activité située chez un fournisseur ou chez le client.
+
+L'arbre complet serait trop volumineux pour le corps du rapport. Les deux cardinalités et leur fonction méthodologique suffisent ici; les individus et affectations détaillés restent disponibles dans l'ABox.
+
+\section{Coordination des écarts}
+
+L'architecture nominale sert aussi de support à l'adaptation. Un agent d'exécution ou un fournisseur signale un écart; le pilotage opérationnel le qualifie, le coordinateur le consolide et le tactique révise le plan. L'AER structure cette circulation par des messages typés. Le Blackboard fournit une mémoire partagée pour les observations et décisions qui doivent rester accessibles à plusieurs agents.
+
+Cette capacité ne signifie pas que chaque incident suit nécessairement la même boucle ni qu'une décision tactique produit toujours une amélioration quantitative. Le chapitre~\ref{chap:adaptation-aer} examine uniquement la propagation expérimentalement établie pour le retard fournisseur. Les mécanismes de panne, de goulot et d'arbitrage local sont présents dans l'ALP, mais leurs résultats historiques ne sont pas utilisés comme validation actuelle.

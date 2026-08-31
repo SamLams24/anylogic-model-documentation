@@ -22,6 +22,9 @@
 \usepackage{lastpage}
 \usepackage{ifthen}
 
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
 \IfFontExistsTF{Times New Roman}{
   \setmainfont{Times New Roman}
 }{
@@ -85,9 +88,8 @@
     \IfFileExists{#2}{%
       \includegraphics[width=#1]{#2}%
     }{%
-      \fbox{\parbox[c][5cm][c]{0.88\textwidth}{\centering
-        \textbf{Figure à fournir}\\[0.6em]
-        Fichier attendu : \texttt{#2}}}%
+      \parbox{0.88\textwidth}{\centering\small
+        Illustration non disponible dans cette version.}%
     }%
     \caption{#3}
     \label{#4}

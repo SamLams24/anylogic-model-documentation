@@ -1,0 +1,6322 @@
+{
+  "meta": {
+    "schemaVersion": "2.1",
+    "modelName": "SCONTO_VSM_Generic",
+    "javaPackageName": "sconto_vsm_generic",
+    "createdAt": "Sun Jun 28 20:00:00 GMT 2026",
+    "updatedAt": "2026-08-28T19:30:00Z",
+    "nomEntreprise": "ZENER SA Togo",
+    "nbActeurs": 5,
+    "nbPostes": 71,
+    "nbScenarios": 5,
+    "nbResponsabilites": 72,
+    "nbMachines": 1,
+    "sourceValidatedSchemaVersion": "1.0",
+    "integrationPolicy": "COLLEAGUE_JSON_BUSINESS_CONFIGURATION_AUTHORITATIVE_C14_RUNTIME_ENRICHMENT_ADDITIVE",
+    "integrationBaseline": "C14.2.1",
+    "integrationRelease": "C14.3",
+    "validatedPostSource": "COLLEAGUE_JSON_VALIDATED_BY_PROJECT_LEAD",
+    "isa95Reference": "SCONTO-SVU Core v4.3.0 / ISA-95-inspired equipment hierarchy",
+    "isa95Source": "DERIVED_FROM_MODEL",
+    "nbISA95Nodes": 190,
+    "nbISA95Assignments": 71,
+    "s2_2Corrections": "C01-OEE,C02-Takt,C03-WIP-context,C04-weighted-cycle,C05-normalization,C06-AHP,C07-ABox,C08-AgentOntology,C08.1-AgentV1.1Alignment,C08.2-AgentIdentity,C08.3-GlobalABoxNaming-AgentClassification-MachineMapping,C10-AERv1.1-FullImports-HolonicScope,C11-Core4.2.1-SCORUnsatFix-StaticSRPilot,C13-PerformancePipeline-Theeranuphattana,C14-FinalABox-UI-Exports-Ontology4.3,C14.3-ColleagueValidatedJSON-FullBusinessMerge",
+    "normalizationProfileVersion": "1.0",
+    "agentOntologyReference": "SCONTO-VSM Agent Extension v1.1.2",
+    "agentOntologyNamespace": "http://www.sconto-vsm.org/agent-extension#",
+    "agentOntologyCoreCompatibility": "Agent Extension v1.1.2 imports Core v4.3.0 directly",
+    "agentArchitecture": "Strategic>Tactical>Coordinator>OperationalPilot>OperationalExecution",
+    "legacySupervisorPolicy": "SupervisorAgent deprecated alias of OperationalPilotAgent; runtime exports OperationalPilotAgent",
+    "agentIdentityPolicy": "ACTOR_SCOPED_OPERATIONAL_V1",
+    "aboxScope": "SCONTO_SVU_GLOBAL_RUNTIME",
+    "aerOntologyReference": "SCONTO-VSM AER Communication Extension v1.1.2",
+    "aerOntologyNamespace": "http://www.sconto-vsm.org/aer-extension#",
+    "ontologyBundle": "SCOPRO+SCOME+SCOBE+Core4.3.0+Agent1.1.2+AER1.1.2",
+    "coreOntologyReference": "SCONTO-SVU Core v4.3.0",
+    "performancePipeline": "VSM_RAW->SCOR_RAW_VALUE->BOTTOM_PERFECT_SCORE_0_10->FUZZY_A_F->PERFORMANCE_ATTRIBUTE->PI_0_10",
+    "c14Status": "C14.3_VALIDATED_POSTS_INTEGRATION_READY_FOR_RUNTIME_VALIDATION",
+    "validationProfile": "RETARD_FOURNISSEUR_RUN_A_B_V2",
+    "validationNotes": "PF=0; GPL=0; raw safety stocks=0; use one fixed customer order of 20; Run A delay OFF, Run B GPL x2 one reception.",
+    "validationPurpose": "RUN_A_B_RETARD_FOURNISSEUR_FINAL",
+    "nominalScenarioForced": "SCENARIO DISTRIBUTION"
+  },
+  "parametresGlobaux": {
+    "nomEntreprise": "ZENER SA Togo",
+    "champDebit": 80,
+    "chiffreAffaireParUnite": 6500,
+    "champCoutHoraireMainOeuvre": 2000,
+    "champCoutMatierePremiereParUnite": 0,
+    "champValeurActifFixe": 0,
+    "champDelaiPaiementJours": 30,
+    "champPoidsRL": 0.4,
+    "champPoidsRS": 0.2,
+    "champPoidsAG": 0.1,
+    "champPoidsCO": 0.15,
+    "champPoidsAM": 0.15,
+    "seqFlux": 0,
+    "seqResponsabilite": 73,
+    "seqMachineSim": 1,
+    "seqTrace": 0,
+    "champStockInitialProduitFini": 0,
+    "champStockInitialMatiereGlobal": 0
+  },
+  "acteurs": [
+    {
+      "idActeur": "ACT_1",
+      "nom": "Fournisseur du GPL",
+      "categorie": "FOURNISSEUR",
+      "typeAnnexe": "",
+      "description": "Fournit le GPL en vrac utilise pour le remplissage des bonbonnes",
+      "actif": true,
+      "delaiPaiementJours": 60,
+      "politiqueAppro": "PERIODIQUE",
+      "intervalleAppro": 3600,
+      "tauxArriveePoisson": 0,
+      "quantiteParAppro": 200,
+      "dernierAppro": -1,
+      "idsMicroActivites": [
+        "sD1.2.2",
+        "sD1.3.1",
+        "sP4.4.1",
+        "sS1.4.1",
+        "sD1.11.1",
+        "sD1.12.1"
+      ],
+      "modeApproMRP": true
+    },
+    {
+      "idActeur": "ACT_2",
+      "nom": "Fournisseur de bouteilles vides",
+      "categorie": "FOURNISSEUR",
+      "typeAnnexe": "",
+      "description": "Fournit les bonbonnes vides, neuves, a integrer dans le circuit de production",
+      "actif": true,
+      "delaiPaiementJours": 45,
+      "politiqueAppro": "PERIODIQUE",
+      "intervalleAppro": 3600,
+      "tauxArriveePoisson": 0,
+      "quantiteParAppro": 200,
+      "dernierAppro": -1,
+      "idsMicroActivites": [
+        "sD1.2.3",
+        "sD1.3.2",
+        "sP4.4.2",
+        "sS1.4.2",
+        "sD1.11.2",
+        "sD1.12.2"
+      ],
+      "modeApproMRP": true
+    },
+    {
+      "idActeur": "ACT_3",
+      "nom": "Fournisseur des accessoires",
+      "categorie": "FOURNISSEUR",
+      "typeAnnexe": "",
+      "description": "Fournit les accessoires necessaires a l'embouteillage : capsules, valves, joints, capuchons et consommables",
+      "actif": true,
+      "delaiPaiementJours": 30,
+      "politiqueAppro": "PERIODIQUE",
+      "intervalleAppro": 3600,
+      "tauxArriveePoisson": 0,
+      "quantiteParAppro": 200,
+      "dernierAppro": -1,
+      "idsMicroActivites": [
+        "sD1.2.4",
+        "sD1.3.3",
+        "sP4.4.3",
+        "sS1.4.3",
+        "sD1.11.3",
+        "sD1.12.3"
+      ],
+      "modeApproMRP": true
+    },
+    {
+      "idActeur": "ACT_4",
+      "nom": "ZENER SA Togo",
+      "categorie": "ENTREPRISE_FOCALE",
+      "typeAnnexe": "",
+      "description": "Entreprise etudiee, responsable de la reception, de l'embouteillage, du controle qualite, du stockage et de l'expedition des bonbonnes GPL",
+      "actif": true,
+      "delaiPaiementJours": 30,
+      "politiqueAppro": "",
+      "intervalleAppro": 0,
+      "tauxArriveePoisson": 0,
+      "quantiteParAppro": 1,
+      "dernierAppro": -1,
+      "idsMicroActivites": [
+        "sS1.1.1",
+        "sS1.2.1",
+        "sS1.2.2",
+        "sS1.2.3",
+        "sS1.3.4",
+        "sS1.3.1",
+        "sS1.3.2",
+        "sSR1.5.1",
+        "sM1.2.1",
+        "sM1.3.1",
+        "sM1.3.2",
+        "sM1.3.3",
+        "sM1.3.4",
+        "sM1.3.5",
+        "sM1.3.6",
+        "sM1.4.1",
+        "sM1.4.2",
+        "sM1.5.1",
+        "sM1.6.1",
+        "sM1.7.1",
+        "sD1.1.1",
+        "sD1.3.4",
+        "sD1.4.4",
+        "sDR1.1.1",
+        "sDR1.3.1",
+        "sDR1.4.1",
+        "sDR1.4.2",
+        "sDR1.4.3",
+        "sD1.2.1",
+        "sD1.5.4",
+        "sD1.6.1",
+        "sD1.7.1",
+        "sD1.8.1",
+        "sD1.9.1",
+        "sD1.10.1",
+        "sS1.1.3",
+        "sS1.1.4",
+        "sD1.11.4",
+        "sD1.12.4",
+        "sP4.4.4",
+        "sP3.4.1",
+        "sM1.1.1",
+        "sS1.4.4",
+        "sSR1.1.2",
+        "sSR1.5.2",
+        "sSR1.5.4"
+      ],
+      "modeApproMRP": false
+    },
+    {
+      "idActeur": "ACT_5",
+      "nom": "CLIENT GENERIQUE",
+      "categorie": "CLIENT",
+      "typeAnnexe": "",
+      "description": "Client unique representant l'ensemble des destinataires de ZENER SA Togo (stations, distributeurs, export, etc.)",
+      "actif": true,
+      "delaiPaiementJours": 15,
+      "politiqueAppro": "",
+      "intervalleAppro": 0,
+      "tauxArriveePoisson": 0,
+      "quantiteParAppro": 1,
+      "dernierAppro": -1,
+      "idsMicroActivites": [
+        "sS1.1.2",
+        "sS1.2.4",
+        "sS1.3.3",
+        "sP2.4.1",
+        "sS1.4.5",
+        "sSR1.3.1",
+        "sSR1.5.3"
+      ],
+      "modeApproMRP": false
+    }
+  ],
+  "postes": [
+    {
+      "idPoste": "sS1.1.1",
+      "nom": "(Schedule Product Deliveries) Planifier les livraisons de GPL",
+      "codeSCOR": "S1.1",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "constant",
+        "p1": 60,
+        "p2": 60,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 0,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 0,
+      "idsResponsabilites": [
+        "RESP_1"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.1.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 522.0,
+      "yManuel": 2232.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.3.1",
+      "nom": "(Reserve Inventory & Determine Delivery Date) Réserver le stock et déterminer la date de livraison du GPL",
+      "codeSCOR": "D1.3",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 300,
+        "p2": 600,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Receive/Enter/Validate Order) Réception et validation de la commande GPL",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_1",
+      "nomActeurResponsable": "Fournisseur du GPL",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.85,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 2500000,
+      "idsResponsabilites": [
+        "RESP_2"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.3.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.11.1",
+      "nom": "(Load Vehicle & Generate Shipping Docs) Charger le transporteur de GPL et générer le document d'expédition",
+      "codeSCOR": "D1.11",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 300,
+        "p2": 900,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Reserve Inventory & Determine Delivery Date) Réserver le stock et déterminer la date de livraison du GPL, (Transfer Product) Transfert du GPL vers le stock d'approvisionnement",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_1",
+      "nomActeurResponsable": "Fournisseur du GPL",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.8,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 1800000,
+      "idsResponsabilites": [
+        "RESP_3"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.4.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.12.1",
+      "nom": "(Ship Product) Expédier le GPL à ZENER SA Togo",
+      "codeSCOR": "D1.12",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 300,
+        "p2": 900,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Load Vehicle & Generate Shipping Docs) Charger le transporteur de GPL et générer le document d'expédition",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_1",
+      "nomActeurResponsable": "Fournisseur du GPL",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.85,
+      "coutHoraireMainOeuvre": 2000,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 15000000,
+      "idsResponsabilites": [
+        "RESP_4"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.5.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.3.2",
+      "nom": "(Reserve Inventory & Determine Delivery Date) Réserver le stock et déterminer la date de livraison des bouteilles vides",
+      "codeSCOR": "D1.3",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1200,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Receive/Enter/Validate Order) Réception et validation de la commande de bouteilles vides",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_2",
+      "nomActeurResponsable": "Fournisseur de bouteilles vides",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.85,
+      "coutHoraireMainOeuvre": 1200,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 1500000,
+      "idsResponsabilites": [
+        "RESP_5"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.3.2"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.11.2",
+      "nom": "(Load Vehicle & Generate Shipping Docs) Charger le camion de bouteilles vides et générer le document d'expédition",
+      "codeSCOR": "D1.11",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1800,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Reserve Inventory & Determine Delivery Date) Réserver le stock et déterminer la date de livraison des bouteilles vides, (Transfer Product) Transfert des bouteilles vides vers le stock d'approvisionnement",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_2",
+      "nomActeurResponsable": "Fournisseur de bouteilles vides",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.8,
+      "coutHoraireMainOeuvre": 1200,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 1200000,
+      "idsResponsabilites": [
+        "RESP_6"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.4.2"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.12.2",
+      "nom": "(Ship Product) Expédier les bouteilles vides à ZENER SA Togo",
+      "codeSCOR": "D1.12",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1800,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Load Vehicle & Generate Shipping Docs) Charger le camion de bouteilles vides et générer le document d'expédition",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_2",
+      "nomActeurResponsable": "Fournisseur de bouteilles vides",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.85,
+      "coutHoraireMainOeuvre": 1800,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 12000000,
+      "idsResponsabilites": [
+        "RESP_7"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.5.2"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.3.3",
+      "nom": "(Reserve Inventory & Determine Delivery Date) Réserver le stock et déterminer la date de livraison des accessoires",
+      "codeSCOR": "D1.3",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 300,
+        "p2": 600,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Receive/Enter/Validate Order) Réception et validation de la commande des accessoires",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_3",
+      "nomActeurResponsable": "Fournisseur des accessoires",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.85,
+      "coutHoraireMainOeuvre": 1000,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 800000,
+      "idsResponsabilites": [
+        "RESP_8"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.3.3"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.11.3",
+      "nom": "(Load Vehicle & Generate Shipping Docs) Charger le camion d'accessoires et générer le document d'expédition",
+      "codeSCOR": "D1.11",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 300,
+        "p2": 1200,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Reserve Inventory & Determine Delivery Date) Réserver le stock et déterminer la date de livraison des accessoires, (Transfer Product) Transfert des accessoires vers le stock d'approvisionnement",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_3",
+      "nomActeurResponsable": "Fournisseur des accessoires",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.8,
+      "coutHoraireMainOeuvre": 1000,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 600000,
+      "idsResponsabilites": [
+        "RESP_9"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.4.3"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.12.3",
+      "nom": "(Ship Product) Expédier les accessoires à ZENER SA Togo",
+      "codeSCOR": "D1.12",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 300,
+        "p2": 1200,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Load Vehicle & Generate Shipping Docs) Charger le camion d'accessoires et générer le document d'expédition",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_3",
+      "nomActeurResponsable": "Fournisseur des accessoires",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.85,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 8000000,
+      "idsResponsabilites": [
+        "RESP_10"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.5.3"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.2.1",
+      "nom": "(Receive Product) Réception du GPL vrac",
+      "codeSCOR": "S1.2",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 300,
+        "p2": 900,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Ship Product) Expédier le GPL à ZENER SA Togo, (Schedule Product Deliveries) Planifier les livraisons de GPL",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.75,
+      "coutHoraireMainOeuvre": 2000,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 3000000,
+      "idsResponsabilites": [
+        "RESP_11"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.2.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 629.0,
+      "yManuel": 2232.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.2.2",
+      "nom": "(Receive Product) Réception des bouteilles vides",
+      "codeSCOR": "S1.2",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1800,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Ship Product) Expédier les bouteilles vides à ZENER SA Togo, (Schedule Product Deliveries) Planifier les livraisons de bonbonnes vides",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.75,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 1500000,
+      "idsResponsabilites": [
+        "RESP_12"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.2.2"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 568.0,
+      "yManuel": 2259.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.2.3",
+      "nom": "(Receive Product) Réception des accessoires de conditionnement",
+      "codeSCOR": "S1.2",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 300,
+        "p2": 1200,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Ship Product) Expédier les accessoires à ZENER SA Togo, (Schedule Product Deliveries) Planifier les livraisons des accessoires",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.75,
+      "coutHoraireMainOeuvre": 1200,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 800000,
+      "idsResponsabilites": [
+        "RESP_13"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.2.3"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 568.0,
+      "yManuel": 2286.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.3.1",
+      "nom": "(Verify Product) Contrôle de conformité des bouteilles vides reçues",
+      "codeSCOR": "S1.3",
+      "typePoste": "AIGUILLAGE",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 20,
+        "p2": 60,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Receive Product) Réception des bouteilles vides",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": {
+        "typeControle": "fuite",
+        "tauxTrue": 0.95,
+        "idCibleEchec": "(Identify Defective Product Condition) Identification et isolement des bouteilles ou accessoires non conformes"
+      },
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.55,
+      "coutHoraireMainOeuvre": 2500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 1200000,
+      "idsResponsabilites": [
+        "RESP_14"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.3.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 676.0,
+      "yManuel": 2259.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.3.2",
+      "nom": "(Verify Product) Contrôle de conformité des accessoires reçus",
+      "codeSCOR": "S1.3",
+      "typePoste": "AIGUILLAGE",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 10,
+        "p2": 30,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Receive Product) Réception des accessoires de conditionnement",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": {
+        "typeControle": "fuite",
+        "tauxTrue": 0.98,
+        "idCibleEchec": "(Identify Defective Product Condition) Identification et isolement des bouteilles ou accessoires non conformes"
+      },
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.55,
+      "coutHoraireMainOeuvre": 2000,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 800000,
+      "idsResponsabilites": [
+        "RESP_15"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.3.2"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 676.0,
+      "yManuel": 2286.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sSR1.5.1",
+      "nom": "(Return Defective Product) Retour des bonbonnes non conformes",
+      "codeSCOR": "SR1.5",
+      "typePoste": "SINK",
+      "loiTemps": {
+        "distribution": "constant",
+        "p1": 0,
+        "p2": 0,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Identify Defective Product Condition) Identification et isolement des bouteilles ou accessoires non conformes",
+      "estUnPosteAlternatif": true,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.1,
+      "coutHoraireMainOeuvre": 0,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 0,
+      "idsResponsabilites": [
+        "RESP_16"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sSR1.5.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 752.0,
+      "yManuel": 2286.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sM1.2.1",
+      "nom": "(Issue Sourced/In-Process Product) Mise à disposition des bouteilles vides – accessoires et GPL pour la production",
+      "codeSCOR": "M1.2",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 30,
+        "p2": 90,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Transfer Product) Transfert des bonbonnes vides et accessoires vers le magasin, (Schedule Production Activities) Ordonnancement des activités de la production (remplissage de gaz)",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.85,
+      "coutHoraireMainOeuvre": 2000,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 2000000,
+      "idsResponsabilites": [
+        "RESP_18"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sM1.2.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": true,
+      "nbProduitsParLot": 200,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sM1.3.1",
+      "nom": "(Produce and Test) Tare des bonbonnes vides",
+      "codeSCOR": "M1.3",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 4,
+        "p2": 6,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Issue Sourced/In-Process Product) Mise à disposition des bouteilles vides – accessoires et GPL pour la production",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1800,
+      "coutMatierePremiereParUnite": 5,
+      "valeurActifFixe": 18000000,
+      "idsResponsabilites": [
+        "RESP_19"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sM1.3.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sM1.3.2",
+      "nom": "(Produce and Test) Remplissage GPL au carrousel",
+      "codeSCOR": "M1.3",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 56,
+        "p2": 120,
+        "p3": 1
+      },
+      "capaciteSimultanee": 8,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Produce and Test) Tare des bonbonnes vides",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.92,
+      "coutHoraireMainOeuvre": 2500,
+      "coutMatierePremiereParUnite": 180,
+      "valeurActifFixe": 55000000,
+      "idsResponsabilites": [
+        "RESP_20"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sM1.3.2"
+      ],
+      "idsMachines": [
+        "MAC_1"
+      ],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": true,
+      "mtbfHeures": 8.0,
+      "mttrHeures": 0.5
+    },
+    {
+      "idPoste": "sM1.3.3",
+      "nom": "(Produce and Test) Premier contrôle d'étanchéité à l'eau savonneuse",
+      "codeSCOR": "M1.3",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 5,
+        "p2": 8,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Produce and Test) Remplissage GPL au carrousel",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.55,
+      "coutHoraireMainOeuvre": 2200,
+      "coutMatierePremiereParUnite": 2,
+      "valeurActifFixe": 9000000,
+      "idsResponsabilites": [
+        "RESP_21"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sM1.3.3"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sM1.3.4",
+      "nom": "(Produce and Test) Contrôle de poids",
+      "codeSCOR": "M1.3",
+      "typePoste": "AIGUILLAGE",
+      "loiTemps": {
+        "distribution": "constant",
+        "p1": 3,
+        "p2": 3,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Produce and Test) Premier contrôle d'étanchéité à l'eau savonneuse",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": {
+        "typeControle": "conformite",
+        "tauxTrue": 0.96,
+        "idCibleEchec": "Correcteur de poids — rework"
+      },
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.55,
+      "coutHoraireMainOeuvre": 2200,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 7000000,
+      "idsResponsabilites": [
+        "RESP_22"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sM1.3.4"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sM1.3.5",
+      "nom": "(Produce and Test) Correcteur de poids — rework",
+      "codeSCOR": "M1.3",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 5,
+        "p2": 25,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Produce and Test) Contrôle de poids",
+      "estUnPosteAlternatif": true,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.55,
+      "coutHoraireMainOeuvre": 2500,
+      "coutMatierePremiereParUnite": 10,
+      "valeurActifFixe": 4000000,
+      "idsResponsabilites": [
+        "RESP_23"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sM1.3.5"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sM1.3.6",
+      "nom": "(Produce and Test) Deuxième contrôle d'étanchéité automatique",
+      "codeSCOR": "M1.3",
+      "typePoste": "AIGUILLAGE",
+      "loiTemps": {
+        "distribution": "constant",
+        "p1": 5,
+        "p2": 5,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Produce and Test) Contrôle de poids, (Produce and Test) Correcteur de poids — rework",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": {
+        "typeControle": "fuite",
+        "tauxTrue": 0.992,
+        "idCibleEchec": "Rejet des déchets de production (Waste Disposal)"
+      },
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.6,
+      "coutHoraireMainOeuvre": 1800,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 11000000,
+      "idsResponsabilites": [
+        "RESP_24"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sM1.3.6"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sM1.4.1",
+      "nom": "(Package) Fixation du capuchon plastique",
+      "codeSCOR": "M1.4",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 3,
+        "p2": 5,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Produce and Test) Deuxième contrôle d'étanchéité automatique",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 2000,
+      "coutMatierePremiereParUnite": 15,
+      "valeurActifFixe": 6000000,
+      "idsResponsabilites": [
+        "RESP_25"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sM1.4.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sM1.4.2",
+      "nom": "(Package) Plastification thermorétractable",
+      "codeSCOR": "M1.4",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 8,
+        "p2": 12,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Package) Fixation du capuchon plastique",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 2200,
+      "coutMatierePremiereParUnite": 35,
+      "valeurActifFixe": 9500000,
+      "idsResponsabilites": [
+        "RESP_26"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sM1.4.2"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sM1.5.1",
+      "nom": "(Stage Finished Product) Transfert vers magasin produits finis",
+      "codeSCOR": "M1.5",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 30,
+        "p2": 60,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Package) Plastification thermorétractable",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.85,
+      "coutHoraireMainOeuvre": 1800,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 2500000,
+      "idsResponsabilites": [
+        "RESP_27"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sM1.5.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sM1.6.1",
+      "nom": "(Release Finished Product to Deliver) Libération des bonbonnes pleines",
+      "codeSCOR": "M1.6",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "constant",
+        "p1": 10,
+        "p2": 10,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Stage Finished Product) Transfert vers magasin produits finis",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.95,
+      "coutHoraireMainOeuvre": 2000,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 500000,
+      "idsResponsabilites": [
+        "RESP_28"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sM1.6.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sM1.7.1",
+      "nom": "(Waste Disposal) Rejet des déchets de production",
+      "codeSCOR": "M1.7",
+      "typePoste": "SINK",
+      "loiTemps": {
+        "distribution": "constant",
+        "p1": 0,
+        "p2": 0,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Produce and Test) Deuxième contrôle d'étanchéité automatique",
+      "estUnPosteAlternatif": true,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.1,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 300000,
+      "idsResponsabilites": [
+        "RESP_29"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sM1.7.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.1.2",
+      "nom": "(Schedule Product Deliveries) Planifier l'approvisionnement auprès de ZENER SA Togo",
+      "codeSCOR": "S1.1",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "constant",
+        "p1": 60,
+        "p2": 60,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Establish Sourcing Plans) Établir les plans d'approvisionnement de bouteilles pleines",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_5",
+      "nomActeurResponsable": "CLIENT GENERIQUE",
+      "categorieActeurResponsable": "CLIENT",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 0,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 0,
+      "idsResponsabilites": [
+        "RESP_33"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.1.2"
+      ],
+      "idsMachines": [],
+      "genereAutonome": true,
+      "politiqueApproPoste": "PERIODIQUE",
+      "intervalleApproPoste": 180.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1180.0,
+      "yManuel": 2352.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.1.1",
+      "nom": "(Process Inquiry & Quote) Traitement de la demande et devis client",
+      "codeSCOR": "D1.1",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 30,
+        "p2": 90,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Establish Delivery Plans) Établir les plans de livraison",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 2000,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 500000,
+      "idsResponsabilites": [
+        "RESP_30"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.1.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1120.0,
+      "yManuel": 2300.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.3.4",
+      "nom": "(Reserve Inventory & Determine Delivery Date) Réservation du stock et détermination de la date de livraison",
+      "codeSCOR": "D1.3",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1800,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Receive/Enter/Validate Order) Réception saisie et validation de la commande",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.85,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 1500000,
+      "idsResponsabilites": [
+        "RESP_31"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.3.4"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1250.0,
+      "yManuel": 2273.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.4.4",
+      "nom": "(Consolidate Orders) Regrouper les commandes",
+      "codeSCOR": "D1.4",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1800,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Reserve Inventory & Determine Delivery Date) Réservation du stock et détermination de la date de livraison",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.8,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 1200000,
+      "idsResponsabilites": [
+        "RESP_32"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.4.4"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1250.0,
+      "yManuel": 2300.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.2.4",
+      "nom": "(Receive Product) Réception de la livraison",
+      "codeSCOR": "S1.2",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 1800,
+        "p2": 21600,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Ship Product) Expédition des bonbonnes aux clients, (Schedule Product Deliveries) Planifier l'approvisionnement auprès de ZENER SA Togo",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_5",
+      "nomActeurResponsable": "CLIENT GENERIQUE",
+      "categorieActeurResponsable": "CLIENT",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.75,
+      "coutHoraireMainOeuvre": 0,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 0,
+      "idsResponsabilites": [
+        "RESP_34"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.2.4"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1670.0,
+      "yManuel": 2355.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.3.3",
+      "nom": "(Verify Product) Vérification de conformité de la livraison reçue",
+      "codeSCOR": "S1.3",
+      "typePoste": "AIGUILLAGE",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 20,
+        "p2": 60,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Receive Product) Réception de la livraison",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_5",
+      "nomActeurResponsable": "CLIENT GENERIQUE",
+      "categorieActeurResponsable": "CLIENT",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": {
+        "typeControle": "fuite",
+        "tauxTrue": 0.97,
+        "idCibleEchec": "Autoriser le retour client de bouteille non conforme"
+      },
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.55,
+      "coutHoraireMainOeuvre": 0,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 0,
+      "idsResponsabilites": [
+        "RESP_35"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.3.3"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1740.0,
+      "yManuel": 2409.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sDR1.1.1",
+      "nom": "(Authorize Defective Product Return) Autoriser le retour client de bouteille non conforme",
+      "codeSCOR": "DR1.1",
+      "typePoste": "AIGUILLAGE",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 10,
+        "p2": 20,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Request Defective Product Return Authorization) Demande d'autorisation de retour des bonbonnes non conformes",
+      "estUnPosteAlternatif": true,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": {
+        "typeControle": "fuite",
+        "tauxTrue": 0.85,
+        "idCibleEchec": "(Transfer Defective Product) Rejet définitif du retour client (éjection sécurité)"
+      },
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.5,
+      "coutHoraireMainOeuvre": 2200,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 500000,
+      "idsResponsabilites": [
+        "RESP_36"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sDR1.1.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1740.0,
+      "yManuel": 2232.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sDR1.3.1",
+      "nom": "(Receive Defective Product) Réception des bouteilles retournées chez ZENER SA Togo",
+      "codeSCOR": "DR1.3",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 15,
+        "p2": 30,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Authorize Defective Product Return) Autoriser le retour client de bouteille non conforme, (Return Defective Product) Retour des bouteilles et bonbonnes non conformes",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.55,
+      "coutHoraireMainOeuvre": 1800,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 1000000,
+      "idsResponsabilites": [
+        "RESP_37"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sDR1.3.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1810.0,
+      "yManuel": 2232.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sDR1.4.1",
+      "nom": "(Transfer Defective Product) Transfert vers inspection / réparation / réintégration",
+      "codeSCOR": "DR1.4",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1800,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Receive Defective Product) Réception des bouteilles retournées chez ZENER SA Togo",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.6,
+      "coutHoraireMainOeuvre": 2000,
+      "coutMatierePremiereParUnite": 300,
+      "valeurActifFixe": 3000000,
+      "idsResponsabilites": [
+        "RESP_38"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sDR1.4.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1880.0,
+      "yManuel": 2232.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sDR1.4.2",
+      "nom": "(Transfer Defective Product) Rejet définitif du retour client (éjection sécurité)",
+      "codeSCOR": "DR1.4",
+      "typePoste": "SINK",
+      "loiTemps": {
+        "distribution": "constant",
+        "p1": 0,
+        "p2": 0,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Transfer Defective Product) Transfert vers inspection / réparation / réintégration",
+      "estUnPosteAlternatif": true,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.1,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 300000,
+      "idsResponsabilites": [
+        "RESP_39"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sDR1.4.2"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1950.0,
+      "yManuel": 2232.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.2.1",
+      "nom": "(Receive/Enter/Validate Order) Réception saisie et validation de la commande",
+      "codeSCOR": "D1.2",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 20,
+        "p2": 60,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Process Inquiry & Quote) Traitement de la demande et devis client, (Schedule Product Deliveries) Planifier l'approvisionnement auprès de ZENER SA Togo",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1800,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 400000,
+      "idsResponsabilites": [
+        "RESP_40"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.2.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1180.0,
+      "yManuel": 2300.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.5.4",
+      "nom": "(Build Loads) Constitution des chargements",
+      "codeSCOR": "D1.5",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 300,
+        "p2": 900,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Consolidate Orders) Regrouper les commandes",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.85,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 900000,
+      "idsResponsabilites": [
+        "RESP_41"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.5.4"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1320.0,
+      "yManuel": 2300.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.6.1",
+      "nom": "(Route Shipments) Planification des itinéraires de livraison",
+      "codeSCOR": "D1.6",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 300,
+        "p2": 600,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Build Loads) Constitution des chargements",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1800,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 300000,
+      "idsResponsabilites": [
+        "RESP_42"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.6.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1320.0,
+      "yManuel": 2273.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.7.1",
+      "nom": "(Select Carriers & Rate Shipments) Sélection du transporteur et tarification",
+      "codeSCOR": "D1.7",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 300,
+        "p2": 600,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Route Shipments) Planification des itinéraires de livraison",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1800,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 300000,
+      "idsResponsabilites": [
+        "RESP_43"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.7.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1390.0,
+      "yManuel": 2300.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.8.1",
+      "nom": "(Receive Product from Source or Make) Réception du produit depuis le stock",
+      "codeSCOR": "D1.8",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "constant",
+        "p1": 300,
+        "p2": 300,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Release Finished Product to Deliver) Libération des bonbonnes pleines, (Select Carriers & Rate Shipments) Sélection du transporteur et tarification, (Reserve Inventory & Determine Delivery Date) Réservation du stock et détermination de la date de livraison",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.95,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 500000,
+      "idsResponsabilites": [
+        "RESP_44"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.8.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1390.0,
+      "yManuel": 2232.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.9.1",
+      "nom": "(Pick Product) Prélèvement des bonbonnes en stock",
+      "codeSCOR": "D1.9",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 120,
+        "p2": 300,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Receive Product from Source or Make) Réception du produit depuis le stock",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 300000,
+      "idsResponsabilites": [
+        "RESP_45"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.9.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1460.0,
+      "yManuel": 2232.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.10.1",
+      "nom": "(Pack Product) Conditionnement du produit pour expédition",
+      "codeSCOR": "D1.10",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 180,
+        "p2": 420,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Pick Product) Prélèvement des bonbonnes en stock",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 400000,
+      "idsResponsabilites": [
+        "RESP_46"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.10.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1530.0,
+      "yManuel": 2232.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.1.3",
+      "nom": "(Schedule Product Deliveries) Planifier les livraisons de bonbonnes vides",
+      "codeSCOR": "S1.1",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1200,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 200000,
+      "idsResponsabilites": [
+        "RESP_47"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.1.3"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 491.0,
+      "yManuel": 2259.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.1.4",
+      "nom": "(Schedule Product Deliveries) Planifier les livraisons des accessoires",
+      "codeSCOR": "S1.1",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1200,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 200000,
+      "idsResponsabilites": [
+        "RESP_48"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.1.4"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 476.0,
+      "yManuel": 2286.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sP4.4.1",
+      "nom": "(Establish Delivery Plans) Établir les plans de livraison de GPL",
+      "codeSCOR": "P4.4",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1200,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_1",
+      "nomActeurResponsable": "Fournisseur du GPL",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 200000,
+      "idsResponsabilites": [
+        "RESP_49"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sP4.4.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.4.1",
+      "nom": "(Transfer Product) Transfert du GPL vers le stock d'approvisionnement",
+      "codeSCOR": "S1.4",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 60,
+        "p2": 180,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 50,
+      "chainesPrecedents": "(Reserve Inventory & Determine Delivery Date) Réserver le stock et déterminer la date de livraison du GPL",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_1",
+      "nomActeurResponsable": "Fournisseur du GPL",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.95,
+      "coutHoraireMainOeuvre": 800,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 500000,
+      "idsResponsabilites": [
+        "RESP_50"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.4.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 568.0,
+      "yManuel": 1899.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sP4.4.2",
+      "nom": "(Establish Delivery Plans) Établir les plans de livraison de bouteilles vides",
+      "codeSCOR": "P4.4",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1200,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_2",
+      "nomActeurResponsable": "Fournisseur de bouteilles vides",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 200000,
+      "idsResponsabilites": [
+        "RESP_51"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sP4.4.2"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.4.2",
+      "nom": "(Transfer Product) Transfert des bouteilles vides vers le stock d'approvisionnement",
+      "codeSCOR": "S1.4",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 60,
+        "p2": 180,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 50,
+      "chainesPrecedents": "(Reserve Inventory & Determine Delivery Date) Réserver le stock et déterminer la date de livraison des bouteilles vides",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_2",
+      "nomActeurResponsable": "Fournisseur de bouteilles vides",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.95,
+      "coutHoraireMainOeuvre": 800,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 500000,
+      "idsResponsabilites": [
+        "RESP_52"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.4.2"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 568.0,
+      "yManuel": 2019.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sP4.4.3",
+      "nom": "(Establish Delivery Plans) Établir les plans de livraison d'accessoires",
+      "codeSCOR": "P4.4",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1200,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_3",
+      "nomActeurResponsable": "Fournisseur des accessoires",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 200000,
+      "idsResponsabilites": [
+        "RESP_53"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sP4.4.3"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.4.3",
+      "nom": "(Transfer Product) Transfert des accessoires vers le stock d'approvisionnement",
+      "codeSCOR": "S1.4",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 60,
+        "p2": 180,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 50,
+      "chainesPrecedents": "(Reserve Inventory & Determine Delivery Date) Réserver le stock et déterminer la date de livraison des accessoires",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_3",
+      "nomActeurResponsable": "Fournisseur des accessoires",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.95,
+      "coutHoraireMainOeuvre": 800,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 500000,
+      "idsResponsabilites": [
+        "RESP_54"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.4.3"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 568.0,
+      "yManuel": 2139.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.11.4",
+      "nom": "(Load Vehicle & Generate Shipping Docs) Chargement du camion et génération du document d'expédition",
+      "codeSCOR": "D1.11",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1800,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Pack Product) Conditionnement du produit pour expédition",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.8,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 800000,
+      "idsResponsabilites": [
+        "RESP_55"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.11.4"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1600.0,
+      "yManuel": 2232.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.12.4",
+      "nom": "(Ship Product) Expédition des bonbonnes aux clients",
+      "codeSCOR": "D1.12",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1800,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Load Vehicle & Generate Shipping Docs) Chargement du camion et génération du document d'expédition",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.85,
+      "coutHoraireMainOeuvre": 1800,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 800000,
+      "idsResponsabilites": [
+        "RESP_56"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.12.4"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1670.0,
+      "yManuel": 2232.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sP3.4.1",
+      "nom": "(Establish Production Plans) Établir les plans de production (remplissage de gaz)",
+      "codeSCOR": "P3.4",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1200,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1800,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 300000,
+      "idsResponsabilites": [
+        "RESP_58"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sP3.4.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 890.0,
+      "yManuel": 2259.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sM1.1.1",
+      "nom": "(Schedule Production Activities) Ordonnancement des activités de la production (remplissage de gaz)",
+      "codeSCOR": "M1.1",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 120,
+        "p2": 300,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Establish Production Plans) Établir les plans de production (remplissage de gaz)",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1800,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 300000,
+      "idsResponsabilites": [
+        "RESP_59"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sM1.1.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 844.0,
+      "yManuel": 2259.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.4.4",
+      "nom": "(Transfer Product) Transfert des bonbonnes vides et accessoires vers le magasin",
+      "codeSCOR": "S1.4",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 60,
+        "p2": 180,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 100,
+      "chainesPrecedents": "(Verify Product) Contrôle de conformité des bouteilles vides reçues, (Verify Product) Contrôle de conformité des accessoires reçus, (Verify Product) Contrôle de conformité du GPL reçu",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1200,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 400000,
+      "idsResponsabilites": [
+        "RESP_60"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.4.4"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sSR1.1.2",
+      "nom": "(Identify Defective Product Condition) Identification et isolement des bouteilles ou accessoires non conformes",
+      "codeSCOR": "SR1.1",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "constant",
+        "p1": 0,
+        "p2": 0,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Verify Product) Contrôle de conformité des bouteilles vides reçues, (Verify Product) Contrôle de conformité des accessoires reçus, (Verify Product) Contrôle de conformité du GPL reçu",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.1,
+      "coutHoraireMainOeuvre": 0,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 0,
+      "idsResponsabilites": [
+        "RESP_61"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sSR1.1.2"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 752.0,
+      "yManuel": 2259.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sSR1.5.2",
+      "nom": "(Return Defective Product) Retour des accessoires non conformes",
+      "codeSCOR": "SR1.5",
+      "typePoste": "SINK",
+      "loiTemps": {
+        "distribution": "constant",
+        "p1": 0,
+        "p2": 0,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Identify Defective Product Condition) Identification et isolement des bouteilles ou accessoires non conformes",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.1,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 0,
+      "idsResponsabilites": [
+        "RESP_62"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sSR1.5.2"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 798.0,
+      "yManuel": 2259.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sP2.4.1",
+      "nom": "(Establish Sourcing Plans) Établir les plans d'approvisionnement de bouteilles pleines",
+      "codeSCOR": "P2.4",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 600,
+        "p2": 1200,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_5",
+      "nomActeurResponsable": "CLIENT GENERIQUE",
+      "categorieActeurResponsable": "CLIENT",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 0,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 0,
+      "idsResponsabilites": [
+        "RESP_63"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sP2.4.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1028.0,
+      "yManuel": 2352.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.4.5",
+      "nom": "(Transfer Product) Transfert des bouteilles au magasin",
+      "codeSCOR": "S1.4",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 300,
+        "p2": 900,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Verify Product) Vérification de conformité de la livraison reçue",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_5",
+      "nomActeurResponsable": "CLIENT GENERIQUE",
+      "categorieActeurResponsable": "CLIENT",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.85,
+      "coutHoraireMainOeuvre": 500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 200000,
+      "idsResponsabilites": [
+        "RESP_64"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.4.5"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1740.0,
+      "yManuel": 2355.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sSR1.5.3",
+      "nom": "(Return Defective Product) Retour des bouteilles et bonbonnes non conformes",
+      "codeSCOR": "SR1.5",
+      "typePoste": "SINK",
+      "loiTemps": {
+        "distribution": "constant",
+        "p1": 0,
+        "p2": 0,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Request Defective Product Return Authorization) Demande d'autorisation de retour des bonbonnes non conformes, (Authorize Defective Product Return) Autoriser le retour client de bouteille non conforme, (Receive Defective Product) Réception des bouteilles retournées chez ZENER SA Togo, (Verify Product) Vérification de conformité de la livraison reçue",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_5",
+      "nomActeurResponsable": "CLIENT GENERIQUE",
+      "categorieActeurResponsable": "CLIENT",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.1,
+      "coutHoraireMainOeuvre": 0,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 0,
+      "idsResponsabilites": [
+        "RESP_65"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sSR1.5.3"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1880.0,
+      "yManuel": 2355.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sP4.4.4",
+      "nom": "(Establish Delivery Plans) Établir les plans de livraison",
+      "codeSCOR": "P4.4",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 30,
+        "p2": 90,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 2000,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 300000,
+      "idsResponsabilites": [
+        "RESP_57"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sP4.4.4"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1028.0,
+      "yManuel": 2300.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.2.2",
+      "nom": "(Receive/Enter/Validate Order) Réception et validation de la commande GPL",
+      "codeSCOR": "D1.2",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 20,
+        "p2": 60,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Establish Delivery Plans) Établir les plans de livraison de GPL, (Schedule Product Deliveries) Planifier les livraisons de GPL",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_1",
+      "nomActeurResponsable": "Fournisseur du GPL",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 200000,
+      "idsResponsabilites": [
+        "RESP_66"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.2.2"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.2.3",
+      "nom": "(Receive/Enter/Validate Order) Réception et validation de la commande de bouteilles vides",
+      "codeSCOR": "D1.2",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 20,
+        "p2": 60,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Establish Delivery Plans) Établir les plans de livraison de bouteilles vides, (Schedule Product Deliveries) Planifier les livraisons de bonbonnes vides",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_2",
+      "nomActeurResponsable": "Fournisseur de bouteilles vides",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 200000,
+      "idsResponsabilites": [
+        "RESP_67"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.2.3"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sD1.2.4",
+      "nom": "(Receive/Enter/Validate Order) Réception et validation de la commande des accessoires",
+      "codeSCOR": "D1.2",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 20,
+        "p2": 60,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Establish Delivery Plans) Établir les plans de livraison d'accessoires, (Schedule Product Deliveries) Planifier les livraisons des accessoires",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_3",
+      "nomActeurResponsable": "Fournisseur des accessoires",
+      "categorieActeurResponsable": "FOURNISSEUR",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 200000,
+      "idsResponsabilites": [
+        "RESP_68"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sD1.2.4"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": false,
+      "xManuel": 0.0,
+      "yManuel": 0.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sSR1.3.1",
+      "nom": "(Request Defective Product Return Authorization) Demande d'autorisation de retour des bonbonnes non conformes",
+      "codeSCOR": "SR1.3",
+      "typePoste": "DELAI",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 60,
+        "p2": 180,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Transfer Product) Transfert des bouteilles au magasin",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_5",
+      "nomActeurResponsable": "CLIENT GENERIQUE",
+      "categorieActeurResponsable": "CLIENT",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 0,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 0,
+      "idsResponsabilites": [
+        "RESP_69"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sSR1.3.1"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1810.0,
+      "yManuel": 2355.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sDR1.4.3",
+      "nom": "(Transfer Defective Product) Réintégration en stock après inspection",
+      "codeSCOR": "DR1.4",
+      "typePoste": "SINK",
+      "loiTemps": {
+        "distribution": "constant",
+        "p1": 0,
+        "p2": 0,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Transfer Defective Product) Transfert vers inspection / réparation / réintégration",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.9,
+      "coutHoraireMainOeuvre": 0,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 0,
+      "idsResponsabilites": [
+        "RESP_70"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sDR1.4.3"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 1950.0,
+      "yManuel": 2259.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sS1.3.4",
+      "nom": "(Verify Product) Contrôle de conformité du GPL reçu",
+      "codeSCOR": "S1.3",
+      "typePoste": "AIGUILLAGE",
+      "loiTemps": {
+        "distribution": "uniform",
+        "p1": 20,
+        "p2": 60,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Receive Product) Réception du GPL vrac",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": {
+        "typeControle": "fuite",
+        "tauxTrue": 0.97,
+        "idCibleEchec": "(Identify Defective Product Condition) Identification et isolement des bouteilles ou accessoires non conformes"
+      },
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.55,
+      "coutHoraireMainOeuvre": 2500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 0,
+      "idsResponsabilites": [
+        "RESP_71"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sS1.3.4"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 676.0,
+      "yManuel": 2232.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    },
+    {
+      "idPoste": "sSR1.5.4",
+      "nom": "(Return Defective Product) Retour du GPL non conforme",
+      "codeSCOR": "SR1.5",
+      "typePoste": "SINK",
+      "loiTemps": {
+        "distribution": "constant",
+        "p1": 0,
+        "p2": 0,
+        "p3": 1
+      },
+      "capaciteSimultanee": 1,
+      "niveauStock": 0,
+      "chainesPrecedents": "(Identify Defective Product Condition) Identification et isolement des bouteilles ou accessoires non conformes",
+      "estUnPosteAlternatif": false,
+      "idActeurResponsable": "ACT_4",
+      "nomActeurResponsable": "ZENER SA Togo",
+      "categorieActeurResponsable": "ENTREPRISE_FOCALE",
+      "typeAnnexeActeurResponsable": "",
+      "regleAiguillage": null,
+      "niveauISA95": "",
+      "politiqueStock": "MTS",
+      "tauxVA": 0.1,
+      "coutHoraireMainOeuvre": 1500,
+      "coutMatierePremiereParUnite": 0,
+      "valeurActifFixe": 0,
+      "idsResponsabilites": [
+        "RESP_73"
+      ],
+      "idsOperationalAgents": [
+        "OP_AUTO_sSR1.5.4"
+      ],
+      "idsMachines": [],
+      "genereAutonome": false,
+      "politiqueApproPoste": "",
+      "intervalleApproPoste": 0.0,
+      "tauxArriveePoissonPoste": 0.0,
+      "quantiteParApproPoste": 1.0,
+      "tailleLot": 1,
+      "attendTousLesPredecesseurs": false,
+      "positionManuelle": true,
+      "xManuel": 798.0,
+      "yManuel": 2286.0,
+      "estPointEclatement": false,
+      "nbProduitsParLot": 1,
+      "consommeMatiere": false
+    }
+  ],
+  "scenarios": [
+    {
+      "typeProduit": "SCENARIO DISTRIBUTION",
+      "sequence": [
+        "sS1.1.1",
+        "sD1.3.1",
+        "sD1.11.1",
+        "sD1.12.1",
+        "sD1.3.2",
+        "sD1.11.2",
+        "sD1.12.2",
+        "sD1.3.3",
+        "sD1.11.3",
+        "sD1.12.3",
+        "sS1.2.1",
+        "sS1.2.2",
+        "sS1.2.3",
+        "sS1.3.1",
+        "sS1.3.2",
+        "sM1.2.1",
+        "sM1.3.1",
+        "sM1.3.2",
+        "sM1.3.3",
+        "sM1.3.5",
+        "sM1.4.1",
+        "sM1.4.2",
+        "sM1.5.1",
+        "sM1.6.1",
+        "sS1.1.2",
+        "sD1.1.1",
+        "sD1.2.1",
+        "sD1.3.4",
+        "sD1.4.4",
+        "sD1.5.4",
+        "sD1.6.1",
+        "sD1.7.1",
+        "sD1.8.1",
+        "sD1.9.1",
+        "sD1.10.1",
+        "sS1.2.4",
+        "sS1.3.3"
+      ],
+      "debitParHeure": 80,
+      "debitParHeureBase": 80,
+      "nomenclature": [
+        {
+          "idMatiere": "GPL_VRAC",
+          "quantiteParUnite": 12.5
+        },
+        {
+          "idMatiere": "BOUTEILLE_VIDE_12KG",
+          "quantiteParUnite": 1
+        },
+        {
+          "idMatiere": "ACCESSOIRES_KIT",
+          "quantiteParUnite": 1
+        }
+      ]
+    },
+    {
+      "typeProduit": "SCENARIO DELIVER RETURN CLIENT",
+      "sequence": [
+        "sDR1.1.1",
+        "sDR1.3.1",
+        "sDR1.4.1",
+        "sS1.3.1",
+        "sM1.2.1"
+      ],
+      "debitParHeure": 0,
+      "debitParHeureBase": 0,
+      "nomenclature": []
+    },
+    {
+      "typeProduit": "ZENER CAS 1 - ORDER HOLDING - COMMANDE DIRECTE",
+      "sequence": [
+        "sS1.1.2",
+        "sD1.1.1",
+        "sD1.2.1",
+        "sD1.3.4",
+        "sD1.4.4",
+        "sD1.5.4",
+        "sD1.6.1",
+        "sD1.7.1",
+        "sD1.8.1",
+        "sD1.9.1",
+        "sD1.10.1",
+        "sS1.2.4",
+        "sS1.3.3"
+      ],
+      "debitParHeure": 0,
+      "debitParHeureBase": 0,
+      "nomenclature": []
+    },
+    {
+      "typeProduit": "ZENER CAS 2 - PF INSUFFISANT - MATIERE SUFFISANTE",
+      "sequence": [
+        "sS1.1.2",
+        "sD1.1.1",
+        "sD1.2.1",
+        "sM1.2.1",
+        "sM1.3.1",
+        "sM1.3.2",
+        "sM1.3.3",
+        "sM1.3.4",
+        "sM1.3.5",
+        "sM1.3.6",
+        "sM1.4.1",
+        "sM1.4.2",
+        "sM1.5.1",
+        "sM1.6.1",
+        "sD1.3.4",
+        "sD1.4.4",
+        "sD1.5.4",
+        "sD1.6.1",
+        "sD1.7.1",
+        "sD1.8.1",
+        "sD1.9.1",
+        "sD1.10.1",
+        "sS1.2.4",
+        "sS1.3.3"
+      ],
+      "debitParHeure": 0,
+      "debitParHeureBase": 0,
+      "nomenclature": [
+        {
+          "idMatiere": "GPL_VRAC",
+          "quantiteParUnite": 12.5
+        },
+        {
+          "idMatiere": "BOUTEILLE_VIDE_12KG",
+          "quantiteParUnite": 1
+        },
+        {
+          "idMatiere": "ACCESSOIRES_KIT",
+          "quantiteParUnite": 1
+        }
+      ]
+    },
+    {
+      "typeProduit": "ZENER CAS 3 - PF ET MATIERE INSUFFISANTS - APPRO PROD LIVRAISON",
+      "sequence": [
+        "sS1.1.2",
+        "sD1.1.1",
+        "sD1.2.1",
+        "sS1.1.1",
+        "sD1.3.1",
+        "sD1.11.1",
+        "sD1.12.1",
+        "sD1.3.2",
+        "sD1.11.2",
+        "sD1.12.2",
+        "sD1.3.3",
+        "sD1.11.3",
+        "sD1.12.3",
+        "sS1.2.1",
+        "sS1.2.2",
+        "sS1.2.3",
+        "sS1.3.1",
+        "sS1.3.2",
+        "sM1.2.1",
+        "sM1.3.1",
+        "sM1.3.2",
+        "sM1.3.3",
+        "sM1.3.4",
+        "sM1.3.5",
+        "sM1.3.6",
+        "sM1.4.1",
+        "sM1.4.2",
+        "sM1.5.1",
+        "sM1.6.1",
+        "sD1.3.4",
+        "sD1.4.4",
+        "sD1.5.4",
+        "sD1.6.1",
+        "sD1.7.1",
+        "sD1.8.1",
+        "sD1.9.1",
+        "sD1.10.1",
+        "sS1.2.4",
+        "sS1.3.3"
+      ],
+      "debitParHeure": 0,
+      "debitParHeureBase": 0,
+      "nomenclature": [
+        {
+          "idMatiere": "GPL_VRAC",
+          "quantiteParUnite": 12.5
+        },
+        {
+          "idMatiere": "BOUTEILLE_VIDE_12KG",
+          "quantiteParUnite": 1
+        },
+        {
+          "idMatiere": "ACCESSOIRES_KIT",
+          "quantiteParUnite": 1
+        }
+      ]
+    }
+  ],
+  "machines": [
+    {
+      "idMachine": "MAC_1",
+      "nom": "Carrousel de remplissage GPL",
+      "idMicroActivite": "sM1.3.2",
+      "nomMicroActivite": "Remplissage GPL au carrousel",
+      "idOperationalAgent": "OP_AUTO_sM1.3.2",
+      "type": "CARROUSEL_GPL",
+      "capacite": 8,
+      "cycleTime": 88,
+      "mtbf": 28800,
+      "mttr": 1800,
+      "active": true
+    }
+  ],
+  "fichesMatiere": [
+    {
+      "idMatiere": "GPL_VRAC",
+      "stockDisponible": 0,
+      "stockSecurite": 0,
+      "delaiObtentionHeures": 6,
+      "idFournisseur": "ACT_1"
+    },
+    {
+      "idMatiere": "BOUTEILLE_VIDE_12KG",
+      "stockDisponible": 250,
+      "stockSecurite": 0,
+      "delaiObtentionHeures": 10,
+      "idFournisseur": "ACT_2"
+    },
+    {
+      "idMatiere": "ACCESSOIRES_KIT",
+      "stockDisponible": 300,
+      "stockSecurite": 0,
+      "delaiObtentionHeures": 5,
+      "idFournisseur": "ACT_3"
+    }
+  ],
+  "normalizationProfiles": [
+    {
+      "code": "RL.2.1",
+      "direction": "BENEFIT",
+      "min": 0.0,
+      "max": 1.0,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 0.0,
+      "perfect": 1.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    },
+    {
+      "code": "RL.2.2",
+      "direction": "BENEFIT",
+      "min": 0.0,
+      "max": 1.0,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 0.0,
+      "perfect": 1.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    },
+    {
+      "code": "RL.3.33",
+      "direction": "BENEFIT",
+      "min": 0.0,
+      "max": 1.0,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 0.0,
+      "perfect": 1.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    },
+    {
+      "code": "RL.3.35",
+      "direction": "BENEFIT",
+      "min": 0.0,
+      "max": 1.0,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 0.0,
+      "perfect": 1.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    },
+    {
+      "code": "RS.2.1",
+      "direction": "COST",
+      "min": 0.0,
+      "max": 3600.0,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 3600.0,
+      "perfect": 0.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    },
+    {
+      "code": "RS.2.2",
+      "direction": "COST",
+      "min": 0.0,
+      "max": 3600.0,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 3600.0,
+      "perfect": 0.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    },
+    {
+      "code": "RS.2.3",
+      "direction": "COST",
+      "min": 0.0,
+      "max": 3600.0,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 3600.0,
+      "perfect": 0.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    },
+    {
+      "code": "RS.2.5",
+      "direction": "COST",
+      "min": 0.0,
+      "max": 3600.0,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 3600.0,
+      "perfect": 0.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    },
+    {
+      "code": "RS.1.1",
+      "direction": "COST",
+      "min": 0.0,
+      "max": 7200.0,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 7200.0,
+      "perfect": 0.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    },
+    {
+      "code": "RS.3.94",
+      "direction": "COST",
+      "min": 0.0,
+      "max": 7200.0,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 7200.0,
+      "perfect": 0.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    },
+    {
+      "code": "AG.3.32",
+      "direction": "BENEFIT",
+      "min": 0.0,
+      "max": 160.0,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 0.0,
+      "perfect": 160.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    },
+    {
+      "code": "PROXY.AG.SYSTEM_UTILIZATION",
+      "direction": "COST",
+      "min": 0.0,
+      "max": 1.5,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 1.5,
+      "perfect": 0.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    },
+    {
+      "code": "AG.1.1",
+      "direction": "BENEFIT",
+      "min": 0.0,
+      "max": 1.0,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 0.0,
+      "perfect": 1.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    },
+    {
+      "code": "CO.1.1",
+      "direction": "COST",
+      "min": 0.0,
+      "max": 1.0,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 1.0,
+      "perfect": 0.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    },
+    {
+      "code": "AM.3.9",
+      "direction": "BENEFIT",
+      "min": 0.0,
+      "max": 1.0,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 0.0,
+      "perfect": 1.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    },
+    {
+      "code": "AM.2.2",
+      "direction": "COST",
+      "min": 0.0,
+      "max": 30.0,
+      "source": "S2.2_DEFAULT_TO_VALIDATE",
+      "version": "2.0",
+      "bottom": 30.0,
+      "perfect": 0.0,
+      "semantics": "MEASUREMENT_SCALE_BOTTOM_PERFECT"
+    }
+  ],
+  "ahpConfiguration": {
+    "consistencyThreshold": 0.1,
+    "strategic": {
+      "criteria": [
+        "RL",
+        "RS",
+        "AG",
+        "CO",
+        "AM"
+      ],
+      "source": "S2.2_BOOTSTRAP_FROM_EXISTING_EXPERT_WEIGHTS",
+      "pairwiseMatrix": [
+        [
+          1.0,
+          2.0,
+          4.0,
+          2.666666666666667,
+          2.666666666666667
+        ],
+        [
+          0.5,
+          1.0,
+          2.0,
+          1.3333333333333335,
+          1.3333333333333335
+        ],
+        [
+          0.25,
+          0.5,
+          1.0,
+          0.6666666666666667,
+          0.6666666666666667
+        ],
+        [
+          0.37499999999999994,
+          0.7499999999999999,
+          1.4999999999999998,
+          1.0,
+          1.0
+        ],
+        [
+          0.37499999999999994,
+          0.7499999999999999,
+          1.4999999999999998,
+          1.0,
+          1.0
+        ]
+      ],
+      "usage": "DIAGNOSTIC_ONLY_NOT_PI"
+    },
+    "bottleneck": {
+      "criteria": [
+        "URGENCE",
+        "IMPACT_SCOR",
+        "PERSISTANCE",
+        "VOLUME_FILE"
+      ],
+      "source": "S2.2_BOOTSTRAP_FROM_EXISTING_WEIGHTS",
+      "pairwiseMatrix": [
+        [
+          1.0,
+          1.3333333333333335,
+          2.0,
+          4.0
+        ],
+        [
+          0.7499999999999999,
+          1.0,
+          1.4999999999999998,
+          2.9999999999999996
+        ],
+        [
+          0.5,
+          0.6666666666666667,
+          1.0,
+          2.0
+        ],
+        [
+          0.25,
+          0.33333333333333337,
+          0.5,
+          1.0
+        ]
+      ],
+      "usage": "BOTTLENECK_DECISION"
+    }
+  },
+  "aboxExport": {
+    "enabled": true,
+    "exportOnOrderClosure": true,
+    "exportOnStop": false,
+    "maxRawEvents": 5000,
+    "format": "Turtle",
+    "coreNamespace": "http://www.sconto-vsm.org/core#",
+    "runtimeNamespacePolicy": "urn:sconto-svu:runtime:{runId}#",
+    "agentAerPolicy": "OFFICIAL_AGENT_V1_1_2_PLUS_OFFICIAL_AER_V1_1_2",
+    "agentNamespace": "http://www.sconto-vsm.org/agent-extension#",
+    "agentOntologyVersionIRI": "http://www.sconto-vsm.org/agent-extension/1.1.2",
+    "agentOntologyWorkingImport": "http://www.sconto-vsm.org/core/4.3.0",
+    "agentArchitecture": "Strategic>Tactical>Coordinator>OperationalPilot>OperationalExecution",
+    "agentIdentityPolicy": "ACTOR_SCOPED_OPERATIONAL_V1",
+    "strictAgentIdentity": true,
+    "fileNamingPolicy": "SCONTO_SVU_ABOX_{company}_{runId}.ttl",
+    "scope": "SCONTO_SVU_GLOBAL_RUNTIME",
+    "coreOntologyVersion": "4.3.0",
+    "agentOntologyVersion": "1.1.2",
+    "aerNamespace": "http://www.sconto-vsm.org/aer-extension#",
+    "aerOntologyVersionIRI": "http://www.sconto-vsm.org/aer-extension/1.1.2",
+    "holonicScopePolicy": "FOCAL_INTERNAL_FULL_EXTERNAL_ACTORS_BOUNDARY",
+    "staticReturnSourcePilotPolicy": "MAP_EXISTING_ASup_sSR_manufacturer_AS_OperationalPilotAgent",
+    "c13Status": "TEMPORARILY_DISABLED_UNTIL_PERFORMANCE_PIPELINE_RUNTIME_VALIDATED; REENABLE_IN_C14",
+    "c14Status": "C14.3_VALIDATED_POSTS_INTEGRATED_PENDING_RUNTIME_VALIDATION",
+    "performancePipeline": "VSM_TO_SCOR_RAW_TO_SCORE_0_10_TO_FUZZY_TO_ATTRIBUTE_TO_PI",
+    "artifactSyncPolicy": "ORDER_CLOSURE_ABOX_THEN_EXCEL_SAME_SIMULATION_TIME",
+    "runIdPolicy": "CONFIGURED_START_PLUS_WALL_CLOCK_UNIQUE",
+    "integrationPolicy": "COLLEAGUE_JSON_BUSINESS_CONFIGURATION_AUTHORITATIVE"
+  },
+  "performanceMeasurement": {
+    "method": "THEERANUPHATTANA_CHAN_QI_ADAPTED",
+    "scope": "SCONTO-SVU extension: VSM generates actual SCOR metric values upstream; scoring/aggregation operates on performance scores, never heterogeneous raw units",
+    "scoreScale": {
+      "min": 0.0,
+      "max": 10.0
+    },
+    "fuzzyGrades": {
+      "profile": "SCONTO_SVU_FUZZY_PROFILE_V1",
+      "centers": {
+        "A": 10.0,
+        "B": 8.0,
+        "C": 6.0,
+        "D": 4.0,
+        "E": 2.0,
+        "F": 0.0
+      },
+      "interpolation": "LINEAR_BETWEEN_ADJACENT_CENTERS",
+      "validatedAgainstPaperExamples": true
+    },
+    "attributeWeights": {
+      "RL": 0.4,
+      "RS": 0.2,
+      "AG": 0.1,
+      "CO": 0.15,
+      "AM": 0.15
+    },
+    "attributeWeightSource": "CONFIGURED_EXPERT_INPUT_TO_VALIDATE",
+    "attributeWeightMethod": "NORMALIZED_INPUT; AHP_STRATEGIC_NOT_USED_FOR_PI",
+    "metricWeightPolicy": "EQUAL_WITHIN_ATTRIBUTE_BY_DEFAULT; USER_OVERRIDES_SUPPORTED",
+    "referenceSelfTests": [
+      {
+        "case": "POF scoring Table VI",
+        "raw": 90.1,
+        "bottom": 70.0,
+        "perfect": 100.0,
+        "expectedScore10": 6.7,
+        "expectedGrades": {
+          "B": 0.35,
+          "C": 0.65
+        }
+      },
+      {
+        "case": "Global PI Table VIII",
+        "grades": {
+          "A": 0.004,
+          "B": 0.147,
+          "C": 0.138,
+          "D": 0.353,
+          "E": 0.297,
+          "F": 0.061
+        },
+        "expectedPI": 4.05
+      }
+    ],
+    "integrationRelease": "C14.3",
+    "businessConfigurationSource": "COLLEAGUE_JSON_VALIDATED_BY_PROJECT_LEAD"
+  },
+  "isa95Hierarchy": [
+    {
+      "id": "ISA_ENT_ACT_1",
+      "nom": "Unité entreprise - Fournisseur du GPL",
+      "typeISA95": "EnterpriseUnit",
+      "parentId": "",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_SITE_ACT_1_MAIN",
+      "nom": "Site principal - Fournisseur du GPL",
+      "typeISA95": "Site",
+      "parentId": "ISA_ENT_ACT_1",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_1_DELIVER",
+      "nom": "Zone Deliver - Fournisseur du GPL",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_1_MAIN",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_1_DELIVER",
+      "nom": "Atelier Deliver - Fournisseur du GPL",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_1_DELIVER",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_1_D1",
+      "nom": "Work Center D1 - Fournisseur du GPL",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_1_DELIVER",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_1_D1_3",
+      "nom": "Work Cell D1.3 - Fournisseur du GPL",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_1_D1",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_1_D1_11",
+      "nom": "Work Cell D1.11 - Fournisseur du GPL",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_1_D1",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_1_D1_12",
+      "nom": "Work Cell D1.12 - Fournisseur du GPL",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_1_D1",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_1_PLAN",
+      "nom": "Zone Plan - Fournisseur du GPL",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_1_MAIN",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_1_PLAN",
+      "nom": "Atelier Plan - Fournisseur du GPL",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_1_PLAN",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_1_P4",
+      "nom": "Work Center P4 - Fournisseur du GPL",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_1_PLAN",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_1_P4_4",
+      "nom": "Work Cell P4.4 - Fournisseur du GPL",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_1_P4",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_1_SOURCE",
+      "nom": "Zone Source - Fournisseur du GPL",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_1_MAIN",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_1_SOURCE",
+      "nom": "Atelier Source - Fournisseur du GPL",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_1_SOURCE",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_1_S1",
+      "nom": "Work Center S1 - Fournisseur du GPL",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_1_SOURCE",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_1_S1_4",
+      "nom": "Work Cell S1.4 - Fournisseur du GPL",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_1_S1",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_ENT_ACT_2",
+      "nom": "Unité entreprise - Fournisseur de bouteilles vides",
+      "typeISA95": "EnterpriseUnit",
+      "parentId": "",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_SITE_ACT_2_MAIN",
+      "nom": "Site principal - Fournisseur de bouteilles vides",
+      "typeISA95": "Site",
+      "parentId": "ISA_ENT_ACT_2",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_2_DELIVER",
+      "nom": "Zone Deliver - Fournisseur de bouteilles vides",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_2_MAIN",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_2_DELIVER",
+      "nom": "Atelier Deliver - Fournisseur de bouteilles vides",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_2_DELIVER",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_2_D1",
+      "nom": "Work Center D1 - Fournisseur de bouteilles vides",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_2_DELIVER",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_2_D1_3",
+      "nom": "Work Cell D1.3 - Fournisseur de bouteilles vides",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_2_D1",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_2_D1_11",
+      "nom": "Work Cell D1.11 - Fournisseur de bouteilles vides",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_2_D1",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_2_D1_12",
+      "nom": "Work Cell D1.12 - Fournisseur de bouteilles vides",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_2_D1",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_2_PLAN",
+      "nom": "Zone Plan - Fournisseur de bouteilles vides",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_2_MAIN",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_2_PLAN",
+      "nom": "Atelier Plan - Fournisseur de bouteilles vides",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_2_PLAN",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_2_P4",
+      "nom": "Work Center P4 - Fournisseur de bouteilles vides",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_2_PLAN",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_2_P4_4",
+      "nom": "Work Cell P4.4 - Fournisseur de bouteilles vides",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_2_P4",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_2_SOURCE",
+      "nom": "Zone Source - Fournisseur de bouteilles vides",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_2_MAIN",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_2_SOURCE",
+      "nom": "Atelier Source - Fournisseur de bouteilles vides",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_2_SOURCE",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_2_S1",
+      "nom": "Work Center S1 - Fournisseur de bouteilles vides",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_2_SOURCE",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_2_S1_4",
+      "nom": "Work Cell S1.4 - Fournisseur de bouteilles vides",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_2_S1",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_ENT_ACT_3",
+      "nom": "Unité entreprise - Fournisseur des accessoires",
+      "typeISA95": "EnterpriseUnit",
+      "parentId": "",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_SITE_ACT_3_MAIN",
+      "nom": "Site principal - Fournisseur des accessoires",
+      "typeISA95": "Site",
+      "parentId": "ISA_ENT_ACT_3",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_3_DELIVER",
+      "nom": "Zone Deliver - Fournisseur des accessoires",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_3_MAIN",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_3_DELIVER",
+      "nom": "Atelier Deliver - Fournisseur des accessoires",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_3_DELIVER",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_3_D1",
+      "nom": "Work Center D1 - Fournisseur des accessoires",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_3_DELIVER",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_3_D1_3",
+      "nom": "Work Cell D1.3 - Fournisseur des accessoires",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_3_D1",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_3_D1_11",
+      "nom": "Work Cell D1.11 - Fournisseur des accessoires",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_3_D1",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_3_D1_12",
+      "nom": "Work Cell D1.12 - Fournisseur des accessoires",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_3_D1",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_3_PLAN",
+      "nom": "Zone Plan - Fournisseur des accessoires",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_3_MAIN",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_3_PLAN",
+      "nom": "Atelier Plan - Fournisseur des accessoires",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_3_PLAN",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_3_P4",
+      "nom": "Work Center P4 - Fournisseur des accessoires",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_3_PLAN",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_3_P4_4",
+      "nom": "Work Cell P4.4 - Fournisseur des accessoires",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_3_P4",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_3_SOURCE",
+      "nom": "Zone Source - Fournisseur des accessoires",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_3_MAIN",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_3_SOURCE",
+      "nom": "Atelier Source - Fournisseur des accessoires",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_3_SOURCE",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_3_S1",
+      "nom": "Work Center S1 - Fournisseur des accessoires",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_3_SOURCE",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_3_S1_4",
+      "nom": "Work Cell S1.4 - Fournisseur des accessoires",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_3_S1",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_ENT_ACT_4",
+      "nom": "Unité entreprise - ZENER SA Togo",
+      "typeISA95": "EnterpriseUnit",
+      "parentId": "",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_SITE_ACT_4_MAIN",
+      "nom": "Site principal - ZENER SA Togo",
+      "typeISA95": "Site",
+      "parentId": "ISA_ENT_ACT_4",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_4_SOURCE",
+      "nom": "Zone Source - ZENER SA Togo",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_4_MAIN",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_4_SOURCE",
+      "nom": "Atelier Source - ZENER SA Togo",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_4_SOURCE",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_4_S1",
+      "nom": "Work Center S1 - ZENER SA Togo",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_4_SOURCE",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_S1_1",
+      "nom": "Work Cell S1.1 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_S1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_S1_2",
+      "nom": "Work Cell S1.2 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_S1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_S1_3",
+      "nom": "Work Cell S1.3 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_S1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_4_RETURN",
+      "nom": "Zone Return - ZENER SA Togo",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_4_MAIN",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_4_RETURN",
+      "nom": "Atelier Return - ZENER SA Togo",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_4_RETURN",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_4_SR1",
+      "nom": "Work Center SR1 - ZENER SA Togo",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_4_RETURN",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_SR1_5",
+      "nom": "Work Cell SR1.5 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_SR1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_4_MAKE",
+      "nom": "Zone Make - ZENER SA Togo",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_4_MAIN",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_4_MAKE",
+      "nom": "Atelier Make - ZENER SA Togo",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_4_MAKE",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_4_M1",
+      "nom": "Work Center M1 - ZENER SA Togo",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_4_MAKE",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_M1_2",
+      "nom": "Work Cell M1.2 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_M1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_M1_3",
+      "nom": "Work Cell M1.3 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_M1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_M1_4",
+      "nom": "Work Cell M1.4 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_M1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_M1_5",
+      "nom": "Work Cell M1.5 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_M1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_M1_6",
+      "nom": "Work Cell M1.6 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_M1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_M1_7",
+      "nom": "Work Cell M1.7 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_M1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_4_DELIVER",
+      "nom": "Zone Deliver - ZENER SA Togo",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_4_MAIN",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_4_DELIVER",
+      "nom": "Atelier Deliver - ZENER SA Togo",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_4_DELIVER",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_4_D1",
+      "nom": "Work Center D1 - ZENER SA Togo",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_4_DELIVER",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_D1_1",
+      "nom": "Work Cell D1.1 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_D1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_D1_3",
+      "nom": "Work Cell D1.3 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_D1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_D1_4",
+      "nom": "Work Cell D1.4 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_D1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_4_DR1",
+      "nom": "Work Center DR1 - ZENER SA Togo",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_4_RETURN",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_DR1_1",
+      "nom": "Work Cell DR1.1 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_DR1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_DR1_3",
+      "nom": "Work Cell DR1.3 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_DR1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_DR1_4",
+      "nom": "Work Cell DR1.4 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_DR1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_D1_2",
+      "nom": "Work Cell D1.2 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_D1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_D1_5",
+      "nom": "Work Cell D1.5 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_D1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_D1_6",
+      "nom": "Work Cell D1.6 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_D1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_D1_7",
+      "nom": "Work Cell D1.7 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_D1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_D1_8",
+      "nom": "Work Cell D1.8 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_D1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_D1_9",
+      "nom": "Work Cell D1.9 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_D1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_D1_10",
+      "nom": "Work Cell D1.10 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_D1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_D1_11",
+      "nom": "Work Cell D1.11 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_D1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_D1_12",
+      "nom": "Work Cell D1.12 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_D1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_4_PLAN",
+      "nom": "Zone Plan - ZENER SA Togo",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_4_MAIN",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_4_PLAN",
+      "nom": "Atelier Plan - ZENER SA Togo",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_4_PLAN",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_4_P3",
+      "nom": "Work Center P3 - ZENER SA Togo",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_4_PLAN",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_P3_4",
+      "nom": "Work Cell P3.4 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_P3",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_M1_1",
+      "nom": "Work Cell M1.1 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_M1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_S1_4",
+      "nom": "Work Cell S1.4 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_S1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_SR1_1",
+      "nom": "Work Cell SR1.1 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_SR1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_4_P4",
+      "nom": "Work Center P4 - ZENER SA Togo",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_4_PLAN",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_4_P4_4",
+      "nom": "Work Cell P4.4 - ZENER SA Togo",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_4_P4",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_ENT_ACT_5",
+      "nom": "Unité entreprise - CLIENT GENERIQUE",
+      "typeISA95": "EnterpriseUnit",
+      "parentId": "",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_SITE_ACT_5_MAIN",
+      "nom": "Site principal - CLIENT GENERIQUE",
+      "typeISA95": "Site",
+      "parentId": "ISA_ENT_ACT_5",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_5_SOURCE",
+      "nom": "Zone Source - CLIENT GENERIQUE",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_5_MAIN",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_5_SOURCE",
+      "nom": "Atelier Source - CLIENT GENERIQUE",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_5_SOURCE",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_5_S1",
+      "nom": "Work Center S1 - CLIENT GENERIQUE",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_5_SOURCE",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_5_S1_1",
+      "nom": "Work Cell S1.1 - CLIENT GENERIQUE",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_5_S1",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_5_S1_2",
+      "nom": "Work Cell S1.2 - CLIENT GENERIQUE",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_5_S1",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_5_S1_3",
+      "nom": "Work Cell S1.3 - CLIENT GENERIQUE",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_5_S1",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_5_PLAN",
+      "nom": "Zone Plan - CLIENT GENERIQUE",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_5_MAIN",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_5_PLAN",
+      "nom": "Atelier Plan - CLIENT GENERIQUE",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_5_PLAN",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_5_P2",
+      "nom": "Work Center P2 - CLIENT GENERIQUE",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_5_PLAN",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_5_P2_4",
+      "nom": "Work Cell P2.4 - CLIENT GENERIQUE",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_5_P2",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_5_S1_4",
+      "nom": "Work Cell S1.4 - CLIENT GENERIQUE",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_5_S1",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_AREA_ACT_5_RETURN",
+      "nom": "Zone Return - CLIENT GENERIQUE",
+      "typeISA95": "Area",
+      "parentId": "ISA_SITE_ACT_5_MAIN",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WORKSHOP_ACT_5_RETURN",
+      "nom": "Atelier Return - CLIENT GENERIQUE",
+      "typeISA95": "Workshop",
+      "parentId": "ISA_AREA_ACT_5_RETURN",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WC_ACT_5_SR1",
+      "nom": "Work Center SR1 - CLIENT GENERIQUE",
+      "typeISA95": "WorkCenter",
+      "parentId": "ISA_WORKSHOP_ACT_5_RETURN",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_5_SR1_5",
+      "nom": "Work Cell SR1.5 - CLIENT GENERIQUE",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_5_SR1",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_MACHINE_MAC_1",
+      "nom": "Carrousel de remplissage GPL",
+      "typeISA95": "Machine",
+      "parentId": "ISA_WS_ACT_4_SM1_3_2",
+      "idActeur": "ACT_4",
+      "refMachineId": "MAC_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_1_D1_2",
+      "nom": "Work Cell D1.2 - Fournisseur du GPL",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_1_D1",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_2_D1_2",
+      "nom": "Work Cell D1.2 - Fournisseur de bouteilles vides",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_2_D1",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_3_D1_2",
+      "nom": "Work Cell D1.2 - Fournisseur des accessoires",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_3_D1",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_CELL_ACT_5_SR1_3",
+      "nom": "Work Cell SR1.3 - CLIENT GENERIQUE",
+      "typeISA95": "WorkCell",
+      "parentId": "ISA_WC_ACT_5_SR1",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SS1_1_1",
+      "nom": "Poste - (Schedule Product Deliveries) Planifier les livraisons de GPL",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_S1_1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_1_SD1_3_1",
+      "nom": "Poste - (Reserve Inventory & Determine Delivery Date) Réserver le stock et déterminer la date de livraison du GPL",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_1_D1_3",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_1_SD1_11_1",
+      "nom": "Poste - (Load Vehicle & Generate Shipping Docs) Charger le transporteur de GPL et générer le document d'expédition",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_1_D1_11",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_1_SD1_12_1",
+      "nom": "Poste - (Ship Product) Expédier le GPL à ZENER SA Togo",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_1_D1_12",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_2_SD1_3_2",
+      "nom": "Poste - (Reserve Inventory & Determine Delivery Date) Réserver le stock et déterminer la date de livraison des bouteilles vides",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_2_D1_3",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_2_SD1_11_2",
+      "nom": "Poste - (Load Vehicle & Generate Shipping Docs) Charger le camion de bouteilles vides et générer le document d'expédition",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_2_D1_11",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_2_SD1_12_2",
+      "nom": "Poste - (Ship Product) Expédier les bouteilles vides à ZENER SA Togo",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_2_D1_12",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_3_SD1_3_3",
+      "nom": "Poste - (Reserve Inventory & Determine Delivery Date) Réserver le stock et déterminer la date de livraison des accessoires",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_3_D1_3",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_3_SD1_11_3",
+      "nom": "Poste - (Load Vehicle & Generate Shipping Docs) Charger le camion d'accessoires et générer le document d'expédition",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_3_D1_11",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_3_SD1_12_3",
+      "nom": "Poste - (Ship Product) Expédier les accessoires à ZENER SA Togo",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_3_D1_12",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SS1_2_1",
+      "nom": "Poste - (Receive Product) Réception du GPL vrac",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_S1_2",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SS1_2_2",
+      "nom": "Poste - (Receive Product) Réception des bouteilles vides",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_S1_2",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SS1_2_3",
+      "nom": "Poste - (Receive Product) Réception des accessoires de conditionnement",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_S1_2",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SS1_3_1",
+      "nom": "Poste - (Verify Product) Contrôle de conformité des bouteilles vides reçues",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_S1_3",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SS1_3_2",
+      "nom": "Poste - (Verify Product) Contrôle de conformité des accessoires reçus",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_S1_3",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SSR1_5_1",
+      "nom": "Poste - (Return Defective Product) Retour des bonbonnes non conformes",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_SR1_5",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SM1_2_1",
+      "nom": "Poste - (Issue Sourced/In-Process Product) Mise à disposition des bouteilles vides – accessoires et GPL pour la production",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_M1_2",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SM1_3_1",
+      "nom": "Poste - (Produce and Test) Tare des bonbonnes vides",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_M1_3",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SM1_3_2",
+      "nom": "Poste - (Produce and Test) Remplissage GPL au carrousel",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_M1_3",
+      "idActeur": "ACT_4",
+      "refMachineId": "MAC_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SM1_3_3",
+      "nom": "Poste - (Produce and Test) Premier contrôle d'étanchéité à l'eau savonneuse",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_M1_3",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SM1_3_4",
+      "nom": "Poste - (Produce and Test) Contrôle de poids",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_M1_3",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SM1_3_5",
+      "nom": "Poste - (Produce and Test) Correcteur de poids — rework",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_M1_3",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SM1_3_6",
+      "nom": "Poste - (Produce and Test) Deuxième contrôle d'étanchéité automatique",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_M1_3",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SM1_4_1",
+      "nom": "Poste - (Package) Fixation du capuchon plastique",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_M1_4",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SM1_4_2",
+      "nom": "Poste - (Package) Plastification thermorétractable",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_M1_4",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SM1_5_1",
+      "nom": "Poste - (Stage Finished Product) Transfert vers magasin produits finis",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_M1_5",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SM1_6_1",
+      "nom": "Poste - (Release Finished Product to Deliver) Libération des bonbonnes pleines",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_M1_6",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SM1_7_1",
+      "nom": "Poste - (Waste Disposal) Rejet des déchets de production",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_M1_7",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_5_SS1_1_2",
+      "nom": "Poste - (Schedule Product Deliveries) Planifier l'approvisionnement auprès de ZENER SA Togo",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_5_S1_1",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SD1_1_1",
+      "nom": "Poste - (Process Inquiry & Quote) Traitement de la demande et devis client",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_D1_1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SD1_3_4",
+      "nom": "Poste - (Reserve Inventory & Determine Delivery Date) Réservation du stock et détermination de la date de livraison",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_D1_3",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SD1_4_4",
+      "nom": "Poste - (Consolidate Orders) Regrouper les commandes",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_D1_4",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_5_SS1_2_4",
+      "nom": "Poste - (Receive Product) Réception de la livraison",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_5_S1_2",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_5_SS1_3_3",
+      "nom": "Poste - (Verify Product) Vérification de conformité de la livraison reçue",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_5_S1_3",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SDR1_1_1",
+      "nom": "Poste - (Authorize Defective Product Return) Autoriser le retour client de bouteille non conforme",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_DR1_1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SDR1_3_1",
+      "nom": "Poste - (Receive Defective Product) Réception des bouteilles retournées chez ZENER SA Togo",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_DR1_3",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SDR1_4_1",
+      "nom": "Poste - (Transfer Defective Product) Transfert vers inspection / réparation / réintégration",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_DR1_4",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SDR1_4_2",
+      "nom": "Poste - (Transfer Defective Product) Rejet définitif du retour client (éjection sécurité)",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_DR1_4",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SD1_2_1",
+      "nom": "Poste - (Receive/Enter/Validate Order) Réception saisie et validation de la commande",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_D1_2",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SD1_5_4",
+      "nom": "Poste - (Build Loads) Constitution des chargements",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_D1_5",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SD1_6_1",
+      "nom": "Poste - (Route Shipments) Planification des itinéraires de livraison",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_D1_6",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SD1_7_1",
+      "nom": "Poste - (Select Carriers & Rate Shipments) Sélection du transporteur et tarification",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_D1_7",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SD1_8_1",
+      "nom": "Poste - (Receive Product from Source or Make) Réception du produit depuis le stock",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_D1_8",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SD1_9_1",
+      "nom": "Poste - (Pick Product) Prélèvement des bonbonnes en stock",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_D1_9",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SD1_10_1",
+      "nom": "Poste - (Pack Product) Conditionnement du produit pour expédition",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_D1_10",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SS1_1_3",
+      "nom": "Poste - (Schedule Product Deliveries) Planifier les livraisons de bonbonnes vides",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_S1_1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SS1_1_4",
+      "nom": "Poste - (Schedule Product Deliveries) Planifier les livraisons des accessoires",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_S1_1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_1_SP4_4_1",
+      "nom": "Poste - (Establish Delivery Plans) Établir les plans de livraison de GPL",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_1_P4_4",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_1_SS1_4_1",
+      "nom": "Poste - (Transfer Product) Transfert du GPL vers le stock d'approvisionnement",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_1_S1_4",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_2_SP4_4_2",
+      "nom": "Poste - (Establish Delivery Plans) Établir les plans de livraison de bouteilles vides",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_2_P4_4",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_2_SS1_4_2",
+      "nom": "Poste - (Transfer Product) Transfert des bouteilles vides vers le stock d'approvisionnement",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_2_S1_4",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_3_SP4_4_3",
+      "nom": "Poste - (Establish Delivery Plans) Établir les plans de livraison d'accessoires",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_3_P4_4",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_3_SS1_4_3",
+      "nom": "Poste - (Transfer Product) Transfert des accessoires vers le stock d'approvisionnement",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_3_S1_4",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SD1_11_4",
+      "nom": "Poste - (Load Vehicle & Generate Shipping Docs) Chargement du camion et génération du document d'expédition",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_D1_11",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SD1_12_4",
+      "nom": "Poste - (Ship Product) Expédition des bonbonnes aux clients",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_D1_12",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SP3_4_1",
+      "nom": "Poste - (Establish Production Plans) Établir les plans de production (remplissage de gaz)",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_P3_4",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SM1_1_1",
+      "nom": "Poste - (Schedule Production Activities) Ordonnancement des activités de la production (remplissage de gaz)",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_M1_1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SS1_4_4",
+      "nom": "Poste - (Transfer Product) Transfert des bonbonnes vides et accessoires vers le magasin",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_S1_4",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SSR1_1_2",
+      "nom": "Poste - (Identify Defective Product Condition) Identification et isolement des bouteilles ou accessoires non conformes",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_SR1_1",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SSR1_5_2",
+      "nom": "Poste - (Return Defective Product) Retour des accessoires non conformes",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_SR1_5",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_5_SP2_4_1",
+      "nom": "Poste - (Establish Sourcing Plans) Établir les plans d'approvisionnement de bouteilles pleines",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_5_P2_4",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_5_SS1_4_5",
+      "nom": "Poste - (Transfer Product) Transfert des bouteilles au magasin",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_5_S1_4",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_5_SSR1_5_3",
+      "nom": "Poste - (Return Defective Product) Retour des bouteilles et bonbonnes non conformes",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_5_SR1_5",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SP4_4_4",
+      "nom": "Poste - (Establish Delivery Plans) Établir les plans de livraison",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_P4_4",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_1_SD1_2_2",
+      "nom": "Poste - (Receive/Enter/Validate Order) Réception et validation de la commande GPL",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_1_D1_2",
+      "idActeur": "ACT_1",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_2_SD1_2_3",
+      "nom": "Poste - (Receive/Enter/Validate Order) Réception et validation de la commande de bouteilles vides",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_2_D1_2",
+      "idActeur": "ACT_2",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_3_SD1_2_4",
+      "nom": "Poste - (Receive/Enter/Validate Order) Réception et validation de la commande des accessoires",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_3_D1_2",
+      "idActeur": "ACT_3",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_5_SSR1_3_1",
+      "nom": "Poste - (Request Defective Product Return Authorization) Demande d'autorisation de retour des bonbonnes non conformes",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_5_SR1_3",
+      "idActeur": "ACT_5",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SDR1_4_3",
+      "nom": "Poste - (Transfer Defective Product) Réintégration en stock après inspection",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_DR1_4",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SS1_3_4",
+      "nom": "Poste - (Verify Product) Contrôle de conformité du GPL reçu",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_S1_3",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "id": "ISA_WS_ACT_4_SSR1_5_4",
+      "nom": "Poste - (Return Defective Product) Retour du GPL non conforme",
+      "typeISA95": "Workstation",
+      "parentId": "ISA_CELL_ACT_4_SR1_5",
+      "idActeur": "ACT_4",
+      "refMachineId": "",
+      "source": "DERIVED_FROM_MODEL"
+    }
+  ],
+  "isa95Assignments": [
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sS1.1.1",
+      "idEquipment": "ISA_WS_ACT_4_SS1_1_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_1",
+      "idPoste": "sD1.3.1",
+      "idEquipment": "ISA_WS_ACT_1_SD1_3_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_1",
+      "idPoste": "sD1.11.1",
+      "idEquipment": "ISA_WS_ACT_1_SD1_11_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_1",
+      "idPoste": "sD1.12.1",
+      "idEquipment": "ISA_WS_ACT_1_SD1_12_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_2",
+      "idPoste": "sD1.3.2",
+      "idEquipment": "ISA_WS_ACT_2_SD1_3_2",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_2",
+      "idPoste": "sD1.11.2",
+      "idEquipment": "ISA_WS_ACT_2_SD1_11_2",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_2",
+      "idPoste": "sD1.12.2",
+      "idEquipment": "ISA_WS_ACT_2_SD1_12_2",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_3",
+      "idPoste": "sD1.3.3",
+      "idEquipment": "ISA_WS_ACT_3_SD1_3_3",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_3",
+      "idPoste": "sD1.11.3",
+      "idEquipment": "ISA_WS_ACT_3_SD1_11_3",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_3",
+      "idPoste": "sD1.12.3",
+      "idEquipment": "ISA_WS_ACT_3_SD1_12_3",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sS1.2.1",
+      "idEquipment": "ISA_WS_ACT_4_SS1_2_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sS1.2.2",
+      "idEquipment": "ISA_WS_ACT_4_SS1_2_2",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sS1.2.3",
+      "idEquipment": "ISA_WS_ACT_4_SS1_2_3",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sS1.3.1",
+      "idEquipment": "ISA_WS_ACT_4_SS1_3_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sS1.3.2",
+      "idEquipment": "ISA_WS_ACT_4_SS1_3_2",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sSR1.5.1",
+      "idEquipment": "ISA_WS_ACT_4_SSR1_5_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sM1.2.1",
+      "idEquipment": "ISA_WS_ACT_4_SM1_2_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sM1.3.1",
+      "idEquipment": "ISA_WS_ACT_4_SM1_3_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sM1.3.2",
+      "idEquipment": "ISA_WS_ACT_4_SM1_3_2",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sM1.3.3",
+      "idEquipment": "ISA_WS_ACT_4_SM1_3_3",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sM1.3.4",
+      "idEquipment": "ISA_WS_ACT_4_SM1_3_4",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sM1.3.5",
+      "idEquipment": "ISA_WS_ACT_4_SM1_3_5",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sM1.3.6",
+      "idEquipment": "ISA_WS_ACT_4_SM1_3_6",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sM1.4.1",
+      "idEquipment": "ISA_WS_ACT_4_SM1_4_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sM1.4.2",
+      "idEquipment": "ISA_WS_ACT_4_SM1_4_2",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sM1.5.1",
+      "idEquipment": "ISA_WS_ACT_4_SM1_5_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sM1.6.1",
+      "idEquipment": "ISA_WS_ACT_4_SM1_6_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sM1.7.1",
+      "idEquipment": "ISA_WS_ACT_4_SM1_7_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_5",
+      "idPoste": "sS1.1.2",
+      "idEquipment": "ISA_WS_ACT_5_SS1_1_2",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sD1.1.1",
+      "idEquipment": "ISA_WS_ACT_4_SD1_1_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sD1.3.4",
+      "idEquipment": "ISA_WS_ACT_4_SD1_3_4",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sD1.4.4",
+      "idEquipment": "ISA_WS_ACT_4_SD1_4_4",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_5",
+      "idPoste": "sS1.2.4",
+      "idEquipment": "ISA_WS_ACT_5_SS1_2_4",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_5",
+      "idPoste": "sS1.3.3",
+      "idEquipment": "ISA_WS_ACT_5_SS1_3_3",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sDR1.1.1",
+      "idEquipment": "ISA_WS_ACT_4_SDR1_1_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sDR1.3.1",
+      "idEquipment": "ISA_WS_ACT_4_SDR1_3_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sDR1.4.1",
+      "idEquipment": "ISA_WS_ACT_4_SDR1_4_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sDR1.4.2",
+      "idEquipment": "ISA_WS_ACT_4_SDR1_4_2",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sD1.2.1",
+      "idEquipment": "ISA_WS_ACT_4_SD1_2_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sD1.5.4",
+      "idEquipment": "ISA_WS_ACT_4_SD1_5_4",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sD1.6.1",
+      "idEquipment": "ISA_WS_ACT_4_SD1_6_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sD1.7.1",
+      "idEquipment": "ISA_WS_ACT_4_SD1_7_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sD1.8.1",
+      "idEquipment": "ISA_WS_ACT_4_SD1_8_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sD1.9.1",
+      "idEquipment": "ISA_WS_ACT_4_SD1_9_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sD1.10.1",
+      "idEquipment": "ISA_WS_ACT_4_SD1_10_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sS1.1.3",
+      "idEquipment": "ISA_WS_ACT_4_SS1_1_3",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sS1.1.4",
+      "idEquipment": "ISA_WS_ACT_4_SS1_1_4",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_1",
+      "idPoste": "sP4.4.1",
+      "idEquipment": "ISA_WS_ACT_1_SP4_4_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_1",
+      "idPoste": "sS1.4.1",
+      "idEquipment": "ISA_WS_ACT_1_SS1_4_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_2",
+      "idPoste": "sP4.4.2",
+      "idEquipment": "ISA_WS_ACT_2_SP4_4_2",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_2",
+      "idPoste": "sS1.4.2",
+      "idEquipment": "ISA_WS_ACT_2_SS1_4_2",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_3",
+      "idPoste": "sP4.4.3",
+      "idEquipment": "ISA_WS_ACT_3_SP4_4_3",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_3",
+      "idPoste": "sS1.4.3",
+      "idEquipment": "ISA_WS_ACT_3_SS1_4_3",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sD1.11.4",
+      "idEquipment": "ISA_WS_ACT_4_SD1_11_4",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sD1.12.4",
+      "idEquipment": "ISA_WS_ACT_4_SD1_12_4",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sP3.4.1",
+      "idEquipment": "ISA_WS_ACT_4_SP3_4_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sM1.1.1",
+      "idEquipment": "ISA_WS_ACT_4_SM1_1_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sS1.4.4",
+      "idEquipment": "ISA_WS_ACT_4_SS1_4_4",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sSR1.1.2",
+      "idEquipment": "ISA_WS_ACT_4_SSR1_1_2",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sSR1.5.2",
+      "idEquipment": "ISA_WS_ACT_4_SSR1_5_2",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_5",
+      "idPoste": "sP2.4.1",
+      "idEquipment": "ISA_WS_ACT_5_SP2_4_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_5",
+      "idPoste": "sS1.4.5",
+      "idEquipment": "ISA_WS_ACT_5_SS1_4_5",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_5",
+      "idPoste": "sSR1.5.3",
+      "idEquipment": "ISA_WS_ACT_5_SSR1_5_3",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sP4.4.4",
+      "idEquipment": "ISA_WS_ACT_4_SP4_4_4",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_1",
+      "idPoste": "sD1.2.2",
+      "idEquipment": "ISA_WS_ACT_1_SD1_2_2",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_2",
+      "idPoste": "sD1.2.3",
+      "idEquipment": "ISA_WS_ACT_2_SD1_2_3",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_3",
+      "idPoste": "sD1.2.4",
+      "idEquipment": "ISA_WS_ACT_3_SD1_2_4",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_5",
+      "idPoste": "sSR1.3.1",
+      "idEquipment": "ISA_WS_ACT_5_SSR1_3_1",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sDR1.4.3",
+      "idEquipment": "ISA_WS_ACT_4_SDR1_4_3",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sS1.3.4",
+      "idEquipment": "ISA_WS_ACT_4_SS1_3_4",
+      "source": "DERIVED_FROM_MODEL"
+    },
+    {
+      "idActeur": "ACT_4",
+      "idPoste": "sSR1.5.4",
+      "idEquipment": "ISA_WS_ACT_4_SSR1_5_4",
+      "source": "DERIVED_FROM_MODEL"
+    }
+  ]
+}

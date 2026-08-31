@@ -16,10 +16,12 @@ La chronologie de rupture simultanée de l'ancien document, la panne historique 
 
 Le Run A de référence, les pics de demande, une campagne qualité avec défauts, un run Return, la comparaison centralisée, décentralisée et hybride, ainsi que toute conclusion d'optimisation globale restent `DISPONIBLE_NON_VALIDE`. Les artefacts historiques Excel et TTL manquent encore.
 
-Le Waiting Time global n'est pas publiable comme valeur croisée: Excel donne 5 256,598 s et l'ABox donne 0 s. Le JSON ne contient ni `runId`, ni échelle temporelle, ni paramètres runtime structurés d'activation du retard. Ces paramètres sont visibles dans l'ALP et dans les sorties du Run B, mais le JSON seul ne permet pas de reproduire exactement le test.
+L'audit des KPI temporels établit que le Waiting Time Excel de 5 256,598 s est reconstruit à partir du Lead Time et du PCE, alors que l'ABox exporte l'attente enregistrée dans `kpiGlobal`, égale à 0 s. Le PCE global de 65 pour cent résulte algébriquement d'une valeur ajoutée fixée à 65 pour cent du Lead Time. Le Lead Time de 15 018,853 s est une durée reconstruite partielle qui exclut l'attente de `CMD_1` pendant la reconstitution et les durées Source et Make portées par `REAPPRO_1`. Ces trois valeurs ne sont pas publiables comme mesures VSM validées.
+
+Le score RS dépend du Lead Time partiel et de l'attente reconstruite. Le PI de 6,227 est donc `CALCULE_MAIS_NON_VALIDABLE`. Le JSON ne contient ni `runId`, ni échelle temporelle, ni paramètres runtime structurés d'activation du retard. Ces paramètres sont visibles dans l'ALP et dans les sorties du Run B, mais le JSON seul ne permet pas de reproduire exactement le test.
 
 ## 4. Chapitres pouvant maintenant être rédigés sans réserve majeure
 
-Les chapitres 1 à 4 peuvent être rédigés à partir du registre, du JSON, de l'ALP et du Run B. La partie du chapitre 5 consacrée au retard fournisseur et à sa propagation peut également être rédigée. Le chapitre 10 peut exposer les limites déjà établies.
+Les chapitres 1 à 5 peuvent rester rédigés après la correction éditoriale du lot existant. Leur contenu fonctionnel et la propagation du retard fournisseur ne dépendent pas de la publication des KPI temporels litigieux.
 
-Le chapitre 6 doit attendre la décision sur le Waiting Time global. Les résultats historiques de panne et de goulot du chapitre 5, le chapitre 7 lorsqu'il prétend à une qualification normative complète des métriques SCOR, le chapitre 8 comparatif et la discussion quantitative générale restent soumis aux preuves manquantes ou aux réserves recensées.
+Le chapitre 6 ne peut pas être rédigé quantitativement avant correction du modèle et validation d'un nouveau run conforme à `sources/VSM_VALIDATION_RUN_PLAN.md`. La méthode du chapitre 7 peut être préparée, mais aucun PI final ne doit être publié tant que Responsiveness n'est pas stabilisé. Le chapitre 8 doit attendre les runs nécessaires. Les résultats historiques de panne et de goulot du chapitre 5 et la discussion quantitative générale restent soumis aux preuves manquantes ou aux réserves recensées.

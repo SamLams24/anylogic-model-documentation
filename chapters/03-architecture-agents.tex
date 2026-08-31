@@ -30,7 +30,7 @@ Une décision descendante change de forme à chaque niveau. Le tactique formule 
 
 La remontée ne répète pas simplement l'ordre initial. L'exécutant fournit un fait, tel qu'une réception ou une fin de production. Le pilote vérifie et agrège ce fait, le coordinateur construit un résultat de processus, puis le tactique met à jour le plan ou informe un autre domaine. Le stratégique reçoit une synthèse, pas le détail de chaque micro-activité.
 
-Ce mécanisme apparaît clairement dans la coordination inter-processus. Une indisponibilité de produit fini conduit Deliver à demander une faisabilité Make. Un manque de matière conduit Make à solliciter Source. Lorsque Source confirme \texttt{MaterialAvailable}, Make peut produire; lorsqu'il transmet \texttt{ProductAvailableForDelivery}, Deliver reprend la commande. Les échanges entre domaines s'effectuent au niveau tactique, tandis que leur réalisation traverse les niveaux de coordination et d'exécution.
+Ce mécanisme apparaît clairement dans la coordination inter-processus. Une indisponibilité de produit fini conduit Deliver à demander une faisabilité Make. Un manque de matière conduit Make à solliciter Source. Lorsque Source confirme \texttt{MaterialAvailable}, Make peut produire. L'ALP implémente aussi le message \texttt{ProductAvailableForDelivery} entre Make et Deliver. Les artefacts du scénario fournisseur ne sont toutefois pas utilisés pour présenter ce message comme un fait expérimental de cette exécution. Les échanges entre domaines s'effectuent au niveau tactique, tandis que leur réalisation traverse les niveaux de coordination et d'exécution.
 
 \section{Flux physique, message, animation et mesure}
 

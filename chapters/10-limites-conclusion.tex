@@ -1,3 +1,16 @@
 \chapter{Limites et conclusion}
+\label{chap:limites-conclusion}
 
-% À migrer depuis le document de base selon DOCUMENT_PLAN.md et SOURCE_POLICY.md.
+\section{Périmètre de validité méthodologique}
+
+La validation quantitative repose sur un seul run du modèle corrigé. Elle établit la cohérence des mécanismes et des exports pour une commande cliente, une reconstitution autonome et un retard déterministe de la première réception GPL. Elle ne fournit ni distribution de résultats, ni intervalle d'incertitude, ni estimation de la sensibilité aux paramètres.
+
+L'absence d'une exécution de référence sans retard, produite avec le même modèle et les mêmes conditions initiales, interdit une conclusion causale sur l'effet net des 6 h supplémentaires. Le statut tardif de la commande est observé; sa décomposition entre Source, Make et Deliver n'est pas identifiée par un dispositif comparatif.
+
+Le PCE ZENER reste estimé. Les temps de traitement et d'attente proviennent des observations runtime, mais la part de valeur ajoutée utilise des taux configurés par poste. Une campagne de chronométrage et une validation métier des règles VA sont nécessaires avant de présenter ce ratio comme une mesure empirique.
+
+Les profils Bottom/Perfect permettent la normalisation interne des métriques. Ils ne sont pas établis comme normes externes ni calibrés sur une série historique de ZENER SA Togo. Le PI de 6,119/10 est donc valide comme résultat du modèle pour le run étudié, sans portée de notation absolue de l'entreprise.
+
+La logique de liaison entre commandes et ordres internes n'est validée que pour \Agent{CMD\_1} et \Agent{REAPPRO\_1}. Le partage d'un ordre entre plusieurs commandes, la couverture partielle et plusieurs reconstitutions successives exigent des scénarios dédiés. Return, la qualité avec défauts, la panne et les comparaisons de modes de coordination restent également sans validation quantitative dans la campagne actuelle.
+
+La reproductibilité est enfin incomplète: la graine aléatoire n'est pas accessible dans \Agent{Main} et le SHA-256 du preset JSON n'est pas exporté automatiquement. Le runId, le scénario, l'échelle temporelle, la perturbation et le timestamp de clôture sont néanmoins concordants entre Excel et ABox.

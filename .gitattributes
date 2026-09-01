@@ -3,3 +3,7 @@ sources/model/scenario_ZENER_RETARD_FOURNISSEUR.json -text
 sources/runs/supplier_delay/run_B_delay/abox.ttl -text
 sources/runs/supplier_delay/run_B_delay/results.xlsx -text
 sources/documents/SCONTO_SVU_Analyse_Traceable_Execution_Rupture_Stocks_FINAL.docx -text
+/sources/model/SCONTO_SVU_FINAL_VSM_FIX_CANDIDATE.alp -text
+/sources/model/SCONTO_SVU_FINAL_VALIDATED.alp -text
+/sources/runs/vsm_validation/abox_final.ttl -text
+/sources/runs/vsm_validation/results_final.xlsx binary

@@ -1,2 +1,25 @@
 \chapter{Fichiers de preuve et exports associés}
-% Référencer ici les noms des Excel, ABox, JSON et autres artefacts retenus.
+\label{ann:fichiers-preuve}
+
+\begin{longtable}{@{}L{0.16\textwidth}L{0.25\textwidth}L{0.31\textwidth}L{0.18\textwidth}@{}}
+\caption{Artefacts primaires du run de validation VSM.}\label{tab:artefacts-vsm}\\
+\toprule
+Rôle & Fichier & SHA-256 & Portée \\
+\midrule
+\endfirsthead
+\toprule
+Rôle & Fichier & SHA-256 & Portée \\
+\midrule
+\endhead
+Modèle baseline & \texttt{SCONTO\_SVU\_}\allowbreak\texttt{FINAL.alp} & \texttt{2D67AD5E}\allowbreak\texttt{44F051F6}\allowbreak\texttt{4E01E887}\allowbreak\texttt{ADC5BB8C}\allowbreak\texttt{628F9D57}\allowbreak\texttt{A32B3CD9}\allowbreak\texttt{84245524}\allowbreak\texttt{0D4C024F} & Comparaison statique; non modifié par la correction. \\
+Modèle candidat construit & \texttt{SCONTO\_SVU\_FINAL\_}\allowbreak\texttt{VSM\_FIX\_}\allowbreak\texttt{CANDIDATE.alp} & \texttt{C4DF051A}\allowbreak\texttt{98498B4D}\allowbreak\texttt{8FCA7D59}\allowbreak\texttt{64A2DEC8}\allowbreak\texttt{09DDCE10}\allowbreak\texttt{0523EDB2}\allowbreak\texttt{C7A1E25C}\allowbreak\texttt{A2276B66} & Source du run validé. \\
+Modèle promu & \texttt{SCONTO\_SVU\_FINAL\_}\allowbreak\texttt{VALIDATED.alp} & \texttt{C4DF051A}\allowbreak\texttt{98498B4D}\allowbreak\texttt{8FCA7D59}\allowbreak\texttt{64A2DEC8}\allowbreak\texttt{09DDCE10}\allowbreak\texttt{0523EDB2}\allowbreak\texttt{C7A1E25C}\allowbreak\texttt{A2276B66} & Copie de référence après validation. \\
+Classeur final & \texttt{sources/runs/}\allowbreak\texttt{vsm\_validation/}\allowbreak\texttt{results\_final.xlsx} & \texttt{A4D598CE}\allowbreak\texttt{F238FC91}\allowbreak\texttt{D9DA4C69}\allowbreak\texttt{AC1BB211}\allowbreak\texttt{9A498D1F}\allowbreak\texttt{33692E02}\allowbreak\texttt{A4948D07}\allowbreak\texttt{9F7723B5} & Manifeste, traces, VSM, métriques, scores et PI. \\
+ABox finale & \texttt{sources/runs/}\allowbreak\texttt{vsm\_validation/}\allowbreak\texttt{abox\_final.ttl} & \texttt{E22251A4}\allowbreak\texttt{9E6851FB}\allowbreak\texttt{21868AF4}\allowbreak\texttt{C622D830}\allowbreak\texttt{209399CC}\allowbreak\texttt{8167B628}\allowbreak\texttt{931009D9}\allowbreak\texttt{8F608052} & Preuve RDF synchronisée et relations de traçabilité. \\
+Rapport de vérification & \texttt{sources/runs/}\allowbreak\texttt{vsm\_validation/}\allowbreak\texttt{RUN\_}\allowbreak\texttt{VERIFICATION.md} & Empreinte enregistrée par Git & Règles d'acceptation et résultats croisés. \\
+\bottomrule
+\end{longtable}
+
+Le runId commun au classeur et à l'ABox est \Agent{RUN\_1773129600000\_1788264883846}. Le scénario est \texttt{SCENARIO DISTRIBUTION}, le motif de clôture \texttt{ORDER\_CLOSED\_CMD\_1} et l'instant final T=2 343 s. Le timestamp exporté est \texttt{2026-03-25T12:53:30}.
+
+Les fichiers bruts ne sont pas reproduits dans le rapport. Leur rôle est d'autoriser la vérification des valeurs publiées, des identifiants, de la chronologie et de la provenance du calcul.

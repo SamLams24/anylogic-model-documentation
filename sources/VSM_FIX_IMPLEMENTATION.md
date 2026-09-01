@@ -2,9 +2,9 @@
 
 ## Périmètre et statut
 
-La correction est appliquée uniquement à `sources/model/SCONTO_SVU_FINAL_VSM_FIX_CANDIDATE.alp`. La baseline `SCONTO_SVU_FINAL.alp`, qui a produit les preuves du Run B, reste inchangée. La validation effectuée dans ce dépôt est statique. Le statut de compilation du modèle est `BUILD_ANYLOGIC_A_FAIRE`.
+La correction a été appliquée à `sources/model/SCONTO_SVU_FINAL_VSM_FIX_CANDIDATE.alp`, puis promue dans `sources/model/SCONTO_SVU_FINAL_VALIDATED.alp` après construction et exécution réussies dans AnyLogic. La baseline `SCONTO_SVU_FINAL.alp`, qui a produit les preuves du Run B, reste inchangée.
 
-L'empreinte SHA-256 de la candidate est `3519D953234A8334AD9DF86FE377F22FAEA429AE0903C6146F0BE61B8B72A8CF`.
+La candidate et le modèle promu portent l'empreinte SHA-256 `C4DF051A98498B4D8FCA7D5964A2DEC809DDCE100523EDB2C7A1E25CA2276B66`.
 
 ## Problème initial
 
@@ -66,13 +66,13 @@ La séparation `CMD_*` et `REAPPRO_*`, la politique autonome de stock, Source av
 
 Un ordre interne partagé par plusieurs commandes impute sa durée complète à chaque commande qui en dépend. Cette convention décrit le délai subi par chaque commande, mais elle ne doit pas être additionnée entre commandes pour estimer une charge d'atelier. La liaison cesse lorsque la quantité totale des commandes déjà couvertes atteint la quantité du `REAPPRO_*`. Une future gestion de couverture partielle par quantité nécessitera un registre d'allocation plus fin. Plusieurs reconstitutions successives pour une même commande doivent aussi être vérifiées afin de confirmer que chaque identifiant n'est imputé qu'une fois.
 
-La disponibilité de la graine aléatoire n'est pas exposée dans `Main`; le manifeste porte donc `NON_ACCESSIBLE_DANS_MAIN`. Le nom du preset JSON est disponible, mais son SHA n'est pas calculé dans AnyLogic. Les taux VA restent non calibrés. La candidate doit être ouverte et construite dans AnyLogic avant tout run.
+La disponibilité de la graine aléatoire n'est pas exposée dans `Main`; le manifeste porte donc `NON_ACCESSIBLE_DANS_MAIN`. Le nom du preset JSON est disponible, mais son SHA n'est pas calculé dans AnyLogic. Les taux VA restent non calibrés.
 
 ## Validation statique finale
 
 Le parsing XML réussit. La candidate contient 89 classes d'agents, 334 fonctions XML, 259 variables et 18 classes Java. Elle ajoute 10 variables et 10 identifiants par rapport à la baseline. Aucun identifiant XML, nom de variable dans une même classe d'agent ou nom de fonction XML n'est dupliqué. Les accolades et parenthèses des blocs modifiés sont équilibrées par contrôle lexical simple. Les nouvelles collections utilisent des types `java.util` pleinement qualifiés et ne nécessitent pas d'import supplémentaire.
 
-Les appels ajoutés correspondent aux signatures définies. La garde ISA-95 de 190 noeuds et 71 affectations reste présente. La constante de PCE global artificiel et les appels de présentation à `kpiGlobal.pce()` sont absents. `tempsAttenteGlobalCoherent()` est un wrapper direct de l'attente de commande. Ces contrôles n'établissent pas la compilabilité AnyLogic, dont le statut demeure `BUILD_ANYLOGIC_A_FAIRE`.
+Les appels ajoutés correspondent aux signatures définies. La garde ISA-95 de 190 noeuds et 71 affectations reste présente. La constante de PCE global artificiel et les appels de présentation à `kpiGlobal.pce()` sont absents. `tempsAttenteGlobalCoherent()` est un wrapper direct de l'attente de commande. Ces contrôles statiques ont été complétés par une construction et une exécution réussies dans AnyLogic. Le statut est `BUILD_ET_RUN_ANYLOGIC_VALIDES` pour le run `RUN_1773129600000_1788264883846`.
 
 ## Critères du run de validation
 

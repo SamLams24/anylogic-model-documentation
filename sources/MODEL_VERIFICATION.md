@@ -10,6 +10,8 @@
 | SHA-256 | `2D67AD5E44F051F64E01E887ADC5BB8C628F9D57A32B3CD9842455240D4C024F` |
 | Portée légitime | Chapitres 2 à 9 et annexes techniques, pour l'existence des mécanismes uniquement |
 
+La correction temporelle a ensuite été construite et exécutée depuis `SCONTO_SVU_FINAL_VSM_FIX_CANDIDATE.alp`, SHA-256 `C4DF051A98498B4D8FCA7D5964A2DEC809DDCE100523EDB2C7A1E25CA2276B66`. La copie promue `SCONTO_SVU_FINAL_VALIDATED.alp` porte la même empreinte. Le run associé est documenté dans `sources/runs/vsm_validation/RUN_VERIFICATION.md`.
+
 Le contrôle porte sur la présence du mécanisme dans le fichier ALP. Le statut `IMPLEMENTE` ne signifie pas qu'un résultat quantitatif a été obtenu pour tous les mécanismes. Les observations propres au Run B sont documentées séparément.
 
 ## Couverture fonctionnelle
@@ -50,4 +52,4 @@ Le contrôle porte sur la présence du mécanisme dans le fichier ALP. Le statut
 
 ## Conclusion probatoire
 
-Les mécanismes recensés dans `MODEL_EVOLUTION.md` ont une destination et une preuve d'implémentation dans le modèle final. La vérification ne transforme pas les scénarios non rejoués en résultats expérimentaux. Le Run B permet seulement de promouvoir les faits directement portés par son Excel et son ABox.
+Les mécanismes recensés dans `MODEL_EVOLUTION.md` ont une destination et une preuve d'implémentation dans le modèle final. Le run VSM valide en plus la liaison `CMD_1` et `REAPPRO_1`, la séparation des périmètres temporels, les six indicateurs VSM, l'alimentation de Responsiveness et le calcul du PI dans le cadre du modèle. Cette promotion ne transforme pas les autres scénarios non rejoués en résultats expérimentaux.

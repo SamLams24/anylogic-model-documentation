@@ -4,7 +4,7 @@
 
 La correction est appliquée uniquement à `sources/model/SCONTO_SVU_FINAL_VSM_FIX_CANDIDATE.alp`. La baseline `SCONTO_SVU_FINAL.alp`, qui a produit les preuves du Run B, reste inchangée. La validation effectuée dans ce dépôt est statique. Le statut de compilation du modèle est `BUILD_ANYLOGIC_A_FAIRE`.
 
-L'empreinte SHA-256 de la candidate est `97FB77235EAD717BF2AB9ABA30C924AC5D58BC94DE01AB465CE7D9889DED7364`.
+L'empreinte SHA-256 de la candidate est `3519D953234A8334AD9DF86FE377F22FAEA429AE0903C6146F0BE61B8B72A8CF`.
 
 ## Problème initial
 
@@ -24,6 +24,8 @@ Les fonctions métier modifiées sont `planifierAvecEchelle`, `declencherProduct
 
 Les fonctions de preuve modifiées sont `kpiParPosteColumns`, `kpiParPosteRows`, `dashboardMicroColumns`, `dashboardMicroRows`, `dashboardGlobalColumns`, `dashboardGlobalRows`, `pceGlobalText`, `kpiLogisticsText`, `tableDashboardMacroSCORText`, `tableDashboardGlobalText`, `getRapportVSM`, `exporterCSV`, `exporterToutesLesTablesExcel`, `exporterABoxRuntimeTTL`, `aboxDirectVSMIndicatorForMetric`, `valeurRuntimeMetriqueSCOR`, `sourceFormuleMetriqueSCOR` et `calculerPIGlobal`.
 
+Le patch porte ainsi sur 40 fonctions distinctes, dont 15 fonctions ajoutées et 25 fonctions existantes modifiées.
+
 ## Nouveaux champs de CommandeAgent
 
 `dureeTraitementClientReelleSec` conserve le traitement métier propre à la commande. `dureeAttenteStockReelleSec` conserve l'attente imputée. `dureeReapproImputeeReelleSec` isole la part provenant des ordres internes. `leadTimeClientReelSec` conserve leur somme finale. `tDebutAttenteStock`, `tFinAttenteStock` et `attenteStockOuverte` tracent l'état runtime.
@@ -38,9 +40,11 @@ Une commande qui constate pour la première fois un stock insuffisant ouvre son 
 
 À la fin de l'ordre interne, sa durée métier cumulée, incluant Source et Make, est imputée une seule fois à chaque commande couverte. L'ABox exporte l'extension runtime `run:contributesToCustomerOrderFulfillment` et sa relation inverse `run:dependsOnInternalReplenishmentOrder`.
 
+Le premier ordre imputé ferme l'attente et fixe `tFinAttenteStock`. La collection `ordresReapproImputes` bloque toute seconde imputation du même ordre. Un retry `ANALYSE_STOCK` qui arrive pendant Deliver ou après la clôture est ignoré, ce qui empêche une réouverture de l'attente et une nouvelle action de stock.
+
 ## Changements Excel
 
-`Dashboard Global` distingue désormais Order Processing Time, Order Waiting / Dwell Time, Order Fulfillment Lead Time, ZENER Process Time, ZENER Waiting Time et ZENER PCE estimé. `Dashboard Micro` et `KPI par Poste` indiquent le taux VA et `VA_SOURCE`, avec les valeurs `CONFIGUREE` ou `FALLBACK`.
+`Dashboard Global` distingue désormais Order Processing Time, Order Waiting / Dwell Time, Order Fulfillment Lead Time, ZENER Process Time, ZENER Waiting Time et ZENER Estimated PCE. `Dashboard Micro` et `KPI par Poste` indiquent le taux VA et `VA_SOURCE`, avec les valeurs `CONFIGUREE` ou `FALLBACK`. Le CSV laisse le champ PCE vide pour `GLOBAL_ORDER` et réserve sa valeur au périmètre `VSM_ZENER`.
 
 La feuille `Manifeste Run` contient le `runId`, le scénario, la quantité fixe, le nombre de commandes, `simToRealSeconds`, les paramètres du retard fournisseur, l'état d'accès à la graine, l'instant de clôture, le nom du preset JSON et le nom du modèle candidate.
 
@@ -48,7 +52,7 @@ La feuille `Manifeste Run` contient le `runId`, le scénario, la quantité fixe,
 
 Les individus temporels de commande sont `vsm_order_processing_time`, `vsm_order_waiting_time` et `vsm_order_fulfillment_lead_time`. Les individus VSM focalisés sont `vsm_zener_process_time`, `vsm_zener_waiting_time` et `vsm_zener_estimated_pce`. Ils utilisent des contextes séparés pour `CUSTOMER_ORDER_CMD_ONLY` et `ZENER_ACT_4_ONLY`.
 
-Les ordres exposent leurs durées propres, leurs instants d'attente et leurs relations runtime. Le `SimulationRun` reçoit le manifeste minimal. Les micro-activités indiquent le taux VA, sa source et la nature `ESTIMATED`.
+Les commandes clientes exposent `run:orderProcessingTimeSeconds`, `run:orderWaitingTimeSeconds`, `run:orderFulfillmentLeadTimeSeconds`, `run:replenishmentImputedTimeSeconds`, `run:stockWaitStartedAtSimulationSecond` et `run:stockWaitEndedAtSimulationSecond`. Les ordres internes exposent `run:replenishmentBusinessDurationSeconds`. Le `SimulationRun` reçoit le manifeste minimal, notamment `run:runId` et `run:closureTimestamp`. Les micro-activités indiquent le taux VA, sa source et la nature `ESTIMATED`.
 
 ## Changements Responsiveness
 
@@ -63,6 +67,12 @@ La séparation `CMD_*` et `REAPPRO_*`, la politique autonome de stock, Source av
 Un ordre interne partagé par plusieurs commandes impute sa durée complète à chaque commande qui en dépend. Cette convention décrit le délai subi par chaque commande, mais elle ne doit pas être additionnée entre commandes pour estimer une charge d'atelier. La liaison cesse lorsque la quantité totale des commandes déjà couvertes atteint la quantité du `REAPPRO_*`. Une future gestion de couverture partielle par quantité nécessitera un registre d'allocation plus fin. Plusieurs reconstitutions successives pour une même commande doivent aussi être vérifiées afin de confirmer que chaque identifiant n'est imputé qu'une fois.
 
 La disponibilité de la graine aléatoire n'est pas exposée dans `Main`; le manifeste porte donc `NON_ACCESSIBLE_DANS_MAIN`. Le nom du preset JSON est disponible, mais son SHA n'est pas calculé dans AnyLogic. Les taux VA restent non calibrés. La candidate doit être ouverte et construite dans AnyLogic avant tout run.
+
+## Validation statique finale
+
+Le parsing XML réussit. La candidate contient 89 classes d'agents, 334 fonctions XML, 259 variables et 18 classes Java. Elle ajoute 10 variables et 10 identifiants par rapport à la baseline. Aucun identifiant XML, nom de variable dans une même classe d'agent ou nom de fonction XML n'est dupliqué. Les accolades et parenthèses des blocs modifiés sont équilibrées par contrôle lexical simple. Les nouvelles collections utilisent des types `java.util` pleinement qualifiés et ne nécessitent pas d'import supplémentaire.
+
+Les appels ajoutés correspondent aux signatures définies. La garde ISA-95 de 190 noeuds et 71 affectations reste présente. La constante de PCE global artificiel et les appels de présentation à `kpiGlobal.pce()` sont absents. `tempsAttenteGlobalCoherent()` est un wrapper direct de l'attente de commande. Ces contrôles n'établissent pas la compilabilité AnyLogic, dont le statut demeure `BUILD_ANYLOGIC_A_FAIRE`.
 
 ## Critères du run de validation
 

@@ -41,9 +41,11 @@ Pour chaque segment temporel, l'export doit indiquer l'identifiant de commande o
 
 `Dashboard Macro` doit fournir les cycles et attentes Source, Make et Deliver avec un compteur interprété comme nombre d'observations.
 
-`Dashboard Global` doit exposer séparément `Order Processing Time`, `Order Waiting / Dwell Time`, `Order Fulfillment Lead Time`, `ZENER Process Time`, `ZENER Waiting Time` et `ZENER PCE estime`. Il faut vérifier `Order Fulfillment Lead Time = Order Processing Time + Order Waiting / Dwell Time`. Le PCE ZENER doit provenir de `kpiZener` et de la valeur ajoutée estimée, sans alimenter l'attente de commande.
+`Dashboard Global` doit exposer séparément `Order Processing Time`, `Order Waiting / Dwell Time`, `Order Fulfillment Lead Time`, `ZENER Process Time`, `ZENER Waiting Time` et `ZENER Estimated PCE`. Il faut vérifier `Order Fulfillment Lead Time = Order Processing Time + Order Waiting / Dwell Time`. Le PCE ZENER doit provenir de `kpiZener` et de la valeur ajoutée estimée, sans alimenter l'attente de commande.
 
 `Manifeste Run` doit contenir le `runId`, le scénario, la quantité fixe, le nombre de commandes, `simToRealSeconds`, le retard fournisseur actif, la matière ciblée, le facteur, l'application à la première réception, l'état d'accès à la graine, le timestamp de clôture, le preset JSON et le nom du modèle candidate.
+
+Dans l'ABox, les propriétés correspondantes du `SimulationRun` sont `run:runId`, `run:scenarioName`, `run:fixedOrderQuantity`, `run:configuredOrderCount`, `run:simToRealSeconds`, `run:supplierDelayActive`, `run:supplierDelayTarget`, `run:supplierDelayFactor`, `run:firstReceiptOnly`, `run:randomSeed`, `run:closureTimestamp`, `run:jsonPresetName` et `run:modelArtifact`.
 
 `Pipeline SCOR vers PI` doit contenir au minimum `RS.1.1`, `RS.3.94`, `RS.2.1`, `RS.2.2`, `RS.2.3`, le score RS et le PI recalculé.
 
@@ -62,6 +64,8 @@ Les événements à contrôler sont la création de la commande, le début et la
 Les individus de commande à contrôler sont `vsm_order_processing_time`, `vsm_order_waiting_time` et `vsm_order_fulfillment_lead_time`. Les individus VSM ZENER sont `vsm_zener_process_time`, `vsm_zener_waiting_time` et `vsm_zener_estimated_pce`. Chaque indicateur doit porter l'unité, un libellé explicite et le contexte `CUSTOMER_ORDER_CMD_ONLY` ou `ZENER_ACT_4_ONLY`.
 
 `order_REAPPRO_1` doit porter `run:contributesToCustomerOrderFulfillment order_CMD_1`. La relation inverse `run:dependsOnInternalReplenishmentOrder` doit être présente sur `order_CMD_1`. Le `SimulationRun` doit exposer le même manifeste que la feuille Excel.
+
+`order_CMD_1` doit aussi porter `run:orderProcessingTimeSeconds`, `run:orderWaitingTimeSeconds`, `run:orderFulfillmentLeadTimeSeconds`, `run:replenishmentImputedTimeSeconds`, `run:stockWaitStartedAtSimulationSecond` et `run:stockWaitEndedAtSimulationSecond`. `order_REAPPRO_1` doit porter `run:replenishmentBusinessDurationSeconds`.
 
 Les individus de performance à contrôler sont `metric_RS_1_1_RS`, `metric_RS_3_94_RS`, les métriques `RS.2.1`, `RS.2.2` et `RS.2.3`, `attr_RS` et `evaluation_PI_*`. Les règles d'agrégation de `RS.1.1` et `RS.3.94` doivent pointer vers les individus VSM qui portent exactement les mêmes valeurs.
 

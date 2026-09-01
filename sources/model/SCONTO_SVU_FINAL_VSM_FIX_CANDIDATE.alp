@@ -2270,11 +2270,13 @@ void finaliserDependanceReappro(CommandeAgent reappro) {
         if (!client.ordresReapproImputes.add(reappro.idCommande)) continue;
         client.dureeReapproImputeeReelleSec += dureeReappro;
         client.dureeAttenteStockReelleSec += dureeReappro;
-        client.tFinAttenteStock = time();
         client.attenteStockOuverte = false;
-        addTrace("BRUT", "MoteurCommande", client.idCommande, "COMMANDE", "GLOBAL",
-            "ATTENTE_STOCK_FIN", "ORDER_WAITING_DWELL", dureeReappro, "s", "COMMANDE_CLIENTE",
-            Double.NaN, "", "Attente imputee depuis l'ordre interne lie " + reappro.idCommande);
+        if (client.tFinAttenteStock < 0) {
+            client.tFinAttenteStock = time();
+            addTrace("BRUT", "MoteurCommande", client.idCommande, "COMMANDE", "GLOBAL",
+                "ATTENTE_STOCK_FIN", "ORDER_WAITING_DWELL", dureeReappro, "s", "COMMANDE_CLIENTE",
+                Double.NaN, "", "Attente imputee depuis l'ordre interne lie " + reappro.idCommande);
+        }
     }
 }
 
@@ -2723,6 +2725,10 @@ void declencherProductionAutonome(ScenarioFlux sc, int quantite) {
 
 void analyserStockCommandeOrchestree(CommandeAgent cmd) {
     if (cmd == null || !modeExecution) return;
+    // Un retry programme avant le reveil peut arriver pendant Deliver ou
+    // apres la cloture. Il ne doit ni rouvrir l'attente, ni relancer la
+    // politique de stock, ni programmer une nouvelle analyse.
+    if ("EN_LIVRAISON".equals(cmd.statut) || "SERVIE".equals(cmd.statut) || "EN_RETARD".equals(cmd.statut)) return;
 
     ScenarioFlux sc = scenarioPourCommande(cmd);
     PosteGenericAgent stockFini = (sc != null) ? trouverStockFiniPourScenario(sc) : null;
@@ -8502,6 +8508,7 @@ public String exporterABoxRuntimeTTL(String raison) {
         aboxTriple(pw,run,"run:artifactSyncPolicy",aboxLit("ORDER_CLOSURE_ABOX_THEN_EXCEL_SAME_SIMULATION_TIME"));
         // VSM-FIX-06 -- manifeste minimal de reproductibilite du run.
         ScenarioFlux scenarioRun = scenarioSelectionneInterface();
+        aboxTriple(pw,run,"run:runId",aboxLit(runId));
         aboxTriple(pw,run,"run:scenarioName",aboxLit(scenarioRun != null ? nomScenario(scenarioRun) : champScenarioSelectionne));
         aboxTriple(pw,run,"run:fixedOrderQuantity",aboxLit(quantiteCommandeFixeActive ? String.valueOf(Math.max(1,quantiteCommandeFixe)) : "NON_FIXEE"));
         aboxTriple(pw,run,"run:configuredOrderCount",aboxDec(Math.max(1,nombreCommandesATester)));
@@ -8511,6 +8518,7 @@ public String exporterABoxRuntimeTTL(String raison) {
         aboxTriple(pw,run,"run:supplierDelayFactor",aboxDec(facteurRetardFournisseur));
         aboxTriple(pw,run,"run:firstReceiptOnly",aboxLit(retardFournisseurUneSeuleReception ? "OUI" : "NON"));
         aboxTriple(pw,run,"run:randomSeed",aboxLit("NON_ACCESSIBLE_DANS_MAIN"));
+        aboxTriple(pw,run,"run:closureTimestamp",aboxLit(aboxIsoAt(time()))+"^^xsd:dateTime");
         aboxTriple(pw,run,"run:jsonPresetName",aboxLit(scenarioJsonFileName()));
         aboxTriple(pw,run,"run:modelArtifact",aboxLit("SCONTO_SVU_FINAL_VSM_FIX_CANDIDATE.alp"));
         aboxTriple(pw,net,"rdf:type","core:SupplyChainNetwork");
@@ -16954,7 +16962,7 @@ return sb.toString();]]></Body>
         "Temps traitement moy. (s)",
         "Temps attente moy. (s)",
         "Délai total moy. (s)",
-        "Efficacité du cycle (%)",
+        "PCE estime (%)",
         "Rebuts",
         "Rework"
     }, w)).append("\n");
@@ -16964,12 +16972,34 @@ return sb.toString();]]></Body>
     KPIBundle g = board.kpiGlobal;
 
     sb.append(tableRow(new String[]{
-        "Ensemble du systeme",
+        "Commande cliente CMD uniquement",
         String.valueOf(g.count),
         fmt2(g.avgCycleTime()),
         fmt2(g.avgWaitTime()),
         fmt2(g.avgLeadTime()),
+        "N/A",
+        "N/A",
+        "N/A"
+    }, w)).append("\n");
+
+    sb.append(tableRow(new String[]{
+        "VSM ZENER ACT_4",
+        String.valueOf(board.kpiZener.count),
+        fmt2(board.kpiZener.avgCycleTime()),
+        fmt2(board.kpiZener.avgWaitTime()),
+        fmt2(board.kpiZener.avgLeadTime()),
         fmt1(board.kpiZener.pce() * 100),
+        "N/A",
+        "N/A"
+    }, w)).append("\n");
+
+    sb.append(tableRow(new String[]{
+        "Qualite globale",
+        "N/A",
+        "N/A",
+        "N/A",
+        "N/A",
+        "N/A",
         String.valueOf(board.totalRebuts),
         String.valueOf(board.totalRework)
     }, w)).append("\n");
@@ -19045,7 +19075,7 @@ return rows;]]></Body>
     "Order Fulfillment Lead Time (secondes)",
     "ZENER Process Time (secondes)",
     "ZENER Waiting Time (secondes)",
-    "ZENER PCE estime (%)",
+    "ZENER Estimated PCE (%)",
     "Source de la valeur ajoutee ZENER",
     "Total des rebuts (toute la simulation)",
     "Total des reprises/rework (toute la simulation)",
@@ -47029,8 +47059,8 @@ try {
             nomE, e.getKey(), k.avgCycleTime(), k.avgWaitTime(), k.avgLeadTime(), k.pce() * 100, k.count));
     }
     KPIBundle g = board.kpiGlobal;
-    pw.println(String.format("%s;GLOBAL_ORDER;ALL;%.3f;%.3f;%.3f;%.2f;%d",
-        nomE, g.avgCycleTime(), g.avgWaitTime(), g.avgLeadTime(), 0.0, g.count));
+    pw.println(String.format("%s;GLOBAL_ORDER;ALL;%.3f;%.3f;%.3f;;%d",
+        nomE, g.avgCycleTime(), g.avgWaitTime(), g.avgLeadTime(), g.count));
     pw.println(String.format("%s;VSM_ZENER;ACT_4;%.3f;%.3f;%.3f;%.2f;%d",
         nomE, board.kpiZener.avgCycleTime(), board.kpiZener.avgWaitTime(), board.kpiZener.avgLeadTime(), board.kpiZener.pce() * 100, board.kpiZener.count));
     pw.println(String.format("%s;QUALITE;rebuts;%d;;;;", nomE, board.totalRebuts));

@@ -1,11 +1,16 @@
-\chapter{Validation expérimentale par scénarios}
+\chapter{Validation expérimentale du scénario retenu}
 \label{chap:validation-scenarios}
 
-\section{Scénario effectivement validé}
+\section{Configuration expérimentale}
 
-La campagne disponible comporte une exécution primaire complète du modèle corrigé. Elle vise à vérifier le comportement combiné d'une rupture initiale de produit fini, d'une absence de GPL et d'un retard déterministe sur la première réception de GPL. L'objectif n'est pas de comparer des politiques, mais de contrôler que la chaîne de reconstitution, les relations de traçabilité et les indicateurs temporels restent cohérents jusqu'au PI.
+La validation expérimentale repose sur une exécution primaire complète du modèle consolidé. Elle vérifie le comportement combiné d'une rupture initiale de produit fini, d'une absence de GPL et d'un retard déterministe sur la première réception de GPL. L'objectif n'est pas de comparer des politiques, mais de contrôler la cohérence de la chaîne de reconstitution, des relations de traçabilité et des indicateurs temporels jusqu'au PI.
 
-Le run \Agent{RUN\_1773129600000\_1788264883846} utilise le scénario \texttt{SCENARIO DISTRIBUTION}. Une commande cliente de 20 unités est lancée avec un stock initial de produit fini nul. Le GPL est nul, les bouteilles vides valent 250 unités et les accessoires 300 unités. Le retard fournisseur est actif sur \texttt{GPL\_VRAC}, avec un facteur 2 appliqué à la première réception seulement. Le délai ciblé passe de 6 h nominales à 12 h effectives.
+L'exécution utilise le scénario \texttt{SCENARIO DISTRIBUTION}. Une commande cliente de 20 unités est lancée avec un stock initial de produit fini nul. Le GPL est nul, les bouteilles vides valent 250 unités et les accessoires 300 unités. Le retard fournisseur est actif sur \texttt{GPL\_VRAC}, avec un facteur 2 appliqué à la première réception seulement. Le délai ciblé passe de 6 h nominales à 12 h effectives.
+
+\noindent Le runId associé est:
+\begin{center}
+\texttt{RUN\_1773129600000\_1788264883846}.
+\end{center}
 
 Le Dashboard Global contient aussi 7 h nominales et 9 h effectives comme moyennes des configurations matière. Ces moyennes n'écrasent pas la preuve ciblée du GPL, portée par le manifeste, la trace et les messages AER.
 
@@ -13,8 +18,8 @@ Le Dashboard Global contient aussi 7 h nominales et 9 h effectives comme moyenne
 
 \begin{table}[H]
   \centering
-  \caption{Chronologie compacte du run de validation VSM.}
-  \label{tab:chronologie-run-vsm}
+  \caption{Chronologie compacte de l'exécution de validation.}
+  \label{tab:chronologie-execution-vsm}
   \begin{tabularx}{\textwidth}{@{}L{0.17\textwidth}L{0.26\textwidth}Y@{}}
     \toprule
     Temps simulé & Objet & Observation vérifiée \\
@@ -38,16 +43,16 @@ Cette séquence valide Source avant Make lorsque la matière manque, le crédit 
 
 Les six transformations décrites dans la \cref{tab:propagation-retard} sont présentes une fois chacune dans Excel et dans l'ABox. Leur charge utile conserve \texttt{GPL\_VRAC}, \Agent{ACT\_1}, les délais de 6 h et 12 h, le retard de 6 h et l'identifiant \Agent{REAPPRO\_1}.
 
-La propagation prouve qu'un écart local de Source est reformulé jusqu'à Deliver. Elle ne prouve pas que la révision minimise un coût global ni que les six heures supplémentaires expliquent seules le statut tardif. Un run sans retard construit avec le même modèle, les mêmes conditions et une graine contrôlée serait nécessaire pour cette attribution.
+La propagation prouve qu'un écart local de Source est reformulé jusqu'à Deliver. Elle ne prouve pas que la révision minimise un coût global ni que les six heures supplémentaires expliquent seules le statut tardif. Une exécution sans retard construite avec le même modèle, les mêmes conditions et une graine contrôlée serait nécessaire pour cette attribution.
 
 \section{Résultats de performance}
 
 Les temps de commande vérifient l'identité additive. Le traitement vaut 18 116,83756052 s, l'attente 46 924,40300189 s et le Lead Time 65 041,24056241 s. Le périmètre ZENER porte 59,38852156 s de traitement, 12,69587399 s d'attente et un PCE estimé de 0,70870898. Les scores RL, RS, AG, CO et AM valent respectivement 7,5, 5,94733671, 4,73462025, 0 et 9,70588235. Le PI vaut 6,11881172 sur 10 avec les profils internes du modèle.
 
-Le run contient aussi la détection d'un goulot sur \Agent{sM1.3.1}, une décision locale \texttt{REBALANCE}, un score AHP de 0,730 et les accusés d'application. Ces faits valident l'exécution de cette boucle locale dans le run. L'AHP ne contribue pas directement au PI et aucun effet de la décision sur le score global ne peut être déduit de cette observation unique.
+L'exécution contient aussi la détection d'un goulot sur \Agent{sM1.3.1}, une décision locale \texttt{REBALANCE}, un score AHP de 0,730 et les accusés d'application. Ces faits valident cette boucle locale dans le scénario retenu. L'AHP ne contribue pas directement au PI et aucun effet de la décision sur le score global ne peut être déduit de cette observation unique.
 
-\section{Ce que le run permet de conclure}
+\section{Portée de la validation}
 
-Les artefacts valident le modèle corrigé pour une commande, une reconstitution et une perturbation déterministe. Ils établissent la cohérence croisée du manifeste, des relations ontologiques, des flux, des temps VSM, de Responsiveness et de l'agrégation du PI. La structure ISA-95 exportée contient 190 équipements typés, 71 micro-activités et 71 relations d'affectation, conformément à la garde du modèle.
+Les artefacts valident le modèle consolidé pour une commande, une reconstitution et une perturbation déterministe. Ils établissent la cohérence croisée du manifeste, des relations ontologiques, des flux, des temps VSM, de Responsiveness et de l'agrégation du PI. La structure ISA-95 exportée contient 190 équipements typés, 71 micro-activités et 71 relations d'affectation, conformément à la garde du modèle.
 
-Le run ne valide pas le fonctionnement nominal, Return, une campagne qualité, une panne, plusieurs commandes partageant un ordre de reconstitution, une politique optimale ou une généralisation aux opérations réelles. Il ne fournit ni comparaison causale avec une référence sans retard, ni réplications permettant d'estimer la variabilité. Ces absences délimitent le résultat expérimental; elles ne sont pas remplacées par les anciens chiffres du document source.
+L'exécution ne valide pas le fonctionnement nominal, Return, un scénario qualité avec défauts, une panne, plusieurs commandes partageant un ordre de reconstitution, une politique optimale ou une généralisation aux opérations réelles. Elle ne fournit ni comparaison causale avec une référence sans retard, ni réplications permettant d'estimer la variabilité. Ces absences délimitent le résultat expérimental.

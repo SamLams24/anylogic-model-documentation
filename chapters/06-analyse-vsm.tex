@@ -5,17 +5,17 @@
 
 L'analyse distingue deux objets temporels qui répondent à des questions différentes. Le registre de commande cliente mesure le délai subi par \Agent{CMD\_1}. Il additionne le traitement propre à cette commande et l'attente de reconstitution imputée depuis l'ordre interne \Agent{REAPPRO\_1}. Le VSM focalisé ZENER agrège, pour sa part, les observations d'exécution rattachées à \Agent{ACT\_4}. Les valeurs de ces deux périmètres ne sont donc pas interchangeables.
 
-Cette séparation corrige une ambiguïté de la version antérieure du pipeline. Un ordre autonome reste nécessaire à l'explication du service de la commande, mais il n'entre pas dans le dénombrement des commandes clientes. La relation RDF \texttt{contributesToCustomerOrderFulfillment}, accompagnée de sa relation inverse, rend l'imputation vérifiable dans l'ABox. Le même mécanisme alimente le Dashboard Global et les métriques Responsiveness.
+Le modèle distingue ces deux périmètres temporels afin de conserver une interprétation cohérente des indicateurs. Un ordre autonome reste nécessaire à l'explication du service de la commande, mais il n'entre pas dans le dénombrement des commandes clientes. La relation RDF \texttt{contributesToCustomer}\allowbreak\texttt{OrderFulfillment}, accompagnée de sa relation inverse, rend l'imputation vérifiable dans l'ABox. Le même registre alimente le Dashboard Global et les métriques Responsiveness.
 
-Les jetons utilisés uniquement pour l'animation sont exclus des stocks et du WIP physiques. Cette règle évite qu'une représentation graphique soit comptée comme une entité de production. Le run étudié porte sur une commande et un ordre interne; il ne permet pas encore de vérifier le partage quantitatif d'une même reconstitution entre plusieurs commandes.
+Les jetons utilisés uniquement pour l'animation sont exclus des stocks et du WIP physiques. Cette règle évite qu'une représentation graphique soit comptée comme une entité de production. L'exécution étudiée porte sur une commande et un ordre interne; elle ne permet pas de vérifier le partage quantitatif d'une même reconstitution entre plusieurs commandes.
 
-\section{Résultats temporels du run validé}
+\section{Résultats temporels de l'exécution validée}
 
-La paire Excel et ABox du run \Agent{RUN\_1773129600000\_1788264883846} fournit les six valeurs centrales de la \cref{tab:vsm-six-indicateurs}. Les valeurs temporelles exactes proviennent de l'ABox; l'affichage est arrondi à deux décimales pour préserver la lisibilité.
+La paire Excel et ABox de l'exécution validée fournit les six valeurs centrales de la \cref{tab:vsm-six-indicateurs}. Les valeurs temporelles exactes proviennent de l'ABox; l'affichage est arrondi à deux décimales pour préserver la lisibilité.
 
 \begin{table}[H]
   \centering
-  \caption{Indicateurs VSM du run validé.}
+  \caption{Indicateurs VSM de l'exécution validée.}
   \label{tab:vsm-six-indicateurs}
   \begin{tabularx}{\textwidth}{@{}L{0.31\textwidth}L{0.24\textwidth}L{0.17\textwidth}Y@{}}
     \toprule
@@ -38,7 +38,7 @@ L'identité additive est satisfaite à la précision exportée:
 \label{eq:identite-vsm-commande}
 \end{equation}
 
-L'attente représente environ 72,1 pour cent du Lead Time de commande. Cette proportion décrit la structure temporelle du run, sans établir à elle seule la cause du retard client. Le délai fournisseur, le traitement de reconstitution, la dynamique Make et la livraison appartiennent à une même exécution perturbée; aucun run de référence synchronisé ne permet d'isoler leur contribution causale respective.
+L'attente représente environ 72,1 pour cent du Lead Time de commande. Cette proportion décrit la structure temporelle de l'exécution, sans établir à elle seule la cause du retard client. Le délai fournisseur, le traitement de reconstitution, la dynamique Make et la livraison appartiennent à une même trajectoire perturbée; aucune exécution de référence synchronisée ne permet d'isoler leur contribution causale respective.
 
 \FigureOrPlaceholder{figures/dashboard_vsm_valide.png}{Lecture consolidée des six indicateurs VSM validés.}{fig:dashboard-vsm-valide}
 
@@ -51,7 +51,7 @@ Le PCE est calculé sur le même périmètre que les temps ZENER. Sa forme gén�
 \label{eq:pce-zener}
 \end{equation}
 
-La somme du traitement et de l'attente vaut 72,08439555 s. Le ratio exporté de 0,70870898 correspond à environ 51,0869 s de valeur ajoutée estimée. Les temps de poste proviennent des observations du modèle, tandis que la nature VA repose sur les taux configurés. L'ABox qualifie explicitement la valeur ajoutée comme \texttt{ESTIMATED} et la politique de source comme \texttt{CONFIGUREE\_OR\_FALLBACK\_BY\_POST}. Dans ce run, les micro-activités observées portent la source \texttt{CONFIGUREE}; aucun recours au fallback n'est observé.
+La somme du traitement et de l'attente vaut 72,08439555 s. Le ratio exporté de 0,70870898 correspond à environ 51,0869 s de valeur ajoutée estimée. Les temps de poste proviennent des observations du modèle, tandis que la nature VA repose sur les taux configurés. L'ABox qualifie explicitement la valeur ajoutée comme \texttt{ESTIMATED} et la politique de source comme \texttt{CONFIGUREE\_OR\_FALLBACK\_BY\_POST}. Dans cette exécution, les micro-activités observées portent la source \texttt{CONFIGUREE}; aucun recours au fallback n'est observé.
 
 Le résultat de 70,9 pour cent n'est donc ni une mesure chronométrée de la valeur ajoutée réelle ni un PCE officiel fourni par une norme externe. Il constitue une estimation interne cohérente avec les règles du modèle. Une campagne de chronométrage reste nécessaire pour transformer cette estimation en mesure empirique calibrée.
 
@@ -59,4 +59,4 @@ Le résultat de 70,9 pour cent n'est donc ni une mesure chronométrée de la val
 
 La commande est créée à T=156 s, entre en attente de stock à T=159 s et est reliée à \Agent{REAPPRO\_1}. La matière devient disponible à T=233 s, Make démarre à T=235 s et la vingtième unité est terminée à T=2 314 s. Deliver commence à T=2 320 s et la commande est close à T=2 343 s. Cette chronologie confirme que Source précède Make lorsque le GPL manque, puis que la fin de la reconstitution réveille la commande avant Deliver.
 
-Les six indicateurs sont concordants entre Excel et RDF et peuvent être utilisés comme entrées du pipeline de performance. Leur validation reste limitée à cette exécution. Aucun gain par rapport à l'ancien modèle, aucune amélioration due au correctif et aucun effet net du retard ne sont quantifiés, faute d'un plan comparatif contrôlé.
+Les six indicateurs sont concordants entre Excel et RDF et peuvent être utilisés comme entrées du pipeline de performance. Leur validation reste limitée à cette exécution. Aucun effet net du retard n'est quantifié, faute d'un protocole comparatif contrôlé.

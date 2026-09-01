@@ -1,4 +1,14 @@
 \chapter*{Résumé}
 \addcontentsline{toc}{chapter}{Résumé}
 
-Ce fichier sera réécrit à la fin, après stabilisation de tous les chapitres. Le résumé final devra présenter la question étudiée, la méthode de traçabilité, les principaux résultats et la portée des conclusions en une page au maximum.
+Ce rapport étudie la continuité entre décision, exécution et mesure dans SCONTO-SVU, appliqué au cas de ZENER SA Togo. La question centrale porte sur la capacité d'un modèle de Supply Chain à expliquer non seulement le résultat d'une simulation, mais aussi les décisions, agents, flux et observations qui conduisent à ce résultat. L'analyse distingue les mécanismes présents dans le projet AnyLogic, les faits observés dans les exports et les capacités disponibles qui ne disposent pas encore d'une validation quantitative.
+
+L'architecture combine les processus Source, Make, Deliver et Return avec cinq niveaux de responsabilité: stratégique, tactique, coordination, pilotage opérationnel et exécution. Une politique autonome gère le stock de produit fini et les matières. Elle sépare la commande cliente \Agent{CMD\_1} de l'ordre interne \Agent{REAPPRO\_1}, ce qui préserve la logique Make-to-Stock et les dénominateurs des KPI clients. Les messages AER, le Blackboard, l'ancrage ISA-95 et les exports synchronisés assurent la traçabilité entre les décisions, les opérations et les mesures.
+
+La validation expérimentale repose sur une exécution où le stock initial de produit fini et le stock GPL sont nuls. La première réception de GPL subit un retard déterministe, tandis que l'ordre interne reconstitue le stock nécessaire à une commande de vingt unités. L'exécution confirme la séquence Source, Make puis Deliver, la dépendance entre la commande et la reconstitution, la livraison complète et tardive, ainsi que la propagation de six messages structurés depuis l'alerte fournisseur jusqu'à la révision du plan Deliver.
+
+Les mesures VSM distinguent le registre temporel de la commande et le périmètre focalisé sur ZENER. Le PCE ZENER est estimé à environ 70,9 pour cent; la valeur ajoutée repose sur des taux configurés et n'est pas chronométrée directement. Les observations alimentent ensuite des métriques, une normalisation, une logique floue et les attributs RL, RS, AG, CO et AM. Avec les profils de normalisation retenus par le modèle, l'exécution conduit à un PI de 6,119/10. Ce score constitue une synthèse multicritère interne, non une notation absolue de la performance réelle de ZENER SA Togo.
+
+Les fichiers Excel et ABox concordent sur l'identité de l'exécution, la chronologie, les indicateurs VSM, les scores d'attribut et le PI. Cette cohérence valide la chaîne de preuve dans le cadre du modèle. La portée scientifique reste néanmoins limitée par l'absence d'une référence sans retard, de réplications statistiques, d'une graine contrôlée, d'une calibration terrain des taux de valeur ajoutée et des profils Bottom/Perfect, ainsi que par l'absence de validation multi-commandes et Return.
+
+\noindent\textbf{Mots-clés:} SCONTO-SVU, Supply Chain, simulation multi-agents, traçabilité, VSM, SCOR, AER, Performance Index.

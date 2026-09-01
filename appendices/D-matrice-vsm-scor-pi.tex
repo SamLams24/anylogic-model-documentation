@@ -5,11 +5,11 @@
 \begin{longtable}{@{}L{0.18\textwidth}L{0.12\textwidth}L{0.11\textwidth}L{0.12\textwidth}L{0.13\textwidth}L{0.15\textwidth}@{}}
 \caption{Matrice de traçabilité entre observation, indicateur et agrégation.}\label{tab:matrice-vsm-scor-pi}\\
 \toprule
-Observation ou source & Indicateur VSM & Métrique & Attribut & Valeur du run & Qualification \\
+Observation ou source & Indicateur VSM & Métrique & Attribut & Valeur de l'exécution & Qualification \\
 \midrule
 \endfirsthead
 \toprule
-Observation ou source & Indicateur VSM & Métrique & Attribut & Valeur du run & Qualification \\
+Observation ou source & Indicateur VSM & Métrique & Attribut & Valeur de l'exécution & Qualification \\
 \midrule
 \endhead
 Registre \Agent{CMD\_1} et liaison \Agent{REAPPRO\_1} & Order Processing Time & Entrée VSM & RS & 18 116,83756052 s & Observation du modèle \\
@@ -24,16 +24,17 @@ Temps macro Deliver & Cycle Deliver & \Metric{RS.2.3} & RS & 67,12341232 s & Ass
 Return non exécuté & Aucun & \Metric{RS.2.5} & RS & Absente & Ne pas convertir en zéro \\
 Livraison complète & Fill rate & \Metric{RL.2.1} & RL & 1 & Association nommée \\
 Livraison tardive & Ponctualité & \Metric{RL.2.2} & RL & 0 & Association nommée \\
-Run mono-produit & Ratios complémentaires & \Metric{RL.3.33}, \Metric{RL.3.35} & RL & 1 et 1 & Approximation mono-produit \\
+Exécution mono-produit & Ratios complémentaires & \Metric{RL.3.33}, \Metric{RL.3.35} & RL & 1 et 1 & Approximation mono-produit \\
 Débit runtime & Throughput & \Metric{AG.3.32} & AG & 1,536 entité/h & Association interne \\
 Utilisation agrégée & Utilisation système & {\scriptsize\texttt{PROXY.AG.}\allowbreak\texttt{SYSTEM\_}\allowbreak\texttt{UTILIZATION}} & AG & 0,134 & Proxy explicite \\
-Livraison et coûts simulés & Ratio et coûts & \Metric{CO.1.1} & CO & 1; 4 918,345 FCFA; 4 940 FCFA & Coûts informatifs \\
+Coût simulé et CA estimé & Rapport coût/CA & \Metric{CO.1.1} & CO & 1 & Association interne \\
 Paramètres d'actifs & Rotation et jours & \Metric{AM.3.9}, \Metric{AM.2.2} & AM & 0,941; 0 jour & Paramètres internes \\
+Actifs fixes exportés & Valeur informative & \Metric{AM.3.18} & AM & 192 800 000 EUR & Paramètre informatif non calibré, hors score \\
 Normalisation et logique floue & Score RL & Agrégat & RL & 7,5/10 & Profil Bottom/Perfect interne \\
-Normalisation et logique floue & Score RS & Agrégat & RS & 5,94733671/10 & Profil Bottom/Perfect interne \\
-Normalisation et logique floue & Score AG & Agrégat & AG & 4,73462025/10 & Profil Bottom/Perfect interne \\
+Normalisation et logique floue & Score RS & Agrégat & RS & {\scriptsize 5,94733671/10} & Profil Bottom/Perfect interne \\
+Normalisation et logique floue & Score AG & Agrégat & AG & {\scriptsize 4,73462025/10} & Profil Bottom/Perfect interne \\
 Normalisation et logique floue & Score CO & Agrégat & CO & 0/10 & Profil Bottom/Perfect interne \\
-Normalisation et logique floue & Score AM & Agrégat & AM & 9,70588235/10 & Profil Bottom/Perfect interne \\
+Normalisation et logique floue & Score AM & Agrégat & AM & {\scriptsize 9,70588235/10} & Profil Bottom/Perfect interne \\
 Somme pondérée & Performance Index & PI & Global & 6,11881172/10 & Validé dans le cadre du modèle \\
 \bottomrule
 \end{longtable}

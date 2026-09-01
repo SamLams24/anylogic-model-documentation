@@ -1,21 +1,21 @@
 \chapter{Gestion des écarts et adaptation}
 \label{chap:adaptation-aer}
 
-\section{Principe de détection d'un écart}
+\section{Qualification d'un écart}
 
-Une adaptation commence par la comparaison d'un état attendu avec un état observé. Pour un approvisionnement, le modèle conserve le délai nominal utilisé par la planification et calcule séparément la date effective de réception. Lorsque les deux divergent dans les conditions prévues par le test, l'écart devient un événement métier identifiable. Il n'est pas déduit a posteriori d'un indicateur global.
+Une adaptation commence par la comparaison d'un état attendu avec un état observé. Pour l'approvisionnement, le modèle conserve le délai nominal utilisé par la planification et calcule séparément la date effective de réception. Lorsque les deux divergent dans les conditions du scénario, l'écart devient un événement métier identifiable. Il n'est pas déduit a posteriori d'un indicateur global.
 
-Cette distinction préserve la causalité. Le fournisseur ou l'agent Source signale d'abord le fait local. Le pilotage opérationnel le qualifie comme exception, le coordinateur l'inscrit dans le contexte du processus, puis le tactique révise les informations nécessaires aux domaines aval. Chaque message apporte une transformation précise; une simple répétition de la même alerte à plusieurs niveaux ne suffirait pas à démontrer une adaptation.
+Le fournisseur ou l'agent Source signale d'abord le fait local. Le pilotage opérationnel le qualifie comme exception, le coordinateur l'inscrit dans le contexte du processus, puis le tactique révise les informations nécessaires aux domaines aval. Chaque message apporte une transformation précise; répéter la même alerte à plusieurs niveaux ne suffirait pas à démontrer une adaptation.
 
-Le modèle implémente aussi des déclencheurs de panne, une détection de goulot et des perturbations de demande. Ces capacités ne sont pas confondues avec le retard fournisseur. Sans artefact primaire dédié, leurs anciens timestamps et résultats restent hors du périmètre expérimental actuel.
+Le modèle permet également d'activer une panne, des perturbations de demande et des scénarios de qualité. Ces capacités restent distinctes du retard fournisseur. Elles ne reçoivent pas de résultat quantitatif lorsqu'aucune exécution primaire dédiée n'est disponible.
 
 \section{Retard fournisseur contrôlé}
 
-Le scénario perturbé cible le GPL fourni par \Agent{ACT\_1}. Le délai nominal vaut 6 h et le délai effectif 12 h, soit un retard additionnel de 6 h. Un seul approvisionnement retardé est comptabilisé. La commande cliente porte 20 unités et l'ordre interne associé est \Agent{REAPPRO\_1}; le besoin GPL correspondant est de 250 unités.
+Le scénario perturbé cible le GPL fourni par \Agent{ACT\_1}. Le délai nominal vaut 6 h et le délai effectif 12 h, soit un retard additionnel de 6 h. Une seule réception est ciblée. La commande porte 20 unités et l'ordre interne associé est \Agent{REAPPRO\_1}; le besoin GPL correspondant vaut 250 unités.
 
-Les exports Excel et ABox décrivent la même exécution et la même clôture à T=1990 s. Ils confirment la matière, le fournisseur, les délais nominal et effectif, ainsi que la chaîne de messages. Cette concordance établit l'activation du retard et sa propagation. Elle ne mesure pas son effet causal net sur le délai final, car l'exécution de référence sans retard n'est pas disponible pour une comparaison contrôlée.
+Les exports Excel et ABox décrivent la même exécution et la même clôture à T=2 343 s. Ils confirment la matière, le fournisseur, les délais nominal et effectif, ainsi que la chaîne de messages. Cette concordance établit l'activation du retard et sa propagation. Elle ne mesure pas son effet causal net sur le délai final, car aucune exécution de référence sans retard n'est disponible.
 
-La commande est livrée en totalité et en retard. Ces deux statuts décrivent le résultat de l'exécution perturbée; ils ne permettent pas d'attribuer toute la tardiveté au seul fournisseur. Make et Deliver possèdent leurs propres dynamiques, et la conversion temporelle doit être explicitée avant toute décomposition quantitative.
+La commande est livrée en totalité et en retard. Ces statuts ne permettent pas d'attribuer toute la tardiveté au fournisseur. Source, Make et Deliver possèdent leurs propres dynamiques, et la conversion temporelle doit être prise en compte avant toute décomposition quantitative.
 
 \section{Propagation vers Make et Deliver}
 
@@ -32,29 +32,27 @@ La propagation AER comporte six transformations structurées. Elles relient l'é
     \texttt{SupplierDelayAlert} & Fournisseur vers pilotage Source & Rend visible l'écart entre réception nominale et réception effective. \\
     \shortstack[l]{\texttt{Operational}\\\texttt{Exception}} & Pilotage vers coordination Source & Qualifie l'alerte comme incident opérationnel du processus Source. \\
     \shortstack[l]{\texttt{ProcessDeviation}\\\texttt{Report}} & Coordination vers tactique Source & Consolide l'impact de l'incident au niveau du plan Source. \\
-    \shortstack[l]{\texttt{RevisedMaterial}\\\texttt{Availability}} & \Agent{AT-sP2} vers \Agent{AT-sP3} & Transmet à Make une nouvelle disponibilité prévisionnelle de la matière. \\
+    \shortstack[l]{\texttt{RevisedMaterial}\\\texttt{Availability}} & \Agent{AT-sP2} vers \Agent{AT-sP3} & Transmet à Make une disponibilité prévisionnelle révisée. \\
     \shortstack[l]{\texttt{RevisedProduction}\\\texttt{CompletionDate}} & \Agent{AT-sP3} vers \Agent{AT-sP4} & Traduit l'information matière en révision potentielle de la fin de production. \\
     \texttt{RevisedDeliveryPlan} & \Agent{AT-sP4} vers \Agent{CA-sD1} & Demande la réévaluation du plan Deliver dans le nouveau contexte. \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
-La séquence montre une adaptation structurée plutôt qu'une optimisation globale. Source consolide un fait fournisseur; Make reçoit une information révisée sur sa contrainte amont; Deliver reçoit une révision de plan. La trace ne démontre pas qu'une solution optimale est recherchée parmi toutes les stratégies possibles, ni que la nouvelle date minimise un critère global.
+La séquence montre une adaptation structurée, sans démontrer une optimisation globale. Source consolide un fait fournisseur; Make reçoit une information révisée sur sa contrainte amont; Deliver reçoit une révision de plan. La trace ne montre pas qu'une solution optimale est recherchée parmi toutes les stratégies possibles.
 
 \FigureOrPlaceholder{figures/propagation_retard_fournisseur.png}{Propagation informationnelle d'un retard fournisseur depuis Source vers Make puis Deliver.}{fig:propagation-retard-fournisseur}
 
-\section{Place du Blackboard et de l'AER}
+\section{Blackboard, goulot et arbitrage local}
 
-L'AER fournit la structure des échanges: type du message, émetteur, destinataire, sujet, contexte de processus et objet concerné. Dans l'ABox, les six messages sont des individus liés à \Agent{REAPPRO\_1}. Cette représentation permet de suivre une même perturbation malgré les changements de niveau et de vocabulaire métier.
+L'AER structure les échanges par le type du message, l'émetteur, le destinataire, le contexte de processus et l'objet concerné. Le Blackboard remplit une autre fonction: il conserve les observations et décisions qui doivent rester accessibles à plusieurs agents.
 
-Le Blackboard remplit une fonction différente. Il offre une mémoire partagée dans laquelle les observations et alertes peuvent être publiées, consultées et rapprochées d'une décision. Le modèle implémente cette mémoire ainsi que les mécanismes de panne et de goulot qui peuvent l'alimenter. L'exécution fournisseur valide la chaîne AER de retard, mais elle n'est pas utilisée pour revendiquer une validation complète de toutes les boucles Blackboard prévues dans l'architecture.
+L'exécution étudiée contient une détection de goulot sur \Agent{sM1.3.1}, une décision \texttt{REBALANCE}, un score AHP local de 0,730 et les accusés d'application. Ces éléments montrent qu'un état opérationnel peut être partagé, qualifié puis transformé en instruction locale. Ils ne suffisent pas à mesurer l'effet de cette décision sur les temps ou sur le PI.
 
-La fermeture d'une boucle adaptative exige normalement plus qu'une alerte: une décision doit être contextualisée, appliquée puis accompagnée d'un accusé. Cette logique est implémentée pour l'adaptation locale. Les résultats historiques de panne et de rééquilibrage ne sont cependant pas repris ici, faute d'artefacts primaires correspondants.
+Une boucle adaptative complète exige une décision contextualisée, son application et un accusé. Le mécanisme de panne peut alimenter une boucle comparable, mais aucune panne n'est observée dans le scénario retenu.
 
 \section{Distinction entre arbitrage AHP et Performance Index}
 
-L'AHP et le PI répondent à deux questions différentes. L'AHP classe ou sélectionne des options face à une situation décisionnelle locale ou tactique, par exemple la priorité à donner à une action lorsque plusieurs contraintes sont détectées. Son score dépend des critères et de la matrice de comparaison utilisés pour cet arbitrage.
+L'AHP et le PI répondent à deux questions différentes. L'AHP classe des options dans une situation locale ou tactique. Son score dépend des critères et de la matrice de comparaison utilisés pour cet arbitrage. Le PI évalue l'exécution à partir de mesures transformées en métriques, puis en scores RL, RS, AG, CO et AM.
 
-Le PI évalue la performance globale à partir de mesures transformées en métriques, puis regroupées dans les attributs RL, RS, AG, CO et AM. Il appartient au pipeline d'évaluation, pas à la boucle locale de décision. Un score AHP ne constitue donc pas une composante directe du PI, sauf si une règle explicite établissait cette relation. Aucune règle de ce type n'est mobilisée dans l'analyse présente.
-
-Le modèle confirme l'implémentation des deux mécanismes. L'exécution fournisseur prouve la propagation d'un retard, mais aucun score AHP historique n'est présenté comme résultat de ce scénario. Les calculs du PI seront étudiés séparément lorsque la définition des valeurs temporelles litigieuses aura été stabilisée.
+Un score AHP ne constitue donc pas une composante directe du PI. L'exécution simultanée d'une décision \texttt{REBALANCE} et du pipeline de performance ne démontre pas que l'une améliore l'autre. Une telle relation demanderait des exécutions comparables avec et sans la décision étudiée.

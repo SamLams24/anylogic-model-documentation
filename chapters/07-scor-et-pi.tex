@@ -3,27 +3,27 @@
 
 \section{Chaîne de transformation}
 
-Le pipeline transforme les observations runtime en métriques, puis en scores d'attribut avant leur agrégation dans le Performance Index. Chaque niveau conserve son rôle: le VSM décrit les temps et flux, les identifiants SCOR structurent les mesures retenues, la normalisation les ramène sur une échelle commune et le système flou produit les scores RL, RS, AG, CO et AM. Le PI est enfin une somme pondérée de ces cinq scores.
+Le pipeline transforme les observations runtime selon une succession explicite. Le VSM décrit les temps et les flux; les métriques organisent les mesures retenues; la normalisation les ramène sur une échelle commune; la logique floue construit les scores RL, RS, AG, CO et AM. Le PI agrège ensuite ces cinq scores avec leurs poids. La somme pondérée porte donc sur des attributs déjà issus du traitement flou, qu'elle ne remplace pas.
 
 \FigureOrPlaceholder{figures/pipeline_vsm_scor_pi.png}{Pipeline de transformation des observations VSM vers les attributs et le PI.}{fig:pipeline-vsm-scor-pi}
 
-L'usage d'un identifiant proche de SCOR ne suffit pas à faire d'une mesure un indicateur officiel. Le modèle distingue les associations nommées, les mesures internes et les proxys explicites. \texttt{PROXY.AG.}\allowbreak\texttt{SYSTEM\_UTILIZATION}, par exemple, est conservé comme proxy de l'utilisation du système et non comme métrique SCOR officielle. Les métriques mono-produit sont également interprétées dans les limites du scénario qui ne contient qu'un produit livré.
+L'usage d'un identifiant proche de SCOR ne suffit pas à faire d'une mesure un indicateur officiel. Le modèle distingue les associations nommées, les mesures internes et les proxys explicites. \path{PROXY.AG.SYSTEM_UTILIZATION}, par exemple, est conservé comme proxy de l'utilisation du système et non comme métrique SCOR officielle. Les métriques mono-produit sont également interprétées dans les limites du scénario qui ne contient qu'un produit livré.
 
 \section{Métriques alimentant les attributs}
 
-Reliability utilise les résultats de service de la commande cliente. \Metric{RL.2.1} vaut 1 pour la livraison complète et \Metric{RL.2.2} vaut 0 pour la ponctualité, car \Agent{CMD\_1} est livrée en retard. Les ratios complémentaires \Metric{RL.3.33} et \Metric{RL.3.35} valent 1 dans ce run mono-produit. Ils ne démontrent pas une fiabilité identique dans un portefeuille diversifié.
+Reliability utilise les résultats de service de la commande cliente. \Metric{RL.2.1} vaut 1 pour la livraison complète et \Metric{RL.2.2} vaut 0 pour la ponctualité, car \Agent{CMD\_1} est livrée en retard. Les ratios complémentaires \Metric{RL.3.33} et \Metric{RL.3.35} valent 1 dans cette exécution mono-produit. Ils ne démontrent pas une fiabilité identique dans un portefeuille diversifié.
 
-Responsiveness reçoit les temps corrigés. \Metric{RS.1.1} vaut 65 041,24056241 s et pointe sur Order Fulfillment Lead Time; \Metric{RS.3.94} vaut 46 924,40300189 s et pointe sur Order Waiting Time. Les temps macro disponibles sont 1,60096154 s pour Source avec \Metric{RS.2.1}, 26,0695401 s pour Make avec \Metric{RS.2.2} et 67,12341232 s pour Deliver avec \Metric{RS.2.3}. \Metric{RS.2.5} est absente, car Return n'a pas été exécuté. Une métrique absente ne doit pas être remplacée par zéro.
+Responsiveness reçoit les temps issus du registre de commande. \Metric{RS.1.1} vaut 65 041,24056241 s et pointe sur Order Fulfillment Lead Time; \Metric{RS.3.94} vaut 46 924,40300189 s et pointe sur Order Waiting Time. Les temps macro disponibles sont 1,60096154 s pour Source avec \Metric{RS.2.1}, 26,0695401 s pour Make avec \Metric{RS.2.2} et 67,12341232 s pour Deliver avec \Metric{RS.2.3}. \Metric{RS.2.5} est absente, car Return n'a pas été exécuté. Une métrique absente ne doit pas être remplacée par zéro.
 
 Agility mobilise notamment un débit de 1,536 entité par heure et un proxy d'utilisation du système de 0,134. La mesure \Metric{AG.1.1} vaut 0,5 dans le pipeline interne. Ces données décrivent la réaction simulée sous les règles disponibles; elles ne constituent pas une mesure de l'agilité organisationnelle réelle.
 
-Cost associe le ratio de livraison \Metric{CO.1.1}, égal à 1, à des montants informatifs de 4 918,345 FCFA pour la main-d'oeuvre et de 4 940 FCFA pour les matières. Le score nul de l'attribut dépend des profils de normalisation du modèle. Les montants ne forment pas une comptabilité industrielle complète et ne sont pas utilisés pour conclure à une absence de performance économique.
+L'attribut Cost utilise \Metric{CO.1.1}, rapport entre le coût total simulé et le chiffre d'affaires estimé. Sa valeur brute vaut 1 pour cette exécution. Les coûts recensés, dont 4 918,345 FCFA pour la main-d'oeuvre et 4 940 FCFA pour les matières, ne constituent pas une comptabilité industrielle complète. Le score CO égal à 0 résulte du profil de normalisation retenu; il ne signifie pas que l'entreprise ne possède aucune performance économique.
 
-Asset Management utilise notamment une valeur de 0,941 pour \Metric{AM.3.9} et une durée de 0 jour pour \Metric{AM.2.2}. La valeur d'actifs fixes d'environ 192,8 millions d'euros est un paramètre informatif non calibré. Elle ne doit pas être interprétée comme une évaluation patrimoniale vérifiée de ZENER SA Togo.
+Asset Management utilise notamment une valeur de 0,941 pour \Metric{AM.3.9} et une durée de 0 jour pour \Metric{AM.2.2}. Ces entrées restent des mesures internes au scénario retenu.
 
 \section{Normalisation, scores et agrégation}
 
-Pour chaque métrique, le modèle conserve une valeur brute, un sens d'amélioration, des repères Bottom et Perfect, un score normalisé et un grade flou. Ces repères assurent la calculabilité interne, mais leur origine n'est pas une norme publiée dans les artefacts du run. Ils doivent être calibrés sur des références métier avant une lecture absolue.
+Pour chaque métrique, le modèle conserve une valeur brute, un sens d'amélioration, des repères Bottom et Perfect, un score normalisé et un grade flou. Ces repères assurent la calculabilité interne, mais leur origine n'est pas une norme publiée dans les artefacts de l'exécution. Ils doivent être calibrés sur des références métier avant une lecture absolue.
 
 Les scores observés et leurs poids sont regroupés dans la \cref{tab:scores-attributs-pi}.
 
@@ -53,10 +53,10 @@ PI=0{,}40\,RL+0{,}20\,RS+0{,}10\,AG+0{,}15\,CO+0{,}15\,AM.
 \label{eq:aggregation-pi}
 \end{equation}
 
-Avec les profils de normalisation retenus par le modèle, l'exécution conduit à un PI de 6,119/10. Cette valeur est validée comme sortie cohérente du pipeline pour le run étudié. Elle ne constitue ni une notation externe de l'entreprise ni une preuve de performance réelle généralisable.
+Avec les profils de normalisation retenus par le modèle, l'exécution conduit à un PI de 6,119/10. Cette valeur est validée comme sortie cohérente du pipeline pour l'exécution étudiée. Elle ne constitue ni une notation externe de l'entreprise ni une preuve de performance réelle généralisable.
 
 \section{Portée méthodologique}
 
-La correction des entrées Responsiveness lève l'incohérence qui empêchait auparavant de publier le PI. Excel et ABox portent les mêmes valeurs brutes, les mêmes scores et les mêmes poids. La traçabilité du calcul est donc établie dans le cadre du modèle.
+Les deux métriques globales de Responsiveness reposent sur le même registre temporel de commande, ce qui assure la cohérence de leur provenance. Excel et ABox portent les mêmes valeurs brutes, les mêmes scores et les mêmes poids. La traçabilité du calcul est donc établie dans le cadre du modèle.
 
-Trois limites restent structurantes. Premièrement, les profils Bottom/Perfect doivent être calibrés. Deuxièmement, certaines entrées sont des proxys ou des approximations mono-produit. Troisièmement, une seule exécution perturbée ne permet ni analyse de sensibilité ni intervalle d'incertitude. Le PI peut servir à comparer des runs construits sur un protocole homogène; il ne doit pas être interprété isolément comme une vérité absolue.
+Trois limites restent structurantes. Premièrement, les profils Bottom/Perfect doivent être calibrés. Deuxièmement, certaines entrées sont des proxys ou des approximations mono-produit. Troisièmement, une seule exécution perturbée ne permet ni analyse de sensibilité ni intervalle d'incertitude. Le PI peut servir à comparer des exécutions construites sur un protocole homogène; il ne doit pas être interprété isolément comme une vérité absolue.

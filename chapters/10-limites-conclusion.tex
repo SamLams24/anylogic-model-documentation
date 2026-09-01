@@ -1,16 +1,30 @@
 \chapter{Limites et conclusion}
 \label{chap:limites-conclusion}
 
-\section{Périmètre de validité méthodologique}
+\section{Limites et périmètre de validité}
 
-La validation quantitative repose sur un seul run du modèle corrigé. Elle établit la cohérence des mécanismes et des exports pour une commande cliente, une reconstitution autonome et un retard déterministe de la première réception GPL. Elle ne fournit ni distribution de résultats, ni intervalle d'incertitude, ni estimation de la sensibilité aux paramètres.
+La validation quantitative repose sur une seule exécution du modèle consolidé. Elle établit la cohérence des mécanismes et des exports pour une commande cliente, une reconstitution autonome et un retard déterministe de la première réception GPL. Elle ne fournit ni distribution de résultats, ni intervalle d'incertitude, ni estimation de la sensibilité aux paramètres.
 
-L'absence d'une exécution de référence sans retard, produite avec le même modèle et les mêmes conditions initiales, interdit une conclusion causale sur l'effet net des 6 h supplémentaires. Le statut tardif de la commande est observé; sa décomposition entre Source, Make et Deliver n'est pas identifiée par un dispositif comparatif.
+L'absence d'une exécution de référence sans retard, produite avec le même modèle et les mêmes conditions initiales, interdit une conclusion causale sur l'effet net de la perturbation. Le statut tardif de la commande est observé; sa décomposition entre Source, Make et Deliver n'est pas identifiée par un dispositif comparatif.
 
-Le PCE ZENER reste estimé. Les temps de traitement et d'attente proviennent des observations runtime, mais la part de valeur ajoutée utilise des taux configurés par poste. Une campagne de chronométrage et une validation métier des règles VA sont nécessaires avant de présenter ce ratio comme une mesure empirique.
+Le PCE ZENER reste estimé. Les temps de traitement et d'attente proviennent des observations runtime, mais la part de valeur ajoutée utilise des taux configurés par poste. Des chronométrages et une validation métier des règles VA sont nécessaires avant de présenter ce ratio comme une mesure empirique.
 
-Les profils Bottom/Perfect permettent la normalisation interne des métriques. Ils ne sont pas établis comme normes externes ni calibrés sur une série historique de ZENER SA Togo. Le PI de 6,119/10 est donc valide comme résultat du modèle pour le run étudié, sans portée de notation absolue de l'entreprise.
+Les profils Bottom et Perfect permettent la normalisation interne des métriques. Ils ne sont pas établis comme normes externes ni calibrés sur une série historique de ZENER SA Togo. Le PI est donc valide comme résultat du modèle pour l'exécution étudiée, sans portée de notation absolue de l'entreprise.
 
-La logique de liaison entre commandes et ordres internes n'est validée que pour \Agent{CMD\_1} et \Agent{REAPPRO\_1}. Le partage d'un ordre entre plusieurs commandes, la couverture partielle et plusieurs reconstitutions successives exigent des scénarios dédiés. Return, la qualité avec défauts, la panne et les comparaisons de modes de coordination restent également sans validation quantitative dans la campagne actuelle.
+La logique de liaison entre commandes et ordres internes n'est validée que pour \Agent{CMD\_1} et \Agent{REAPPRO\_1}. Le partage d'un ordre entre plusieurs commandes, la couverture partielle et plusieurs reconstitutions successives exigent des scénarios dédiés. Return, la qualité avec défauts, la panne et les comparaisons de modes de coordination restent également sans validation quantitative.
 
-La reproductibilité est enfin incomplète: la graine aléatoire n'est pas accessible dans \Agent{Main} et le SHA-256 du preset JSON n'est pas exporté automatiquement. Le runId, le scénario, l'échelle temporelle, la perturbation et le timestamp de clôture sont néanmoins concordants entre Excel et ABox.
+La reproductibilité est incomplète: la graine aléatoire n'est pas accessible dans \Agent{Main} et le SHA-256 du preset JSON n'est pas exporté automatiquement. L'identifiant d'exécution, le scénario, l'échelle temporelle, la perturbation et le timestamp de clôture sont néanmoins concordants entre Excel et ABox.
+
+\section{Conclusion générale}
+
+L'étude avait pour objectif de vérifier la continuité entre la demande, la décision, l'exécution et la mesure dans SCONTO-SVU. Le cas ZENER SA Togo montre qu'une commande peut être suivie depuis son entrée jusqu'à sa clôture sans confondre le service externe avec les mécanismes internes nécessaires à sa réalisation. Source, Make et Deliver s'enchaînent selon l'état des stocks et des matières, tandis que les événements et messages conservent la provenance des changements d'état.
+
+L'architecture multi-agents structure cette continuité par niveaux de responsabilité. Le tactique, la coordination, le pilotage opérationnel et l'exécution transforment progressivement les objectifs et les faits. La structure ISA-95 ancre les micro-activités dans leur contexte physique. Cette organisation ne remplace pas les processus métiers; elle rend leurs décisions et leurs preuves observables.
+
+La politique autonome de stock joue un rôle central. La séparation entre \Agent{CMD\_*} et \Agent{REAPPRO\_*} maintient la distinction entre demande externe et ordre interne, préserve la logique Make-to-Stock et protège les KPI clients. Lorsque la matière manque, Source précède Make; la production crédite ensuite le stock fini, réveille la commande et autorise Deliver.
+
+La gestion des écarts complète le fonctionnement nominal. L'AER propage l'information fournisseur en la reformulant pour Source, Make et Deliver. Le Blackboard, le goulot observé et l'arbitrage AHP montrent la capacité du modèle à contextualiser une adaptation locale. Cette décision reste distincte du PI, qui évalue l'exécution après transformation des observations.
+
+Le VSM fournit la lecture physique et temporelle. Les métriques organisent ensuite les observations, la normalisation et la logique floue construisent les attributs, puis la pondération produit le PI. La concordance entre Excel et ABox rend ce calcul auditable dans le cadre du modèle. Elle établit une cohérence fonctionnelle et décisionnelle, ainsi qu'une chaîne de mesure traçable au niveau des paramètres exportés.
+
+Les résultats démontrent donc l'exécution du scénario retenu, la traçabilité entre commande et reconstitution, la propagation d'un retard, la cohérence des indicateurs et le calcul du PI selon les règles du modèle. Ils ne démontrent ni l'optimalité de la politique, ni l'effet causal isolé du retard, ni la robustesse statistique, ni la généralisation multi-commandes. La calibration terrain reste nécessaire avant toute interprétation absolue de la performance de ZENER SA Togo.

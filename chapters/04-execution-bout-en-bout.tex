@@ -1,59 +1,40 @@
 \chapter{Exécution de bout en bout}
 \label{chap:execution-bout-en-bout}
 
-\section{De la commande cliente à la décision de reconstitution}
+\section{Commande cliente et décision de reconstitution}
 
-La chaîne commence par une commande externe. Dans l'exécution étudiée, \Agent{CMD\_1} porte une demande de 20 unités du produit nominal. Le stock initial de produit fini vaut zéro, ce qui interdit une livraison immédiate. Le modèle conserve la commande en attente et laisse la politique autonome évaluer le besoin de reconstitution.
+La chaîne commence par une demande externe. Dans l'exécution étudiée, \Agent{CMD\_1} porte une commande de 20 unités alors que le stock initial de produit fini est nul. Le modèle conserve cette commande en attente et laisse la politique autonome évaluer le besoin de reconstitution.
 
-Cette évaluation crée \Agent{REAPPRO\_1}, un ordre interne de 20 unités. Les deux identifiants décrivent donc des objets différents. \Agent{CMD\_1} exprime l'obligation de service envers le client; \Agent{REAPPRO\_1} autorise la reconstitution du stock nécessaire à cette obligation. L'ordre interne n'est ni une seconde demande externe ni une livraison à compter dans les KPI clients. Les fonctions de taux de service et de ponctualité filtrent explicitement les identifiants \Agent{REAPPRO\_*}.
+Cette évaluation crée \Agent{REAPPRO\_1}, un ordre interne de 20 unités. Les deux objets n'ont pas la même fonction. \Agent{CMD\_1} représente l'obligation de service envers le client; \Agent{REAPPRO\_1} autorise le rétablissement du stock nécessaire à ce service. L'ordre interne n'est ni une seconde commande externe ni une livraison à compter dans les KPI clients.
 
-Le passage par une politique de stock modifie la lecture causale de l'exécution. Make ne fabrique pas parce que la commande cliente serait devenue un ordre de production. Il fabrique parce qu'une décision interne a constaté un déficit et créé un lot de reconstitution. Une fois le lot achevé, le stock physique est crédité et la commande en attente peut être réévaluée.
+Le passage par la politique de stock préserve une logique Make-to-Stock. Make n'est pas déclenché par la conversion directe de la demande en ordre de fabrication. Il répond à une décision interne fondée sur l'état du stock. Une fois le lot achevé, le stock physique est crédité et la commande en attente peut être réévaluée.
 
-\section{Analyse matière et déclenchement de Source}
+\section{Analyse matière et intervention de Source}
 
-Le besoin matière de \Agent{REAPPRO\_1} est calculé à partir de la nomenclature. Pour 20 unités, il faut 250 unités de GPL, 20 bouteilles et 20 kits d'accessoires. Les stocks détaillés chargés couvrent les bouteilles et les accessoires, mais le GPL commence à zéro. Le stock projeté de cette matière est donc insuffisant et Source doit intervenir avant Make.
+La nomenclature de \Agent{REAPPRO\_1} exige 250 unités de GPL, 20 bouteilles et 20 kits d'accessoires. Les bouteilles et les accessoires sont disponibles au début du scénario, contrairement au GPL. Le diagnostic matière impose donc Source avant Make.
 
-La trace montre un ordre Source à T=57 s de simulation et une quantité de 250 unités de GPL. Cette quantité traverse plusieurs étapes du processus d'approvisionnement; elle ne doit pas être additionnée à chaque ligne de l'export. La réception est enregistrée à T=130 s. Elle crédite le stock GPL avant sa consommation par Make et déclenche la remontée de \texttt{MaterialAvailable} vers le plan de production.
+La réception de 250 unités de GPL crédite le stock matière, puis l'événement \texttt{MaterialAvailable} informe Make que la contrainte amont est levée. La quantité de GPL traverse plusieurs opérations Source; elle ne doit pas être additionnée à chaque ligne de la trace. Le flux physique et le message de disponibilité décrivent deux aspects complémentaires du même passage, sans être interchangeables.
 
-Le délai fournisseur appartient à un référentiel temporel distinct de certains timestamps événementiels. Le modèle reconstruit des durées réelles pour Source et Deliver à l'aide d'une échelle, tandis que Make conserve sa dynamique de simulation. Les jalons servent donc ici à établir l'ordre Source puis Make, pas à reconstruire une durée métier par simple soustraction.
+Les délais Source et Deliver utilisent une conversion temporelle, tandis que Make conserve sa dynamique propre. Les timestamps de la trace ordonnent les événements; ils ne suffisent pas à reconstruire les durées métier exportées par le pipeline VSM.
 
-\section{Make et mise en stock du produit fini}
+\section{Make et crédit du stock fini}
 
-Make commence après la disponibilité matière, autour de T=132 s de simulation. Les opérations produisent le lot interne de 20 unités, dont l'achèvement est signalé vers T=1966,9 s. Le transfert M1.5 vers le magasin de produits finis constitue une étape fonctionnelle décisive: l'ALP incrémente alors le stock physique, à l'exclusion des jetons purement visuels.
+Make débute après la disponibilité matière et produit les 20 unités de l'ordre interne. Le transfert M1.5 vers le magasin constitue l'étape où le stock physique de produit fini est crédité. Les jetons réservés à l'animation sont exclus de ce comptage.
 
-La fin d'une opération Make ne suffirait pas, à elle seule, à rendre la commande livrable. Le modèle clôt l'ordre autonome, puis relance l'analyse des commandes en attente. \Agent{CMD\_1} retrouve ainsi un stock disponible créé par \Agent{REAPPRO\_1}. Cette séparation évite d'attribuer directement au lot interne le statut de commande cliente.
+La fin d'une opération de production ne rend pas automatiquement la commande livrable. Le modèle clôt d'abord l'ordre interne, puis relance l'analyse des commandes en attente. \Agent{CMD\_1} retrouve alors un stock disponible dont la provenance reste liée à \Agent{REAPPRO\_1}. Cette relation est exportée dans les deux sens dans l'ABox.
 
-Les mécanismes de rebut et de reprise sont présents dans le modèle, mais l'exécution considérée n'est pas une campagne qualité. Aucun résultat général sur la robustesse de ces mécanismes n'est tiré de cette trajectoire.
+Les mécanismes de rebut et de reprise sont disponibles dans le modèle. Le scénario retenu ne comporte toutefois pas de défauts permettant d'évaluer quantitativement leur comportement.
 
 \section{Réveil de la commande et Deliver}
 
-Après le crédit du stock, la politique réveille \Agent{CMD\_1}. Deliver réserve les 20 unités, puis enchaîne la préparation et l'expédition. Le départ est visible à T=1975 s et la clôture à T=1990 s. Le décrément du stock intervient lors de la satisfaction effective de la commande. L'export final indique ainsi 20 unités commandées, 20 livrées et un stock de produit fini nul.
+Après le crédit du stock, la politique réveille \Agent{CMD\_1}. Deliver réserve les 20 unités, prépare l'expédition et assure le transport jusqu'au client. Le stock est décrémenté lors de la satisfaction effective de la commande. L'exécution se termine avec 20 unités commandées, 20 unités livrées et un stock fini nul.
 
-La commande est complète, mais elle est clôturée en retard. Ce constat porte sur une seule demande et ne doit pas être généralisé à un taux de service de long terme. Il confirme en revanche que les KPI clients ne confondent pas l'ordre de reconstitution avec une seconde commande.
+La commande est complète, mais tardive. Ce résultat porte sur une seule demande et ne représente pas un taux de service de long terme. Il confirme en revanche que le service client et la reconstitution interne restent séparés dans les comptes.
 
 \FigureOrPlaceholder{figures/chaine_execution_consolidee.png}{Chaîne fonctionnelle de satisfaction d'une commande lorsque les stocks imposent une reconstitution préalable.}{fig:chaine-execution-consolidee}
 
-\section{Jalons et portée de la trace}
+\section{Portée de la trace}
 
-\begin{table}[H]
-  \centering
-  \caption{Jalons de l'exécution expérimentale perturbée.}
-  \label{tab:jalons-execution}
-  \begin{tabularx}{\textwidth}{@{}L{0.16\textwidth}L{0.28\textwidth}Y@{}}
-    \toprule
-    Temps simulé & Jalon & Lecture autorisée \\
-    \midrule
-    T=53 s & Entrée de la commande cliente & Début de la trajectoire de \Agent{CMD\_1} \\
-    T=57 s & Ordre Source & Approvisionnement GPL associé à \Agent{REAPPRO\_1} \\
-    T=130 s & Réception du GPL & Les 250 unités deviennent disponibles avant Make \\
-    T=132 s & Début de Make & La production suit la levée de la contrainte matière \\
-    T=1966,9 s & Lot interne achevé & Les 20 unités de reconstitution sont terminées \\
-    T=1975 s & Départ Deliver & La commande réveillée entre dans la livraison finale \\
-    T=1990 s & Clôture de \Agent{CMD\_1} & Livraison complète, statut en retard, stock fini final nul \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
+La chronologie vérifiée est regroupée dans la \cref{tab:chronologie-execution-vsm}. Elle établit l'ordre entre diagnostic, Source, Make, crédit du stock, réveil de la commande, Deliver et clôture. Les valeurs VSM utilisent un autre niveau d'instrumentation et sont analysées au chapitre~\ref{chap:analyse-vsm}.
 
-Les timestamps ordonnent les événements de cette exécution. Ils ne sont pas interchangeables avec les durées réelles reconstruites par le pipeline. En particulier, l'écart brut entre T=53 s et T=1990 s n'a pas la même définition que le Lead Time exporté. Le chapitre se limite donc à l'ordre causal, aux quantités directement vérifiées et aux statuts de clôture.
-
-La trace établit expérimentalement la présence de \Agent{CMD\_1} et \Agent{REAPPRO\_1}, l'approvisionnement GPL, l'ordre Source puis Make puis Deliver, la livraison des 20 unités et le stock final nul. Le crédit du produit fini, le réveil de la commande et le filtrage des KPI sont en outre confirmés par l'implémentation. Une campagne comparative serait nécessaire pour quantifier l'effet propre de la politique de stock ou du retard fournisseur sur la performance.
+La trace et l'ABox établissent ensemble la présence de \Agent{CMD\_1} et \Agent{REAPPRO\_1}, leur dépendance, l'approvisionnement GPL, la livraison complète et le stock final nul. Elles ne quantifient pas l'effet propre de la politique de stock ou du retard fournisseur. Une comparaison contrôlée serait nécessaire pour isoler ces contributions.

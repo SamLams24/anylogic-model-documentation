@@ -1,3 +1,66 @@
 \chapter{Discussion intégrée}
+\label{chap:discussion}
 
-% À migrer depuis le document de base selon DOCUMENT_PLAN.md et SOURCE_POLICY.md.
+\section{Articulation entre décision, exécution et mesure}
+
+L'intégration proposée par SCONTO-SVU relie trois plans qui sont souvent analysés séparément. Le plan décisionnel contient les objectifs, diagnostics, alertes, arbitrages et instructions. Le plan d'exécution porte les flux Source, Make, Deliver et Return, les états de stock et le cycle de vie des commandes. Le plan de mesure transforme les événements en observations VSM, en métriques et en synthèse multicritère. La valeur du modèle réside moins dans leur coexistence que dans les liens explicites qui permettent de passer de l'un à l'autre.
+
+Cette organisation rend une conclusion vérifiable. Une livraison tardive peut être reliée à une commande, aux opérations qui l'ont servie et aux valeurs qui alimentent Reliability ou Responsiveness. Inversement, une décision locale reste identifiable sans être automatiquement créditée d'une variation du PI. La traçabilité limite ainsi deux erreurs: attribuer une performance à un agent qui n'en calcule pas la mesure, ou déduire un effet causal de la seule proximité entre une décision et un résultat.
+
+L'observabilité obtenue reste dépendante de l'instrumentation. Les messages montrent la circulation d'une information; les événements physiques établissent les quantités et changements d'état; les indicateurs appliquent une règle de consolidation. La présence de ces trois traces permet de confronter plusieurs représentations de la même exécution, sans supposer qu'elles répondent à la même question.
+
+\section{Autonomie de la politique de stock}
+
+La politique de stock introduit une autonomie opérationnelle entre la demande et la production. Le point de commande, le stock projeté, les réceptions attendues et la quantité de Wilson bornée fournissent un cadre de décision qui ne dépend pas d'une instruction manuelle pour chaque manque. Dans le scénario retenu, cette autonomie maintient la continuité du flux malgré l'absence initiale de produit fini et de GPL.
+
+Cette capacité ne constitue pas une optimisation démontrée. Les règles déterminent un comportement exploitable dans le modèle, mais aucune comparaison n'établit que le niveau de stock, la taille du lot ou le coût obtenus sont optimaux. L'intérêt expérimental réside dans la possibilité de modifier ces paramètres et d'observer leurs effets sous un protocole commun. Une analyse de sensibilité serait nécessaire pour discuter leur performance relative.
+
+Le pilotage des matières complète celui du produit fini. Une réception attendue reste datée et ne devient pas un stock physique avant l'événement correspondant. Cette distinction évite qu'un engagement fournisseur soit traité comme une disponibilité immédiate. Elle explique aussi pourquoi Source demeure une étape nécessaire avant Make lorsque le stock projeté est insuffisant.
+
+\section{Séparation entre commande cliente et reconstitution}
+
+La distinction entre \Agent{CMD\_*} et \Agent{REAPPRO\_*} constitue un apport conceptuel majeur. Le premier identifiant représente une demande externe et une obligation de service. Le second désigne un ordre interne provoqué par la politique de stock. Leur séparation conserve une logique Make-to-Stock: la rupture déclenche une reconstitution, mais ne transforme pas artificiellement la demande en commande Make-to-Order.
+
+Cette modélisation protège les indicateurs clients. Un ordre interne ne doit pas augmenter le nombre de commandes, modifier le dénominateur de ponctualité ou être compté comme une seconde livraison. Elle permet néanmoins de relier le service client à la reconstitution qui l'a rendu possible. Les relations RDF directes et inverses conservent cette dépendance dans la preuve ontologique.
+
+L'imputation temporelle suit la même logique. La commande reçoit l'attente associée à l'ordre dont elle dépend, tandis que l'ordre interne garde sa durée métier propre. Cette convention décrit le délai subi par le client, mais elle ne doit pas servir à additionner plusieurs fois une même charge d'atelier. Le scénario étudié ne couvre qu'une commande et une reconstitution. Un cas où plusieurs commandes partagent un ordre nécessiterait une règle d'allocation par quantité et une vérification de l'unicité des imputations.
+
+\section{Traçabilité sémantique et reproductibilité}
+
+Les identifiants stables assurent la continuité entre Excel, ABox et modèle. Le manifeste fixe le scénario, les paramètres de perturbation, l'échelle temporelle et l'instant de clôture. L'ABox ajoute les types, relations et contextes de mesure, tandis que le classeur conserve les tableaux de trace et les agrégats. La structure ISA-95 replace les micro-activités dans leur contexte d'équipement.
+
+Cette complémentarité renforce l'auditabilité. Une valeur peut être contrôlée dans le tableau de bord, reliée à un individu RDF et rapprochée de la logique qui la produit. Le fichier de preuve ne se réduit donc pas à un résultat final; il conserve aussi les relations nécessaires à son interprétation.
+
+Traçabilité et reproductibilité stricte ne se confondent toutefois pas. L'identifiant d'exécution, les paramètres principaux et le timestamp sont exportés, mais la graine reste inaccessible dans \Agent{Main}. L'empreinte du preset JSON n'est pas inscrite automatiquement dans le manifeste. Une autre exécution peut reproduire la configuration déclarée sans garantir une trajectoire aléatoire identique.
+
+\section{Adaptation locale et rôle de l'AER}
+
+La propagation du retard illustre la fonction de l'AER. Une alerte fournisseur est qualifiée comme exception opérationnelle, consolidée au niveau Source, puis traduite en révisions utiles à Make et Deliver. La chaîne ne transmet pas seulement un signal; elle adapte le contenu au niveau qui le reçoit. Le Blackboard complète ce mécanisme en maintenant un état partagé pour les observations et décisions.
+
+Le goulot détecté sur \Agent{sM1.3.1}, la décision \texttt{REBALANCE}, le score AHP local de 0,730 et les accusés d'application montrent qu'une autre boucle peut se fermer dans la même exécution. Ces faits établissent une capacité d'adaptation locale. Ils ne démontrent ni que l'option choisie est globalement optimale, ni qu'elle améliore le PI.
+
+L'AHP local et le PI global doivent rester séparés. L'AHP compare des options dans un contexte décisionnel donné. Le PI synthétise des dimensions de performance après transformation des observations. Un lien causal entre les deux exigerait des exécutions comparables où l'action AHP constitue le facteur contrôlé.
+
+\section{Complémentarité entre VSM, SCOR et PI}
+
+Le VSM, SCOR et le PI apportent trois lectures complémentaires. Le VSM conserve la structure physique et temporelle du flux. Les métriques associées à SCOR organisent les observations par dimension de performance. Le PI fournit une synthèse multicritère interne après normalisation, logique floue, construction des scores d'attribut et pondération.
+
+Cette chaîne n'efface pas la nature des entrées. Certaines mesures sont des associations internes, d'autres des proxys explicites ou des approximations propres à une exécution mono-produit. Leur qualification doit accompagner leur interprétation. De même, les repères Bottom et Perfect rendent les unités comparables dans le modèle, mais ils ne constituent pas une calibration externe.
+
+Avec les profils retenus, le PI de 6,119/10 permet de caractériser l'exécution et pourrait soutenir une comparaison entre scénarios soumis au même protocole. Il ne donne pas une note absolue à ZENER SA Togo. La lecture des attributs demeure nécessaire pour comprendre ce que l'agrégat résume et ce que ses entrées ne couvrent pas.
+
+\section{Portée des résultats}
+
+L'exécution validée établit la cohérence fonctionnelle de la chaîne, la traçabilité de la dépendance entre commande et reconstitution, la propagation AER et la concordance des indicateurs jusqu'au PI. Elle montre que le modèle peut servir de support expérimental pour examiner simultanément les décisions, les flux et la mesure.
+
+La portée reste celle d'une trajectoire simulée. L'absence d'une référence sans retard empêche d'isoler l'effet de la perturbation fournisseur. L'absence de réplications exclut une estimation de la variabilité. Le PCE dépend de taux VA configurés et les profils de normalisation ne sont pas calibrés sur des données terrain. Aucun résultat ne démontre une optimalité, une robustesse statistique ou une généralisation aux opérations réelles de l'entreprise.
+
+Les fonctions Return, qualité avec défauts, panne, perturbation de demande et comparaison des modes de coordination élargissent l'espace expérimental disponible. Elles doivent rester décrites comme capacités tant qu'une preuve primaire dédiée ne permet pas une conclusion quantitative.
+
+\section{Perspectives de validation}
+
+Une validation plus large devrait utiliser des graines contrôlées, plusieurs réplications et des scénarios appariés. Une exécution sans retard fournirait le contrefactuel minimal pour estimer l'effet de la perturbation fournisseur. Des scénarios multi-commandes permettraient de tester le partage des reconstitutions et la stabilité des KPI clients.
+
+La calibration métier constitue un second axe. Les taux de valeur ajoutée gagneraient à être confrontés à des chronométrages. Les bornes Bottom et Perfect, les paramètres de coût et les règles d'actifs devraient être validés avec les responsables concernés. Cette étape transformerait les scores internes en instruments de comparaison plus proches du contexte opérationnel.
+
+Enfin, Return, les défauts qualité, les pannes et les pics de demande nécessitent des protocoles dédiés. La généralisation attendue n'est pas l'extension automatique des valeurs actuelles à d'autres situations. Elle réside dans la capacité à soumettre la même architecture de traçabilité à des conditions contrôlées, puis à comparer les résultats avec des définitions et des preuves homogènes.

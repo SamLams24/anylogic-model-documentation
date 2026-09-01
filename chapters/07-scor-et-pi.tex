@@ -7,7 +7,7 @@ Le pipeline transforme les observations runtime selon une succession explicite. 
 
 \FigureOrPlaceholder{figures/pipeline_vsm_scor_pi.png}{Pipeline de transformation des observations VSM vers les attributs et le PI.}{fig:pipeline-vsm-scor-pi}
 
-L'usage d'un identifiant proche de SCOR ne suffit pas à faire d'une mesure un indicateur officiel. Le modèle distingue les associations nommées, les mesures internes et les proxys explicites. \path{PROXY.AG.SYSTEM_UTILIZATION}, par exemple, est conservé comme proxy de l'utilisation du système et non comme métrique SCOR officielle. Les métriques mono-produit sont également interprétées dans les limites du scénario qui ne contient qu'un produit livré.
+Les correspondances sont interprétées dans le cadre du référentiel SCOR version 12.0 utilisé par le modèle \cite{apics2017}. L'usage d'un identifiant proche de SCOR ne suffit pas à faire d'une mesure un indicateur officiel. Le modèle distingue les associations nommées, les mesures internes et les proxys explicites. \path{PROXY.AG.SYSTEM_UTILIZATION}, par exemple, est conservé comme proxy de l'utilisation du système et non comme métrique SCOR officielle. Les métriques mono-produit sont également interprétées dans les limites du scénario qui ne contient qu'un produit livré.
 
 \section{Métriques alimentant les attributs}
 
@@ -15,7 +15,7 @@ Reliability utilise les résultats de service de la commande cliente. \Metric{RL
 
 Responsiveness reçoit les temps issus du registre de commande. \Metric{RS.1.1} vaut 65 041,24056241 s et pointe sur Order Fulfillment Lead Time; \Metric{RS.3.94} vaut 46 924,40300189 s et pointe sur Order Waiting Time. Les temps macro disponibles sont 1,60096154 s pour Source avec \Metric{RS.2.1}, 26,0695401 s pour Make avec \Metric{RS.2.2} et 67,12341232 s pour Deliver avec \Metric{RS.2.3}. \Metric{RS.2.5} est absente, car Return n'a pas été exécuté. Une métrique absente ne doit pas être remplacée par zéro.
 
-Agility mobilise notamment un débit de 1,536 entité par heure et un proxy d'utilisation du système de 0,134. La mesure \Metric{AG.1.1} vaut 0,5 dans le pipeline interne. Ces données décrivent la réaction simulée sous les règles disponibles; elles ne constituent pas une mesure de l'agilité organisationnelle réelle.
+Agility mobilise notamment un débit de 1,536 entité par heure et un proxy d'utilisation du système de 0,134. La mesure \Metric{AG.1.1} vaut 0,5 dans le pipeline interne. Sa fonction source échantillonne le débit toutes les 60 s et conserve au plus dix observations. Avec au moins trois valeurs et une moyenne positive, elle calcule \(1-\min(1,\sigma/\bar{x})\); sinon, elle renvoie la valeur neutre 0,5. L'export ne conserve pas la branche effectivement suivie. La valeur observée doit donc être qualifiée d'approximation interne dont le mode d'obtention exact n'est pas vérifiable dans l'artefact exporté. Ces données ne constituent pas une mesure de l'agilité organisationnelle réelle.
 
 L'attribut Cost utilise \Metric{CO.1.1}, rapport entre le coût total simulé et le chiffre d'affaires estimé. Sa valeur brute vaut 1 pour cette exécution. Les coûts recensés, dont 4 918,345 FCFA pour la main-d'oeuvre et 4 940 FCFA pour les matières, ne constituent pas une comptabilité industrielle complète. Le score CO égal à 0 résulte du profil de normalisation retenu; il ne signifie pas que l'entreprise ne possède aucune performance économique.
 
@@ -24,6 +24,19 @@ Asset Management utilise notamment une valeur de 0,941 pour \Metric{AM.3.9} et u
 \section{Normalisation, scores et agrégation}
 
 Pour chaque métrique, le modèle conserve une valeur brute, un sens d'amélioration, des repères Bottom et Perfect, un score normalisé et un grade flou. Ces repères assurent la calculabilité interne, mais leur origine n'est pas une norme publiée dans les artefacts de l'exécution. Ils doivent être calibrés sur des références métier avant une lecture absolue.
+
+La théorie des ensembles flous fournit le cadre général permettant d'exprimer une appartenance graduelle \cite{zadeh1965}. Les travaux de Chan et Qi proposent une mesure de performance orientée processus fondée sur ce cadre \cite{chanqi2003}. Theeranuphattana et Tang, puis Theeranuphattana, Tang et Khang, discutent son articulation avec SCOR et avec une mesure intégrée de la performance de la chaîne logistique \cite{theeranuphattana2008,theeranuphattana2012}. La méthode mise en oeuvre dans SCONTO-SVU est une adaptation interne inspirée de ces travaux. Elle n'en constitue pas une reproduction exacte.
+
+Pour une valeur \(x\), le profil interne emploie un repère Bottom \(b\) et un repère Perfect \(p\). Le score sur 10 est borné à l'intervalle \([0,10]\). Lorsque \(p>b\), il vaut \(10(x-b)/(p-b)\); lorsque \(p<b\), il vaut \(10(b-x)/(b-p)\). Ce score est ensuite réparti linéairement entre les deux grades voisins parmi A, B, C, D, E et F, dont les centres valent respectivement 10, 8, 6, 4, 2 et 0. Les appartenances des métriques sont agrégées avec leurs poids locaux, puis normalisées par la somme de ces poids.
+
+La défuzzification d'un vecteur d'appartenance \((\mu_A,\mu_B,\mu_C,\mu_D,\mu_E,\mu_F)\) suit la règle interne:
+
+\begin{equation}
+S=\frac{10\mu_A+8\mu_B+6\mu_C+4\mu_D+2\mu_E}{\mu_A+\mu_B+\mu_C+\mu_D+\mu_E+\mu_F}.
+\label{eq:defuzzification-interne}
+\end{equation}
+
+Le même principe d'agrégation pondérée des appartenances et de défuzzification produit les cinq scores d'attribut. Les poids globaux sont ensuite appliqués à ces scores pour calculer le PI.
 
 Les scores observés et leurs poids sont regroupés dans la \cref{tab:scores-attributs-pi}.
 

@@ -42,7 +42,7 @@ Cette séparation protège la chaîne de preuve. Une quantité reçue doit être
 
 \section{Ancrage ISA-95 de l'exécution}
 
-La structure ISA-95 du modèle comprend 190 nœuds d'équipement et 71 affectations de micro-activités. Ces cardinalités sont contrôlées de trois manières complémentaires. Le projet ALP contient une garde explicite; le JSON les déclare dans sa configuration; l'ABox de l'exécution expérimentale contient 190 sujets d'équipement et 71 relations d'affectation par \texttt{executedAt}. Elles peuvent donc être présentées comme une propriété vérifiée de la structure utilisée.
+La structure du modèle est organisée selon un cadre inspiré d'ISA-95 et de sa hiérarchie physique \cite{isa2025}. Elle comprend 190 nœuds d'équipement et 71 affectations de micro-activités. Ces cardinalités appartiennent à SCONTO-SVU et ne sont pas prescrites par la norme. Elles sont contrôlées de trois manières complémentaires. Le projet ALP contient une garde explicite; le JSON les déclare dans sa configuration; l'ABox de l'exécution expérimentale contient 190 sujets d'équipement et 71 relations d'affectation par \texttt{executedAt}. Elles peuvent donc être présentées comme une propriété vérifiée de la structure utilisée.
 
 L'intérêt de cette hiérarchie n'est pas le comptage en lui-même. Elle associe un acteur à son contexte physique, puis rattache la micro-activité au niveau d'équipement où elle s'exécute. Le lecteur peut ainsi relier une trace Make à l'entreprise focale, au secteur concerné et au poste qui a produit l'événement. Cette contextualisation facilite l'audit des mesures et évite d'attribuer à un acteur une activité située chez un fournisseur ou chez le client.
 

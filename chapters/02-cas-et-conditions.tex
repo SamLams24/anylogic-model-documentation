@@ -60,13 +60,13 @@ S_{\mathrm{proj}} = S_{\mathrm{courant}} + R_{\mathrm{attendues}} - B_{\mathrm{e
 
 Lorsque ce stock projeté franchit le point de commande, le modèle peut déclencher Source avant Make. Une réception attendue demeure un objet daté; elle ne crédite pas le stock physique avant son événement de réception.
 
-Le dimensionnement du lot peut s'appuyer sur la quantité économique de Wilson. Dans sa forme usuelle, la quantité est calculée par:
+Le dimensionnement du lot peut s'appuyer sur la quantité économique de commande, selon le modèle EOQ classique introduit par Harris et souvent diffusé sous l'appellation formule de Wilson \cite{harris1913,erlenkotter1990}. Dans sa forme usuelle, la quantité est calculée par:
 
 \[
-Q_{\mathrm{W}} = \sqrt{\frac{2 D C_{\mathrm{l}}}{C_{\mathrm{p}}}},
+Q_{\mathrm{EOQ}} = \sqrt{\frac{2 D C_{\mathrm{l}}}{C_{\mathrm{p}}}},
 \]
 
-où \(D\) représente la demande considérée, \(C_{\mathrm{l}}\) le coût de lancement et \(C_{\mathrm{p}}\) le coût de possession. Le modèle borne le résultat afin de maintenir une taille de lot exploitable. Wilson fournit ici une règle de dimensionnement et une aide à la décision. La présence de cette formule ne démontre pas une optimalité globale de la chaîne, qui demanderait des objectifs explicites et une campagne comparative.
+où \(D\) représente la demande considérée, \(C_{\mathrm{l}}\) le coût de lancement et \(C_{\mathrm{p}}\) le coût de possession. Le modèle borne le résultat afin de maintenir une taille de lot exploitable. L'EOQ fournit ici une règle de dimensionnement et une aide à la décision. La présence de cette formule ne démontre pas une optimalité globale de la chaîne, qui demanderait des objectifs explicites et une campagne comparative.
 
 \section{Paramétrage et reproductibilité}
 

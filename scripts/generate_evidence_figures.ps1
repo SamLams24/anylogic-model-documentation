@@ -135,7 +135,7 @@ $chainLabels = @(
     @{Label="Ordre interne REAPPRO_1"; Brush=$internalSoft},
     @{Label=("Analyse mati" + $eGrave + "re"); Brush=$stockSoft},
     @{Label="Source"; Brush=$processSoft},
-    @{Label="MaterialAvailable"; Brush=$stockSoft},
+    @{Label="MaterialAvailable"; Brush=$messageSoft},
     @{Label="Make"; Brush=$processSoft},
     @{Label=("Cr" + $eAcute + "dit du stock de produit fini"); Brush=$stockSoft},
     @{Label=("R" + $eAcute + "veil de CMD_1"); Brush=$externalSoft},
@@ -154,10 +154,11 @@ for ($index = 0; $index -lt ($chainNodes.Count - 1); $index++) {
 
 $legendY = 1740
 $legend = @(
-    @{X=120; Label="Commande externe"; Brush=$externalSoft},
-    @{X=420; Label="Ordre interne"; Brush=$internalSoft},
-    @{X=700; Label="Processus"; Brush=$processSoft},
-    @{X=940; Label=("Stock ou disponibilit" + $eAcute); Brush=$stockSoft}
+    @{X=35; Label="Commande externe"; Brush=$externalSoft},
+    @{X=285; Label="Ordre interne"; Brush=$internalSoft},
+    @{X=510; Label="Processus"; Brush=$processSoft},
+    @{X=700; Label="Stock"; Brush=$stockSoft},
+    @{X=890; Label=("Message de disponibilit" + $eAcute); Brush=$messageSoft}
 )
 foreach ($item in $legend) {
     $graphics.FillRectangle($item.Brush, $item.X, $legendY, 42, 28)

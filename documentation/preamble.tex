@@ -1,0 +1,138 @@
+% Préambule propre à la documentation SCONTO-SVU. Compilation avec XeLaTeX.
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{fontspec}
+\usepackage[french]{babel}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\IfFontExistsTF{Times New Roman}{
+  \setmainfont{Times New Roman}
+}{
+  \setmainfont{TeX Gyre Termes}
+}
+
+\IfFontExistsTF{Arial}{
+  \newfontfamily\DocumentationSans{Arial}
+}{
+  \newfontfamily\DocumentationSans{TeX Gyre Heros}
+}
+
+\setstretch{1.12}
+\setlength{\parindent}{0.6cm}
+\setlength{\parskip}{0pt}
+
+\titleformat{\chapter}[block]
+  {\DocumentationSans\bfseries\fontsize{15}{18}\selectfont}
+  {\thechapter.}{0.6em}{}[\vspace{0.25ex}\titlerule]
+\titlespacing*{\chapter}{0pt}{-10pt}{16pt}
+
+\titleformat{\section}
+  {\DocumentationSans\bfseries\fontsize{12}{14}\selectfont}
+  {\thesection}{0.6em}{}
+\titleformat{\subsection}
+  {\DocumentationSans\bfseries\fontsize{11}{13}\selectfont}
+  {\thesubsection}{0.6em}{}
+
+\captionsetup{font=small,labelfont=bf,justification=centering}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black,
+  pdftitle={Documentation du modèle SCONTO-SVU},
+  pdfauthor={}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Documentation SCONTO-SVU}
+\fancyhead[R]{\small Fonctionnement et utilisation}
+\fancyfoot[C]{\small Page \thepage\ sur \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\definecolor{DocBlue}{HTML}{335C81}
+\definecolor{DocBluePale}{HTML}{EDF3F8}
+\definecolor{DocAmber}{HTML}{8A5A00}
+\definecolor{DocAmberPale}{HTML}{FFF7E6}
+\definecolor{DocGreen}{HTML}{356B4C}
+\definecolor{DocGreenPale}{HTML}{EEF7F1}
+\definecolor{DocGray}{HTML}{555555}
+\definecolor{DocGrayPale}{HTML}{F3F3F3}
+
+\newcommand{\DocumentationBox}[4]{%
+  \par\smallskip\noindent
+  \fcolorbox{#1}{#2}{%
+    \begin{minipage}{0.92\linewidth}
+      \small\textbf{#3}\quad #4
+    \end{minipage}}%
+  \par\smallskip
+}
+
+\newcommand{\BonASavoir}[1]{%
+  \DocumentationBox{DocBlue}{DocBluePale}{Bon à savoir.}{#1}}
+\newcommand{\AttentionDoc}[1]{%
+  \DocumentationBox{DocAmber}{DocAmberPale}{Attention.}{#1}}
+\newcommand{\ExempleDoc}[1]{%
+  \DocumentationBox{DocGreen}{DocGreenPale}{Exemple.}{#1}}
+\newcommand{\EnPratique}[1]{%
+  \DocumentationBox{DocGray}{DocGrayPale}{En pratique.}{#1}}
+
+\newif\ifdocumentationdraft
+\documentationdrafttrue
+\newcommand{\DocumentationNote}[1]{%
+  \ifdocumentationdraft
+    \par\smallskip\noindent
+    \fcolorbox{DocGray}{DocGrayPale}{%
+      \begin{minipage}{0.92\linewidth}
+        \small\textit{Note interne de fondation : #1}
+      \end{minipage}}
+    \par\smallskip
+  \fi
+}
+
+\newcommand{\FigureOrPlaceholder}[4][0.92\textwidth]{%
+  \begin{figure}[H]
+    \centering
+    \IfFileExists{#2}{%
+      \includegraphics[width=#1]{#2}%
+    }{%
+      \fbox{\parbox[c][4.5cm][c]{0.86\textwidth}{\centering\small
+        Illustration planifiée : \texttt{#2}}}%
+    }%
+    \caption{#3}
+    \label{#4}
+  \end{figure}%
+}
+
+\newcommand{\TablePlaceholder}[2]{%
+  \begin{table}[H]
+    \centering
+    \begin{tabularx}{0.88\textwidth}{lY}
+      \toprule
+      Élément & Contenu attendu \\
+      \midrule
+      Fondation & Tableau à renseigner pendant la rédaction du chapitre. \\
+      \bottomrule
+    \end{tabularx}
+    \caption{#1}
+    \label{#2}
+  \end{table}%
+}

@@ -13,8 +13,8 @@ Le tableau suivant recense les 13 blocs du fichier de référence, dans l'ordre 
 
 \begin{landscape}
 {\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{L{0.11\linewidth} L{0.20\linewidth} L{0.07\linewidth} L{0.09\linewidth} L{0.17\linewidth} L{0.13\linewidth} L{0.13\linewidth} L{0.10\linewidth}}
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{L{0.10\linewidth} L{0.17\linewidth} L{0.06\linewidth} L{0.08\linewidth} L{0.15\linewidth} L{0.12\linewidth} L{0.12\linewidth} L{0.10\linewidth}}
 \caption{Blocs racine de la configuration JSON.}\label{tab:blocs-json-annexe}\\
 \toprule
 Bloc & Rôle & Type & Absence tolérée & Valeur de repli & Fonction de chargement & Fonction de sauvegarde & Remarque \\
@@ -30,20 +30,20 @@ Bloc & Rôle & Type & Absence tolérée & Valeur de repli & Fonction de chargeme
 \bottomrule
 \endlastfoot
 
-\texttt{meta} & Métadonnées de version, de schéma et de traçabilité de la sauvegarde. & objet & Oui & Champs lus individuellement, sans échec global. & \texttt{chargerScenarioJSON} & \texttt{sauverScenarioJSON} & Porte \texttt{schemaVersion}, contrôlé mais non bloquant. \\
-\texttt{parametres\allowbreak Globaux} & Réglages partagés: débit, coûts, poids du PI, stocks globaux de repli, compteurs. & objet & Oui & Valeur courante conservée comme repli, hors compteurs remis à zéro. & \texttt{chargerScenarioJSON} & \texttt{sauverScenarioJSON} & Alimente aussi les poids initiaux du PI. \\
+\texttt{meta} & Métadonnées de version, de schéma et de traçabilité de la sauvegarde. & objet & Oui & Champs lus individuellement, sans échec global. & \texttt{charger\allowbreak ScenarioJSON} & \texttt{sauver\allowbreak ScenarioJSON} & Porte \texttt{schemaVersion}, contrôlé mais non bloquant. \\
+\texttt{parametres\allowbreak Globaux} & Réglages partagés: débit, coûts, poids du PI, stocks globaux de repli, compteurs. & objet & Oui & Valeur courante conservée comme repli, hors compteurs remis à zéro. & \texttt{charger\allowbreak ScenarioJSON} & \texttt{sauver\allowbreak ScenarioJSON} & Alimente aussi les poids initiaux du PI. \\
 \texttt{acteurs} & Organisations de la chaîne: fournisseurs, entreprise focale, client, acteurs annexes. & liste & Oui & Liste vide si absent. & \texttt{acteurFromJson} & \texttt{acteurToJson} & 5 entrées dans le fichier de référence. \\
-\texttt{postes} & Micro-activités: identité, code SCOR, temps, capacité, prédécesseurs, matière. & liste & Oui & Liste vide si absent; un scénario vide ne peut pas démarrer. & Restaurés directement dans \texttt{chargerScenarioJSON}, sans fonction dédiée & \texttt{posteToJson} & 71 entrées; agents opérationnels recréés en première passe. \\
+\texttt{postes} & Micro-activités: identité, code SCOR, temps, capacité, prédécesseurs, matière. & liste & Oui & Liste vide si absent; un scénario vide ne peut pas démarrer. & Restaurés directement dans \texttt{charger\allowbreak ScenarioJSON}, sans fonction dédiée & \texttt{posteToJson} & 71 entrées; agents opérationnels recréés en première passe. \\
 \texttt{scenarios} & Gammes de produit: séquence de postes et nomenclature associée. & liste & Oui & Liste vide si absent. & \texttt{scenarioFromJson} & \texttt{scenarioToJson} & 5 entrées; le scénario nominal est resélectionné après chargement. \\
 \texttt{machines} & Ressources machine associées à un poste: capacité, cycle, MTBF, MTTR. & liste & Oui & Liste vide si absent. & \texttt{machineFromJson} & \texttt{machineToJson} & 1 entrée dans le fichier de référence. \\
-\texttt{fichesMatiere} & Fiches de matière: stock, sécurité, délai, fournisseur. & liste & Oui & Liste vide si absent. & Lue directement dans \texttt{chargerScenarioJSON} & Écrite directement dans \texttt{sauverScenarioJSON} & 3 entrées; alimente le besoin net du \cref{chap:stocks-reapprovisionnement}. \\
+\texttt{fichesMatiere} & Fiches de matière: stock, sécurité, délai, fournisseur. & liste & Oui & Liste vide si absent. & Lue directement dans \texttt{charger\allowbreak ScenarioJSON} & Écrite directement dans \texttt{sauver\allowbreak ScenarioJSON} & 3 entrées; alimente le besoin net du \cref{chap:stocks-reapprovisionnement}. \\
 \texttt{normalization\allowbreak Profiles} & Profils Bottom/Perfect utilisés par la normalisation des métriques. & liste & Oui & Profils par défaut complétés pour les codes manquants. & Lue directement, puis \texttt{initialiser\allowbreak Profils\allowbreak Normalisation\allowbreak Defaut} complète & Écrite directement & 16 profils dans le fichier de référence. \\
-\texttt{ahpConfiguration} & Seuil de cohérence et deux matrices de comparaison par paires, stratégique et goulot. & objet & Oui & Matrice stratégique reconstruite depuis les poids du PI si absente. & \texttt{matriceAHPFromJson} & \texttt{matriceAHPToJson} & L'AHP stratégique reste sans effet sur le PI, voir \cref{chap:agents-aer}. \\
+\texttt{ahp\allowbreak Configuration} & Seuil de cohérence et deux matrices de comparaison par paires, stratégique et goulot. & objet & Oui & Matrice stratégique reconstruite depuis les poids du PI si absente. & \texttt{matriceAHP\allowbreak FromJson} & \texttt{matriceAHP\allowbreak ToJson} & L'AHP stratégique reste sans effet sur le PI, voir \cref{chap:agents-aer}. \\
 \texttt{aboxExport} & Réglages de l'export ABox: activation, déclencheurs, limite d'événements, espaces de noms. & objet & Oui & Valeurs de repli documentées ci-dessous. & Lue directement & Écrite directement & Pilote l'export décrit au \cref{chap:resultats-exports}. \\
 \texttt{performance\allowbreak Measurement} & Déclaration de la méthode de mesure, de l'échelle et des poids par défaut. & objet & Oui & Non lu pour reconstituer l'état; les poids actifs viennent de \texttt{parametres\allowbreak Globaux}. & Non consommé au chargement & Écrite directement & Champ \texttt{method} vaut \texttt{THEERANUPHATTANA\_\allowbreak CHAN\_QI\_\allowbreak ADAPTED} dans le fichier de référence. \\
-\texttt{isa95Hierarchy} & Hiérarchie d'équipements: identité, type ISA-95, parent, acteur, source. & liste & Oui, mais requise pour la garde de démarrage & Liste vide si absent; une hiérarchie incohérente déclenche un avertissement. & \texttt{isa95NodeFromJson} & \texttt{isa95NodeToJson} & 190 noeuds; voir \cref{chap:isa95-ontologie}. \\
-\texttt{isa95Assignments} & Affectation d'une micro-activité à un élément de la hiérarchie ISA-95. & liste & Oui, mais requise pour la garde de démarrage & Liste vide si absent. & \texttt{isa95Assignment\allowbreak FromJson} & \texttt{isa95Assignment\allowbreak ToJson} & 71 affectations; contrôlées avec \texttt{isa95Hierarchy}. \\
-\texttt{responsabilites} & Affectation d'une micro-activité à un acteur, avec niveau hiérarchique et quantité. & liste & Absent du fichier de référence & Chargement poursuivi sans erreur si absent. & \texttt{responsabiliteFromJson} & \texttt{responsabiliteToJson} & Produit systématiquement par la sauvegarde; absent du fichier de référence audité. \\
+\texttt{isa95\allowbreak Hierarchy} & Hiérarchie d'équipements: identité, type ISA-95, parent, acteur, source. & liste & Oui, mais requise pour la garde de démarrage & Liste vide si absent; une hiérarchie incohérente déclenche un avertissement. & \texttt{isa95Node\allowbreak FromJson} & \texttt{isa95Node\allowbreak ToJson} & 190 noeuds; voir \cref{chap:isa95-ontologie}. \\
+\texttt{isa95\allowbreak Assignments} & Affectation d'une micro-activité à un élément de la hiérarchie ISA-95. & liste & Oui, mais requise pour la garde de démarrage & Liste vide si absent. & \texttt{isa95Assignment\allowbreak FromJson} & \texttt{isa95Assignment\allowbreak ToJson} & 71 affectations; contrôlées avec \texttt{isa95Hierarchy}. \\
+\texttt{responsa\allowbreak bilites} & Affectation d'une micro-activité à un acteur, avec niveau hiérarchique et quantité. & liste & Absent du fichier de référence & Chargement poursuivi sans erreur si absent. & \texttt{responsabilite\allowbreak FromJson} & \texttt{responsabilite\allowbreak ToJson} & Produit systématiquement par la sauvegarde; absent du fichier de référence audité. \\
 \end{longtable}
 }
 \end{landscape}
@@ -89,7 +89,7 @@ Un poste porte plus de trente propriétés. Les plus structurantes pour la recon
     \texttt{capaciteSimultanee} & nombre & Replie à 1. \\
     \texttt{chainesPrecedents} & liste & Postes précédents; contrôlés puis reconnectés en seconde passe du chargement, par identifiant ou par nom. \\
     \texttt{genereAutonome}, \texttt{politiqueApproPoste}, \texttt{intervalleApproPoste}, \texttt{tauxArriveePoissonPoste}, \texttt{quantiteParApproPoste} & booléen, chaîne, nombres & Paramètrent la génération autonome; \texttt{genereAutonome} replie à faux. \\
-    \texttt{tailleLot}, \texttt{attendTousLesPredecesseurs} & nombre, booléen & Règlent le regroupement et la synchronisation multi-amont; \texttt{tailleLot} borné à au moins 1 au chargement. \\
+    \texttt{tailleLot}, \texttt{attend\allowbreak Tous\allowbreak Les\allowbreak Predecesseurs} & nombre, booléen & Règlent le regroupement et la synchronisation multi-amont; \texttt{tailleLot} borné à au moins 1 au chargement. \\
     \texttt{consommeMatiere}, \texttt{nbProduitsParLot} & booléen, nombre & Activent la consommation de matière décrite au \cref{chap:nomenclature-stocks}; \texttt{consommeMatiere} replie à faux. \\
     \texttt{niveauStock} & nombre & Peut refléter l'instant de sauvegarde plutôt qu'une constante de conception. \\
     \bottomrule
@@ -160,7 +160,7 @@ Un scénario porte un type de produit, un débit par heure courant et de base, u
 
 \section{Responsabilités}
 
-Le bloc \texttt{responsabilites} associe une micro-activité, un acteur, un niveau hiérarchique et une quantité, avec les identifiants dérivés nécessaires à la reconstruction des agents correspondants. Il est produit systématiquement par \texttt{sauverScenarioJSON}, mais absent du fichier de référence audité, qui n'a jamais été resauvegardé depuis sa dernière modification manuelle. Le chargeur le lit lorsqu'il existe, via \texttt{responsabiliteFromJson}, et poursuit sans erreur lorsqu'il manque.
+Le bloc \texttt{responsabilites} associe une micro-activité, un acteur, un niveau hiérarchique et une quantité, avec les identifiants dérivés nécessaires à la reconstruction des agents correspondants. Il est produit systématiquement par \texttt{sauver\allowbreak ScenarioJSON}, mais absent du fichier de référence audité, qui n'a jamais été resauvegardé depuis sa dernière modification manuelle. Le chargeur le lit lorsqu'il existe, via \texttt{responsabiliteFromJson}, et poursuit sans erreur lorsqu'il manque.
 
 \section{Profils de normalisation}
 

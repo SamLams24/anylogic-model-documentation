@@ -31,8 +31,8 @@ function New-Node {
 }
 
 function New-Edge {
-    param([int]$From, [int]$To, [string]$Label = '', [string]$Style = 'solid')
-    [pscustomobject]@{ From = $From; To = $To; Label = $Label; Style = $Style }
+    param([int]$From, [int]$To, [string]$Label = '', [string]$Style = 'solid', [int]$LabelOffsetX = 0, [int]$LabelOffsetY = -28)
+    [pscustomobject]@{ From = $From; To = $To; Label = $Label; Style = $Style; LabelOffsetX = $LabelOffsetX; LabelOffsetY = $LabelOffsetY }
 }
 
 function Get-NodeBrush {
@@ -104,8 +104,8 @@ function Write-Diagram {
         }
         $graphics.DrawLine($edgePen, $x1, $y1, $x2, $y2)
         if ($edge.Label) {
-            $mx = [int](($x1 + $x2) / 2)
-            $my = [int](($y1 + $y2) / 2) - 28
+            $mx = [int](($x1 + $x2) / 2) + $edge.LabelOffsetX
+            $my = [int](($y1 + $y2) / 2) + $edge.LabelOffsetY
             $graphics.DrawString($edge.Label, $labelFont, $textBrush, $mx, $my, $center)
         }
     }
@@ -336,7 +336,7 @@ $commandNodes = @(
 $commandEdges = @(
     (New-Edge 0 1), (New-Edge 1 2), (New-Edge 2 3 'oui'), (New-Edge 3 4),
     (New-Edge 4 5), (New-Edge 5 6), (New-Edge 2 7 'non'), (New-Edge 7 8),
-    (New-Edge 8 9 'Source puis Make si besoin'), (New-Edge 9 10),
+    (New-Edge 8 9 'Source puis Make si besoin' -LabelOffsetX 130 -LabelOffsetY -15), (New-Edge 9 10),
     (New-Edge 10 11), (New-Edge 11 2 "r${chEAcute}analyse")
 )
 Write-Diagram 'Cycle d''une commande cliente' $commandNodes $commandEdges 'cycle_commande.png' 1900 1120

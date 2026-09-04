@@ -39,11 +39,13 @@ Une \textbf{machine} représente une ressource physique associée à un poste, a
 
 \section{Catalogue par niveau}
 
+Le tableau suivant réunit, sous un même intitulé de catalogue, les cinq agents décisionnels, la ressource Machine pilotée au niveau Exécution et les deux structures transversales Blackboard et AER; la colonne Niveau distingue explicitement ce qui relève d'un agent décisionnel de ce qui n'en est pas un.
+
 \begin{landscape}
 {\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{L{0.11\linewidth} L{0.09\linewidth} L{0.17\linewidth} L{0.20\linewidth} L{0.20\linewidth} L{0.11\linewidth} L{0.10\linewidth}}
-\caption{Agents et objets pilotés, par niveau de décision.}\label{tab:agents-annexe}\\
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{L{0.10\linewidth} L{0.08\linewidth} L{0.15\linewidth} L{0.18\linewidth} L{0.18\linewidth} L{0.10\linewidth} L{0.10\linewidth}}
+\caption{Agents décisionnels, structures transversales et ressources pilotées, par niveau.}\label{tab:agents-annexe}\\
 \toprule
 Agent ou classe & Niveau & Responsabilité & Messages reçus (exemples) & Messages émis (exemples) & Blackboard & Objets pilotés \\
 \midrule
@@ -64,9 +66,9 @@ Tactique (Source, Make, Deliver, Return) & Tactique & Planifie chaque domaine SC
 
 Coordination (par processus) & Coordination & Contextualise le plan tactique pour un processus et consolide les retours opérationnels en un compte rendu de domaine. & Plan tactique du domaine & \texttt{Operational\-Exception} vers le tactique, ordre de domaine vers le pilotage & Écrit les comptes rendus consolidés & Ordre de domaine transmis au pilotage opérationnel \\
 
-OperationalPilot & Pilotage opérationnel & Décompose l'ordre de domaine, affecte les tâches aux postes et surveille l'exécution; qualifie un goulot avec l'AHP local le cas échéant. & Ordre de domaine, \texttt{Supplier\-Delay\-Alert} & \texttt{Operational\-Exception}, affectation ou instruction vers l'exécution & Écrit les décisions locales, notamment un rééquilibrage & Postes et machines affectés à une instruction \\
+Operational\-Pilot & Pilotage opérationnel & Décompose l'ordre de domaine, affecte les tâches aux postes et surveille l'exécution; qualifie un goulot avec l'AHP local le cas échéant. & Ordre de domaine, \texttt{Supplier\-Delay\-Alert} & \texttt{Operational\-Exception}, affectation ou instruction vers l'exécution & Écrit les décisions locales, notamment un rééquilibrage & Postes et machines affectés à une instruction \\
 
-OperationalExecution & Exécution & Réalise l'opération physique ou informationnelle et rapporte le fait obtenu. & Instruction ou affectation & \texttt{MaterialReceived}, accusé de fin de tâche, quantité produite & Écrit l'observation brute lue ensuite par les niveaux supérieurs & Poste ou machine concerné par l'opération \\
+Operational\-Execution & Exécution & Réalise l'opération physique ou informationnelle et rapporte le fait obtenu. & Instruction ou affectation & \texttt{MaterialReceived}, accusé de fin de tâche, quantité produite & Écrit l'observation brute lue ensuite par les niveaux supérieurs & Poste ou machine concerné par l'opération \\
 
 Machine (instance) & Exécution & Porte la capacité, le temps de cycle et la fiabilité d'une ressource physique associée à un poste. & Instruction d'exécution transmise au poste & Fait runtime relatif au poste piloté & Ne publie pas directement; le poste rapporte l'observation & Elle-même, en tant que ressource du poste \\
 

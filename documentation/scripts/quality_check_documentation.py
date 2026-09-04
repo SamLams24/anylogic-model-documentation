@@ -102,12 +102,19 @@ def main() -> int:
         add_match(errors, path, text, r"\\DocumentationNote\s*\{", "note interne encore active")
 
         if args.final:
-            for pattern, label in (
-                (r"\\FigureOrPlaceholder\s*(?:\[[^]]*\])?\s*\{", "placeholder de figure encore autorisé"),
-                (r"\\TablePlaceholder\s*\{", "placeholder de tableau encore autorisé"),
-                (r"Illustration planifiée", "texte de placeholder"),
-            ):
-                add_match(errors, path, text, pattern, label)
+            for match in re.finditer(r"\\FigureOrPlaceholder\s*(?:\[[^]]*\])?\s*\{([^}]*)\}", text):
+                figure_path = ROOT / match.group(1).strip()
+                if not figure_path.is_file():
+                    relative = path.relative_to(ROOT)
+                    errors.append(
+                        f"{relative}:{line_number(text, match.start())}: "
+                        f"figure manquante pour \\FigureOrPlaceholder: {match.group(1).strip()}"
+                    )
+
+            add_match(errors, path, text, r"\\TablePlaceholder\s*\{", "placeholder de tableau encore autorisé")
+
+            if path.name != "preamble.tex":
+                add_match(errors, path, text, r"Illustration planifiée", "texte de placeholder")
 
     if warnings:
         print("AVERTISSEMENTS:")

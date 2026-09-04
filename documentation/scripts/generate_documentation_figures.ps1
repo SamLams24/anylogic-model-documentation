@@ -147,6 +147,173 @@ function Write-Diagram {
     Write-Host "Figure generee : $target"
 }
 
+function Write-TreeDiagram {
+    param(
+        [string]$Title,
+        [object[]]$Nodes,
+        [object[]]$Edges,
+        [string]$FileName,
+        [int]$Width = 1800,
+        [int]$Height = 900
+    )
+
+    $bitmap = [System.Drawing.Bitmap]::new($Width, $Height)
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+    $graphics.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::ClearTypeGridFit
+    $graphics.Clear([System.Drawing.Color]::White)
+
+    $titleFont = [System.Drawing.Font]::new('Arial', 25, [System.Drawing.FontStyle]::Bold)
+    $nodeFont = [System.Drawing.Font]::new('Arial', 14, [System.Drawing.FontStyle]::Regular)
+    $labelFont = [System.Drawing.Font]::new('Arial', 12, [System.Drawing.FontStyle]::Italic)
+    $titleBrush = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::FromArgb(40, 55, 70))
+    $textBrush = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::FromArgb(25, 25, 25))
+    $borderPen = [System.Drawing.Pen]::new([System.Drawing.Color]::FromArgb(51, 92, 129), 3)
+    $edgePen = [System.Drawing.Pen]::new([System.Drawing.Color]::FromArgb(90, 90, 90), 2.5)
+    $arrow = [System.Drawing.Drawing2D.AdjustableArrowCap]::new(5, 6, $true)
+    $edgePen.CustomEndCap = $arrow
+    $center = [System.Drawing.StringFormat]::new()
+    $center.Alignment = [System.Drawing.StringAlignment]::Center
+    $center.LineAlignment = [System.Drawing.StringAlignment]::Center
+
+    $graphics.DrawString($Title, $titleFont, $titleBrush, 45, 30)
+
+    foreach ($edge in $Edges) {
+        $from = $Nodes[$edge.From]
+        $to = $Nodes[$edge.To]
+        $x1 = $from.X + [int]($from.Width / 2)
+        $y1 = $from.Y + $from.Height
+        $x2 = $to.X + [int]($to.Width / 2)
+        $y2 = $to.Y
+        $midY = [int](($y1 + $y2) / 2)
+        $points = [System.Drawing.Point[]]@(
+            [System.Drawing.Point]::new($x1, $y1),
+            [System.Drawing.Point]::new($x1, $midY),
+            [System.Drawing.Point]::new($x2, $midY),
+            [System.Drawing.Point]::new($x2, $y2)
+        )
+        $graphics.DrawLines($edgePen, $points)
+        if ($edge.Label) {
+            $lx = [int](($x1 + $x2) / 2)
+            $graphics.DrawString($edge.Label, $labelFont, $textBrush, $lx, $midY - 20, $center)
+        }
+    }
+
+    foreach ($node in $Nodes) {
+        $rectangle = [System.Drawing.RectangleF]::new($node.X, $node.Y, $node.Width, $node.Height)
+        $brush = Get-NodeBrush $node.Kind
+        $graphics.FillRectangle($brush, $rectangle)
+        $graphics.DrawRectangle($borderPen, $node.X, $node.Y, $node.Width, $node.Height)
+        $graphics.DrawString($node.Text, $nodeFont, $textBrush, $rectangle, $center)
+        $brush.Dispose()
+    }
+
+    $target = Join-Path $figureDirectory $FileName
+    $bitmap.Save($target, [System.Drawing.Imaging.ImageFormat]::Png)
+
+    $center.Dispose()
+    $arrow.Dispose()
+    $edgePen.Dispose()
+    $borderPen.Dispose()
+    $textBrush.Dispose()
+    $titleBrush.Dispose()
+    $labelFont.Dispose()
+    $nodeFont.Dispose()
+    $titleFont.Dispose()
+    $graphics.Dispose()
+    $bitmap.Dispose()
+    Write-Host "Figure generee : $target"
+}
+
+function Write-MembershipCurves {
+    param(
+        [string]$Title,
+        [string]$FileName,
+        [int]$Width = 1700,
+        [int]$Height = 850
+    )
+
+    $bitmap = [System.Drawing.Bitmap]::new($Width, $Height)
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+    $graphics.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::ClearTypeGridFit
+    $graphics.Clear([System.Drawing.Color]::White)
+
+    $titleFont = [System.Drawing.Font]::new('Arial', 25, [System.Drawing.FontStyle]::Bold)
+    $labelFont = [System.Drawing.Font]::new('Arial', 14, [System.Drawing.FontStyle]::Bold)
+    $axisFont = [System.Drawing.Font]::new('Arial', 12, [System.Drawing.FontStyle]::Regular)
+    $titleBrush = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::FromArgb(40, 55, 70))
+    $textBrush = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::FromArgb(25, 25, 25))
+    $axisPen = [System.Drawing.Pen]::new([System.Drawing.Color]::FromArgb(120, 120, 120), 2)
+    $center = [System.Drawing.StringFormat]::new()
+    $center.Alignment = [System.Drawing.StringAlignment]::Center
+
+    $graphics.DrawString($Title, $titleFont, $titleBrush, 45, 30)
+
+    $left = 130
+    $right = 1620
+    $top = 130
+    $bottom = 680
+    $plotWidth = $right - $left
+    $plotHeight = $bottom - $top
+
+    # Axes: x = score 0..10, y = membership degree 0..1
+    $graphics.DrawLine($axisPen, $left, $bottom, $right, $bottom)
+    $graphics.DrawLine($axisPen, $left, $bottom, $left, $top)
+    for ($s = 0; $s -le 10; $s++) {
+        $x = $left + [int]($s / 10.0 * $plotWidth)
+        $graphics.DrawLine($axisPen, $x, $bottom, $x, $bottom + 8)
+        $graphics.DrawString("$s", $axisFont, $textBrush, $x, $bottom + 12, $center)
+    }
+    $graphics.DrawString("Score sur 10", $axisFont, $textBrush, [int](($left+$right)/2), $bottom + 45, $center)
+
+    $grades = @(
+        @{ Name = 'F'; Center = 0;  Color = [System.Drawing.Color]::FromArgb(180, 60, 60) },
+        @{ Name = 'E'; Center = 2;  Color = [System.Drawing.Color]::FromArgb(200, 120, 40) },
+        @{ Name = 'D'; Center = 4;  Color = [System.Drawing.Color]::FromArgb(190, 170, 30) },
+        @{ Name = 'C'; Center = 6;  Color = [System.Drawing.Color]::FromArgb(90, 160, 70) },
+        @{ Name = 'B'; Center = 8;  Color = [System.Drawing.Color]::FromArgb(60, 120, 180) },
+        @{ Name = 'A'; Center = 10; Color = [System.Drawing.Color]::FromArgb(90, 70, 170) }
+    )
+
+    foreach ($g in $grades) {
+        $pen = [System.Drawing.Pen]::new($g.Color, 3.5)
+        $c = $g.Center
+        $lo = [Math]::Max(0, $c - 2)
+        $hi = [Math]::Min(10, $c + 2)
+        $pts = New-Object System.Collections.Generic.List[System.Drawing.PointF]
+        for ($s = $lo; $s -le $hi; $s += 0.1) {
+            $mu = [Math]::Max(0.0, 1.0 - [Math]::Abs($s - $c) / 2.0)
+            $x = $left + ($s / 10.0) * $plotWidth
+            $y = $bottom - ($mu * $plotHeight)
+            $pts.Add([System.Drawing.PointF]::new($x, $y))
+        }
+        $graphics.DrawLines($pen, $pts.ToArray())
+        $labelX = $left + ($c / 10.0) * $plotWidth
+        $labelY = $top - 5
+        $lblBrush = [System.Drawing.SolidBrush]::new($g.Color)
+        $graphics.DrawString($g.Name, $labelFont, $lblBrush, $labelX, $labelY, $center)
+        $lblBrush.Dispose()
+        $pen.Dispose()
+    }
+
+    $graphics.DrawString("Degre d'appartenance", $labelFont, $titleBrush, $left - 100, [int](($top+$bottom)/2 - 100))
+
+    $target = Join-Path $figureDirectory $FileName
+    $bitmap.Save($target, [System.Drawing.Imaging.ImageFormat]::Png)
+
+    $center.Dispose()
+    $axisPen.Dispose()
+    $textBrush.Dispose()
+    $titleBrush.Dispose()
+    $axisFont.Dispose()
+    $labelFont.Dispose()
+    $titleFont.Dispose()
+    $graphics.Dispose()
+    $bitmap.Dispose()
+    Write-Host "Figure generee : $target"
+}
+
 function Write-SequenceDiagram {
     param(
         [string]$Title,
@@ -785,3 +952,164 @@ $invariantsEdges = @(
     (New-Edge 1 0), (New-Edge 2 0), (New-Edge 3 0), (New-Edge 4 0)
 )
 Write-Diagram "Invariants du mod${chEGrave}le regroup${chEAcute}s par domaine" $invariantsNodes $invariantsEdges 'invariants_modele.png' 1900 900
+
+# --- Tranche enrichissement scientifique et agents ---
+
+Write-MembershipCurves "Fonctions d'appartenance des grades flous A a F" 'grades_flous_a_f.png'
+
+$theeraNodesLeft = @(
+    (New-Node 60 220 420 110 "Valeurs de performance" 'input'),
+    (New-Node 60 390 420 110 "Normalisation" 'process'),
+    (New-Node 60 560 420 110 "Grades flous" 'process'),
+    (New-Node 60 730 420 110 "Agregation multicritere" 'process'),
+    (New-Node 60 900 420 110 "Indice composite" 'output')
+)
+$theeraNodesRight = @(
+    (New-Node 900 110 480 110 "Evenements AnyLogic" 'input'),
+    (New-Node 900 260 480 110 "Observations VSM" 'process'),
+    (New-Node 900 410 480 110 "Valeur physique SCOR ou interne" 'process'),
+    (New-Node 900 560 480 110 "Bottom / Perfect, score sur 10" 'process'),
+    (New-Node 900 710 480 110 "Grades flous, agregation par attribut" 'process'),
+    (New-Node 900 860 480 110 "Performance Index" 'output')
+)
+$theeraNodes = $theeraNodesLeft + $theeraNodesRight
+$theeraEdges = @(
+    (New-Edge 0 1), (New-Edge 1 2), (New-Edge 2 3), (New-Edge 3 4),
+    (New-Edge 5 6), (New-Edge 6 7), (New-Edge 7 8), (New-Edge 8 9), (New-Edge 9 10),
+    (New-Edge 1 8 "correspond ${chAGrave}" 'dashed'),
+    (New-Edge 2 9 "correspond ${chAGrave}" 'dashed'),
+    (New-Edge 4 10 "correspond ${chAGrave}" 'dashed')
+)
+Write-Diagram "Theeranuphattana et Tang, methode de reference et adaptation SCONTO-SVU" $theeraNodes $theeraEdges 'theeranuphattana_sconto.png' 1500 1050
+
+$piTreeNodes = @(
+    (New-Node 1250 80 300 110 'PI' 'output'),
+    (New-Node 265 300 300 100 'RL' 'input'),
+    (New-Node 1075 300 300 100 'RS' 'input'),
+    (New-Node 1795 300 300 100 'AG' 'input'),
+    (New-Node 2205 300 200 100 'CO' 'input'),
+    (New-Node 2450 300 260 100 'AM' 'input'),
+    (New-Node 60 540 170 100 "RL.2.1" 'process'),
+    (New-Node 240 540 170 100 "RL.2.2" 'process'),
+    (New-Node 420 540 170 100 "RL.3.33" 'process'),
+    (New-Node 600 540 170 100 "RL.3.35" 'process'),
+    (New-Node 780 540 170 100 "RS.1.1" 'process'),
+    (New-Node 960 540 170 100 "RS.3.94" 'process'),
+    (New-Node 1140 540 170 100 "RS.2.1" 'process'),
+    (New-Node 1320 540 170 100 "RS.2.2" 'process'),
+    (New-Node 1500 540 170 100 "RS.2.3" 'process'),
+    (New-Node 1680 540 170 110 "AG.1.1" 'process'),
+    (New-Node 1860 540 170 110 "AG.3.32" 'process'),
+    (New-Node 2040 540 170 110 "PROXY.AG`nSYS_UTIL" 'process'),
+    (New-Node 2220 540 170 100 "CO.1.1" 'process'),
+    (New-Node 2400 540 170 100 "AM.3.9" 'process'),
+    (New-Node 2580 540 170 100 "AM.2.2" 'process')
+)
+$piTreeEdges = @(
+    (New-Edge 0 1), (New-Edge 0 2), (New-Edge 0 3), (New-Edge 0 4), (New-Edge 0 5),
+    (New-Edge 1 6), (New-Edge 1 7), (New-Edge 1 8), (New-Edge 1 9),
+    (New-Edge 2 10), (New-Edge 2 11), (New-Edge 2 12), (New-Edge 2 13), (New-Edge 2 14),
+    (New-Edge 3 15), (New-Edge 3 16), (New-Edge 3 17),
+    (New-Edge 4 18),
+    (New-Edge 5 19), (New-Edge 5 20)
+)
+Write-TreeDiagram "Lecture arborescente du PI et des metriques contributives" $piTreeNodes $piTreeEdges 'arbre_pi_metriques.png' 2900 700
+
+$constructionNodes = @(
+    (New-Node 1290 20 320 90 "Evenements de simulation" 'input'),
+    (New-Node 200 160 380 90 "Evenements Source" 'process'),
+    (New-Node 1090 160 380 90 "Evenements Make" 'process'),
+    (New-Node 1980 160 380 90 "Evenements Deliver" 'process'),
+    (New-Node 1290 320 320 90 "Observations VSM" 'process'),
+    (New-Node 1290 460 320 90 "Metriques SCOR ou internes" 'process'),
+    (New-Node 1290 600 320 90 "Grades flous A ${chAGrave} F" 'process'),
+    (New-Node 250 740 260 90 'RL' 'output'),
+    (New-Node 560 740 260 90 'RS' 'output'),
+    (New-Node 870 740 260 90 'AG' 'output'),
+    (New-Node 1180 740 260 90 'CO' 'output'),
+    (New-Node 1490 740 260 90 'AM' 'output'),
+    (New-Node 1290 900 320 90 'PI' 'output')
+)
+$constructionEdges = @(
+    (New-Edge 0 1), (New-Edge 0 2), (New-Edge 0 3),
+    (New-Edge 1 4), (New-Edge 2 4), (New-Edge 3 4),
+    (New-Edge 4 5), (New-Edge 5 6),
+    (New-Edge 6 7), (New-Edge 6 8), (New-Edge 6 9), (New-Edge 6 10), (New-Edge 6 11),
+    (New-Edge 7 12), (New-Edge 8 12), (New-Edge 9 12), (New-Edge 10 12), (New-Edge 11 12)
+)
+Write-TreeDiagram "De l'evenement au PI, avec embranchements par famille et par attribut" $constructionNodes $constructionEdges 'arbre_construction_performance.png' 2900 1050
+
+$agentsTreeNodes = @(
+    (New-Node 1105 100 260 90 'AS-sP1' 'actor'),
+    (New-Node 240 250 260 90 'AT-sP2 Source' 'process'),
+    (New-Node 860 250 260 90 'AT-sP3 Make' 'process'),
+    (New-Node 1440 250 300 90 'AT-sP4 Deliver' 'process'),
+    (New-Node 1980 250 260 90 'AT-sP5 Return' 'process'),
+    (New-Node 240 400 260 90 'CA-sS1' 'process'),
+    (New-Node 860 400 260 90 'CA-sM1' 'process'),
+    (New-Node 1440 400 300 90 'CA-sD1' 'process'),
+    (New-Node 1980 400 260 90 'CA-sR' 'process'),
+    (New-Node 240 550 260 90 'AOp-sS1.1' 'process'),
+    (New-Node 860 550 260 90 'AOp-sM1.1' 'process'),
+    (New-Node 1440 550 300 110 "ASup-sD1`n(sD1.3 ${chAGrave} sD1.7)" 'process'),
+    (New-Node 20 730 220 90 "AOe-sS1.2`nProcurement" 'output'),
+    (New-Node 260 730 220 90 "AOe-sS1.3`nReceiving" 'output'),
+    (New-Node 500 730 220 90 "AOe-sS1.4`nTransfer" 'output'),
+    (New-Node 760 730 220 90 "AOe-sM1.2`nMatiere" 'output'),
+    (New-Node 1000 730 220 90 "AOe-sM1.3-7`nMachineAgent" 'output'),
+    (New-Node 1260 730 220 90 "AOe-sD1.2`nOrder Mgmt" 'output'),
+    (New-Node 1500 730 220 90 "AOe-sD1.8`nInventory" 'output'),
+    (New-Node 1740 730 300 90 "AOe-sD1.9-12`nPick/Pack/Load/Transport" 'output')
+)
+$agentsTreeEdges = @(
+    (New-Edge 0 1), (New-Edge 0 2), (New-Edge 0 3), (New-Edge 0 4),
+    (New-Edge 1 5), (New-Edge 2 6), (New-Edge 3 7), (New-Edge 4 8),
+    (New-Edge 5 9), (New-Edge 6 10), (New-Edge 7 11),
+    (New-Edge 9 12), (New-Edge 9 13), (New-Edge 9 14),
+    (New-Edge 10 15), (New-Edge 10 16),
+    (New-Edge 11 17), (New-Edge 11 18), (New-Edge 11 19)
+)
+Write-TreeDiagram "Arborescence detaillee des agents confirmes, du niveau strategique a l'execution" $agentsTreeNodes $agentsTreeEdges 'arbre_agents_detaille.png' 2300 880
+
+$fluxGlobalNodes = @(
+    (New-Node 60 120 260 90 'CustomerOrder' 'input'),
+    (New-Node 60 270 260 90 'InventoryCheck' 'process'),
+    (New-Node 60 430 320 150 'Stock fini suffisant ?' 'decision'),
+    (New-Node 500 430 240 90 'Deliver' 'output'),
+    (New-Node 60 700 300 90 'Analyse Make' 'process'),
+    (New-Node 60 870 340 150 "Matieres suffisantes ?" 'decision'),
+    (New-Node 560 870 240 90 'Make puis Deliver' 'output'),
+    (New-Node 60 1140 300 90 'Source' 'process'),
+    (New-Node 60 1290 300 90 'MaterialAvailable' 'process'),
+    (New-Node 60 1440 300 90 'Make puis Deliver' 'output')
+)
+$fluxGlobalEdges = @(
+    (New-Edge 0 1), (New-Edge 1 2),
+    (New-Edge 2 3 'oui'), (New-Edge 2 4 'non'),
+    (New-Edge 4 5),
+    (New-Edge 5 6 'oui'), (New-Edge 5 7 'non'),
+    (New-Edge 7 8), (New-Edge 8 9)
+)
+Write-Diagram "Flux global: de la commande au service, CMD reste Make-to-Stock" $fluxGlobalNodes $fluxGlobalEdges 'flux_global_messages.png' 1150 1600
+
+$boucleNodesObjectif = @(
+    (New-Node 60 120 420 90 'Strategic: orientation' 'input'),
+    (New-Node 60 270 420 90 'Tactical: plan de domaine' 'process'),
+    (New-Node 60 420 420 90 'Coordinator: ordre de domaine' 'process'),
+    (New-Node 60 570 420 90 'OperationalPilot: affectation' 'process'),
+    (New-Node 60 720 420 90 'OperationalExecution: instruction' 'process')
+)
+$boucleNodesPreuve = @(
+    (New-Node 900 720 420 90 'OperationalExecution: fait runtime' 'output'),
+    (New-Node 900 570 420 90 'OperationalPilot: decision locale' 'output'),
+    (New-Node 900 420 420 90 'Coordinator: compte rendu' 'output'),
+    (New-Node 900 270 420 90 'Tactical: rapport de domaine' 'output'),
+    (New-Node 900 120 420 90 'Strategic: rapport consolide' 'output')
+)
+$boucleNodes = $boucleNodesObjectif + $boucleNodesPreuve
+$boucleEdges = @(
+    (New-Edge 0 1), (New-Edge 1 2), (New-Edge 2 3), (New-Edge 3 4),
+    (New-Edge 4 5 'execution'),
+    (New-Edge 5 6), (New-Edge 6 7), (New-Edge 7 8), (New-Edge 8 9)
+)
+Write-Diagram "Boucle objectif/plan descendante et boucle fait/preuve montante" $boucleNodes $boucleEdges 'boucle_objectif_preuve.png' 1500 880

@@ -25,7 +25,7 @@ La fenêtre \texttt{Stocks initiaux} propose le stock initial de produit fini et
 
 \FigureOrPlaceholder{documentation/figures/screenshots/ui_stocks_initiaux.png}{Fenêtre Stocks initiaux.}{fig:ui-stocks-initiaux}
 
-Quatre profils facilitent la préparation de situations de départ. Un profil fixe des stocks initiaux et sélectionne le scénario nominal, mais ne représente pas un scénario métier distinct.
+Trois profils d'état initial facilitent la préparation de situations de départ contrastées. Un profil fixe des stocks initiaux; il ne représente pas un scénario métier distinct de la gamme nominale.
 
 \begin{table}[H]
   \centering
@@ -36,16 +36,21 @@ Quatre profils facilitent la préparation de situations de départ. Un profil fi
     Cas 1, livraison directe & 100 & 100 & Le stock de départ permet de privilégier Deliver. \\
     Cas 2, production & 0 & 100 & Les matières sont disponibles, le produit fini doit être reconstitué. \\
     Cas 3, approvisionnement et production & 0 & 0 & Source doit précéder la production lorsque les besoins l'exigent. \\
-    Personnalisé & Valeurs conservées & Valeurs conservées & Les réglages courants restent sous le contrôle de l'utilisateur. \\
     \bottomrule
   \end{tabularx}
-  \caption{Effet des profils sur l'état initial des stocks.}
+  \caption{Effet des trois profils sur l'état initial des stocks.}
   \label{tab:profils-stocks}
 \end{table}
 
-\FigureOrPlaceholder{documentation/figures/screenshots/ui_profils_test.png}{Fenêtre Profils de test.}{fig:ui-profils-test}
+\AttentionDoc{Une vérification directe de l'interface a montré que la présentation d'origine de cette section, une \og fenêtre Profils de test\fg{} ouverte par un bouton dédié, ne correspond pas à ce qu'un utilisateur rencontre normalement: ce bouton n'apparaît dans aucune capture de la vue Configuration réunie pour cette documentation, alors que les boutons voisins de réglage y figurent tous. Le mécanisme réellement accessible et confirmé par capture est décrit ci-dessous.}
 
-Les valeurs des trois cas sont des paramètres implémentés. Elles ne doivent pas être présentées comme des résultats expérimentaux sans une exécution archivée correspondant au profil.
+Dans la pratique, un profil s'applique en choisissant directement, dans la liste des scénarios de la vue Configuration décrite au \cref{chap:configurer}, l'une des entrées \texttt{ZENER CAS 1}, \texttt{ZENER CAS 2} ou \texttt{ZENER CAS 3}: sélectionner cette entrée applique automatiquement le profil de stock correspondant, puis la commande utilise ensuite la gamme nominale portant la nomenclature réelle. Sélectionner \texttt{SCENARIO DISTRIBUTION} directement revient au fonctionnement standard, sans override de profil.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_profils_test.png}{Liste des scénarios de la vue Configuration, où une sélection ZENER CAS 1/2/3 applique automatiquement le profil de stock correspondant.}{fig:ui-profils-test}
+
+Les valeurs des trois cas sont des paramètres implémentés, confirmés dans le code du modèle. Elles ne doivent pas être présentées comme des résultats expérimentaux sans une exécution archivée correspondant au profil.
+
+\BonASavoir{Le modèle contient également une fonction \texttt{ouvrirProfilsTest} associée à un bouton nommé \texttt{btnProfilsTest}, qui ouvrirait une boîte de dialogue de sélection listant les mêmes trois profils plus une option Personnalisé. Ce bouton existe dans le fichier du modèle mais sa position dans la vue visible n'a pas pu être confirmée lors de la préparation de cette documentation; il n'apparaît dans aucune capture réunie. Il est documenté au \cref{chap:maintenance-extension} comme une capacité interne dont l'exposition à l'écran reste à vérifier, plutôt que comme un contrôle utilisateur confirmé.}
 
 \section{Préparer retours, qualité et perturbations}
 

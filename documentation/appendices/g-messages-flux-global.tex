@@ -1,0 +1,168 @@
+\chapter{Catalogue des messages inter-agents et Flux global}
+\label{ann:messages-flux-global}
+
+Cette annexe recense les messages AER échangés entre agents dans le modèle, organisés par famille fonctionnelle. Elle s'appuie sur un document de travail intitulé « Tableaux clarifiés du flux global », qui propose une correspondance générique entre rôles et messages, puis vérifie chaque entrée contre \texttt{sources/model/SCONTO\_\allowbreak SVU\_\allowbreak FINAL\_\allowbreak VALIDATED.alp} et contre l'ABox du run de validation \texttt{RUN\_1773129600000\_1788264883846}.
+
+\section{Notation générique et instance réellement documentée}
+
+Le document de travail source décrit des tableaux génériques valables pour trois politiques de réalisation, à l'aide d'une variable $x$: $x=1$ pour Make-to-Stock, $x=2$ pour Make-to-Order, $x=3$ pour Engineer-to-Order. Le mécanisme validé dans ce document reste exclusivement Make-to-Stock: la commande cliente \texttt{CMD\_*} n'est jamais convertie en ordre de fabrication direct, comme établi au \cref{chap:stocks-reapprovisionnement}. Cette annexe ne republie donc pas les formulations MTO partiel ou MTO complet du document source: elle retient uniquement les identifiants de l'instance 1, réellement présents dans l'ALP, tels que \texttt{CA-s\allowbreak S1}, \texttt{AOp-s\allowbreak S1.1} ou \texttt{ASup-s\allowbreak D1}. La notation générique $x$ n'est conservée que dans cette section, à titre d'explication, sans être publiée comme un identifiant technique.
+
+\AttentionDoc{La lecture des messages ci-dessous, en particulier le scénario impliquant Source, ne signifie pas que le client passe en commande à la demande. \texttt{CMD\_*} reste une demande cliente Make-to-Stock; \texttt{REAPPRO\_*} reste un ordre interne de reconstitution. Le \cref{chap:stocks-reapprovisionnement} détaille cette distinction.}
+
+\section{Statut de chaque message}
+
+Chaque message porte l'un des quatre statuts suivants, établi par comparaison entre le document source, l'ALP et l'ABox du run de validation.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.30\textwidth} Y}
+    \toprule
+    Statut & Signification \\
+    \midrule
+    \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} & Le message porte un sujet AER (\texttt{aer:has\allowbreak Message\allowbreak Subject}) effectivement présent dans l'ABox du run de validation. \\
+    \texttt{IMPLEMENTE\_\allowbreak NON\_\allowbreak OBSERVE} & Le nom du message est confirmé dans l'ALP, mais aucune occurrence n'a été trouvée dans l'ABox du run de validation. \\
+    \texttt{SOURCE\_\allowbreak HISTORIQUE\_\allowbreak NON\_\allowbreak CONFIRMEE} & Le message provient du document de travail source, sans confirmation directe dans l'ALP actuel. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Statuts de preuve utilisés dans cette annexe.}
+  \label{tab:statuts-messages}
+\end{table}
+
+Les entrées \texttt{SOURCE\_\allowbreak HISTORIQUE\_\allowbreak NON\_\allowbreak CONFIRMEE} ne figurent pas dans le tableau principal; elles sont réunies dans une note d'écart en fin d'annexe plutôt que publiées comme des messages courants.
+
+\section{Catalogue principal, messages observés dans le run de validation}
+
+Le tableau suivant réunit les 62 messages dont le sujet AER a été retrouvé tel quel dans l'ABox du run de validation, organisés par famille fonctionnelle. Chaque message n'apparaît qu'une fois, même lorsque le document source le répète dans plusieurs scénarios de stock. La phase AER reprend le type ontologique porté par le message dans l'ABox (\texttt{Amendment\allowbreak Message}, \texttt{Execution\allowbreak Message} ou \texttt{Execution\allowbreak Start\allowbreak Message} pour EXECUTION, \texttt{Reporting\allowbreak Message} pour REPORT); \texttt{Operational\allowbreak Order\allowbreak Message} est classé AMENDMENT, car il porte la descente d'un ordre opérationnel au sens du \cref{chap:agents-aer}.
+
+\begin{landscape}
+{\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{L{0.15\linewidth} L{0.06\linewidth} L{0.14\linewidth} L{0.14\linewidth} L{0.32\linewidth} L{0.11\linewidth}}
+\caption{Messages AER observés dans le run de validation, par famille.}\label{tab:messages-annexe}\\
+\toprule
+Message & Phase & Émetteur & Destinataire & Contenu ou rôle & Statut \\
+\midrule
+\endfirsthead
+\toprule
+Message & Phase & Émetteur & Destinataire & Contenu ou rôle & Statut \\
+\midrule
+\endhead
+\midrule
+\multicolumn{6}{r}{Suite à la page suivante}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\multicolumn{6}{l}{\textbf{A. Réception commande}} \\
+\texttt{Customer\allowbreak Order} & EXEC & \texttt{Customer\allowbreak Actor} & \texttt{AOe-s\allowbreak D1.2} & Identifiant, client, produit, quantité, date demandée. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Order\allowbreak Received} & REPORT & \texttt{AOe-s\allowbreak D1.2} & \texttt{ASup-s\allowbreak D1} & Commande enregistrée, contrôles de forme. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+
+\multicolumn{6}{l}{\textbf{B. Vérification stock}} \\
+\texttt{Inventory\allowbreak Check\allowbreak Request} & AMEND & \texttt{ASup-s\allowbreak D1} & \texttt{AOe-s\allowbreak D1.8} & Produit, quantité demandée, horizon de réservation. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Inventory\allowbreak Availability\allowbreak Response} & REPORT & \texttt{AOe-s\allowbreak D1.8} & \texttt{ASup-s\allowbreak D1} & Stock physique, réservé, disponible, quantité manquante. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Order\allowbreak Validated} & REPORT & \texttt{ASup-s\allowbreak D1} & \texttt{CA-s\allowbreak D1} & Commande validée, quantité disponible et manquante. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Order\allowbreak Feasibility\allowbreak Request} & REPORT & \texttt{CA-s\allowbreak D1} & \texttt{AT-s\allowbreak P4} & Demande de décision sur la faisabilité et la date à promettre. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+
+\multicolumn{6}{l}{\textbf{C. Faisabilité Make}} \\
+\texttt{Make\allowbreak Feasibility\allowbreak Check} & AMEND & \texttt{AT-s\allowbreak P3} & \texttt{CA-s\allowbreak M1} & Évaluation de la capacité et de la disponibilité des composants. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Capacity\allowbreak And\allowbreak Material\allowbreak Check\allowbreak Order} & AMEND & \texttt{CA-s\allowbreak M1} & \texttt{AOp-s\allowbreak M1.1} & Produit, nomenclature, gamme, quantité, date cible. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Capacity\allowbreak Check\allowbreak Request} & AMEND & \texttt{AOp-s\allowbreak M1.1} & \texttt{AOe-s\allowbreak M1.2 à AOe-s\allowbreak M1.7 et Machine\allowbreak Agent} & Machines, postes, temps opératoires, charge. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Material\allowbreak Check\allowbreak Request} & AMEND & \texttt{AOp-s\allowbreak M1.1} & \texttt{AOe-s\allowbreak M1.2} & Matières, composants, quantités et lots. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Capacity\allowbreak Availability\allowbreak Response} & REPORT & \texttt{AOe-s\allowbreak M1.2 à AOe-s\allowbreak M1.7 et Machine\allowbreak Agent} & \texttt{AOp-s\allowbreak M1.1} & Capacité disponible, créneaux, date de fin. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Material\allowbreak Availability\allowbreak Response} & REPORT & \texttt{AOe-s\allowbreak M1.2} & \texttt{AOp-s\allowbreak M1.1} & Confirmation de disponibilité des matières. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Make\allowbreak Feasibility\allowbreak Response} & REPORT & \texttt{CA-s\allowbreak M1} & \texttt{AT-s\allowbreak P3} & Quantité réalisable, dates et ressources. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Material\allowbreak Shortage\allowbreak Detected} & REPORT & \texttt{AOe-s\allowbreak M1.2} & \texttt{AOp-s\allowbreak M1.1} & Matières et quantités manquantes. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Make\allowbreak Constraint\allowbreak Report} & REPORT & \texttt{AOp-s\allowbreak M1.1} & \texttt{CA-s\allowbreak M1} & Production impossible avant réapprovisionnement. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Material\allowbreak Availability\allowbreak Request} & AMEND & \texttt{AT-s\allowbreak P3} & \texttt{AT-s\allowbreak P2} & Liste des matières, quantités, date limite. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+
+\multicolumn{6}{l}{\textbf{D. Faisabilité Source}} \\
+\texttt{Source\allowbreak Feasibility\allowbreak Request} & AMEND & \texttt{AT-s\allowbreak P2} & \texttt{CA-s\allowbreak S1} & Évaluation des fournisseurs et du délai d'approvisionnement. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Supplier\allowbreak Check\allowbreak Order} & AMEND & \texttt{CA-s\allowbreak S1} & \texttt{AOp-s\allowbreak S1.1} & Matières, quantités, spécifications, fournisseurs, date requise. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Supplier\allowbreak Availability\allowbreak Check} & AMEND & \texttt{AOp-s\allowbreak S1.1} & \texttt{AOe-s\allowbreak S1.2} & Disponibilité, prix, délai et conditions. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Request\allowbreak For\allowbreak Availability} & AMEND & \texttt{AOe-s\allowbreak S1.2} & \texttt{Supplier\allowbreak Actor} & Matière, quantité, qualité attendue, date souhaitée. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Supplier\allowbreak Commitment} & REPORT & \texttt{Supplier\allowbreak Actor} & \texttt{AOe-s\allowbreak S1.2} & Quantité disponible, prix, délai, date estimée. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Supplier\allowbreak Availability\allowbreak Response} & REPORT & \texttt{AOe-s\allowbreak S1.2} & \texttt{AOp-s\allowbreak S1.1} & Synthèse de la réponse fournisseur. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Source\allowbreak Operational\allowbreak Feasibility} & REPORT & \texttt{AOp-s\allowbreak S1.1} & \texttt{CA-s\allowbreak S1} & Fournisseur retenu, date prévue de réception. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Source\allowbreak Feasibility\allowbreak Response} & REPORT & \texttt{CA-s\allowbreak S1} & \texttt{AT-s\allowbreak P2} & Quantité approvisionnable, fournisseur, coût, date. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+
+\multicolumn{6}{l}{\textbf{E. Approvisionnement Source}} \\
+\texttt{Procurement\allowbreak Plan} & AMEND & \texttt{AT-s\allowbreak P2} & \texttt{CA-s\allowbreak S1} & Fournisseur, matière, quantité, dates de commande et réception. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Procurement\allowbreak Order} & AMEND & \texttt{CA-s\allowbreak S1} & \texttt{AOp-s\allowbreak S1.1} & Ordre opérationnel d'achat et de réception. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Purchase\allowbreak Order\allowbreak Task} & AMEND & \texttt{AOp-s\allowbreak S1.1} & \texttt{AOe-s\allowbreak S1.2} & Préparation et émission de la commande fournisseur. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Purchase\allowbreak Order} & AMEND & \texttt{AOe-s\allowbreak S1.2} & \texttt{Supplier\allowbreak Actor} & Commande d'achat officielle. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Inbound\allowbreak Delivery} & EXEC & \texttt{Supplier\allowbreak Actor} & \texttt{AOe-s\allowbreak S1.3} & Livraison physique de la matière. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Material\allowbreak Received} & EXEC & \texttt{AOe-s\allowbreak S1.3} & \texttt{AOp-s\allowbreak S1.1} & Quantité reçue, conformité, lot, emplacement. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Procurement\allowbreak Completed} & REPORT & \texttt{CA-s\allowbreak S1} & \texttt{AT-s\allowbreak P2} & Approvisionnement terminé. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Material\allowbreak Available} & REPORT & \texttt{AT-s\allowbreak P2} & \texttt{AT-s\allowbreak P3} & Matière libérée pour la production. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+
+\multicolumn{6}{l}{\textbf{F. Exécution Make}} \\
+\texttt{Production\allowbreak Plan} & AMEND & \texttt{AT-s\allowbreak P3} & \texttt{CA-s\allowbreak M1} & Ordre de travail, quantité, début, fin, séquence, ressources. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Production\allowbreak Order} & AMEND & \texttt{CA-s\allowbreak M1} & \texttt{AOp-s\allowbreak M1.1} & Ordre opérationnel de lancement. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Production\allowbreak Task\allowbreak Assignment} & AMEND & \texttt{AOp-s\allowbreak M1.1} & \texttt{AOe-s\allowbreak M1.2 à AOe-s\allowbreak M1.7} & Instructions par machine, poste ou opération. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Execution\allowbreak Start} & EXEC & \texttt{AOe-s\allowbreak M1.2 à AOe-s\allowbreak M1.7} & \texttt{AOp-s\allowbreak M1.1} & Début de l'ordre de fabrication. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Execution\allowbreak Progress} & EXEC & \texttt{AOe-s\allowbreak M1.2 à AOe-s\allowbreak M1.7} & \texttt{AOp-s\allowbreak M1.1} & Quantité produite, reste, temps, anomalies. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+
+\multicolumn{6}{l}{\textbf{G. Exécution Deliver}} \\
+\texttt{Delivery\allowbreak Plan} & AMEND & \texttt{AT-s\allowbreak P4} & \texttt{CA-s\allowbreak D1} & Quantité à livrer, dépôt, préparation, expédition, date promise. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Delivery\allowbreak Order} & AMEND & \texttt{CA-s\allowbreak D1} & \texttt{ASup-s\allowbreak D1} & Ordre opérationnel de réservation, préparation, expédition. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Reserve\allowbreak Inventory} & AMEND & \texttt{ASup-s\allowbreak D1} & \texttt{AOe-s\allowbreak D1.8} & Produit, lot, emplacement, quantité à réserver. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Inventory\allowbreak Reserved} & EXEC & \texttt{AOe-s\allowbreak D1.8} & \texttt{ASup-s\allowbreak D1} & Confirmation de réservation, identifiants des lots. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Picking\allowbreak Task} & AMEND & \texttt{ASup-s\allowbreak D1} & \texttt{AOe-s\allowbreak D1.9} & Produits, quantités, lots, emplacements. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Picking\allowbreak Completed} & EXEC & \texttt{AOe-s\allowbreak D1.9} & \texttt{ASup-s\allowbreak D1} & Quantité prélevée, heure de fin, anomalies. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Packing\allowbreak Task} & AMEND & \texttt{ASup-s\allowbreak D1} & \texttt{AOe-s\allowbreak D1.10} & Conditionnement, étiquetage, contrôle. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Packing\allowbreak Completed} & EXEC & \texttt{AOe-s\allowbreak D1.10} & \texttt{ASup-s\allowbreak D1} & Colis préparés, poids, volume, contrôle. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Loading\allowbreak Task} & AMEND & \texttt{ASup-s\allowbreak D1} & \texttt{AOe-s\allowbreak D1.11} & Véhicule, quai, colis, séquence, heure de chargement. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Loading\allowbreak Completed} & EXEC & \texttt{AOe-s\allowbreak D1.11} & \texttt{ASup-s\allowbreak D1} & Confirmation du chargement, départ prévu. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Shipment\allowbreak Order} & AMEND & \texttt{ASup-s\allowbreak D1} & \texttt{AOe-s\allowbreak D1.12} & Destination, itinéraire, transporteur, date limite. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Delivery\allowbreak Completed} & EXEC & \texttt{AOe-s\allowbreak D1.12} & \texttt{ASup-s\allowbreak D1} & Date réelle, quantité livrée, preuve de livraison. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Promised\allowbreak Delivery\allowbreak Date} & AMEND & \texttt{AT-s\allowbreak P4} & \texttt{CA-s\allowbreak D1} & Date calculée à partir de la fin de production et du délai. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Order\allowbreak Confirmation\allowbreak Order} & AMEND & \texttt{CA-s\allowbreak D1} & \texttt{ASup-s\allowbreak D1} & Instruction de communiquer la date promise. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Customer\allowbreak Confirmation\allowbreak Task} & AMEND & \texttt{ASup-s\allowbreak D1} & \texttt{AOe-s\allowbreak D1.2} & Commande acceptée, quantité confirmée, date promise. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Order\allowbreak Confirmed} & REPORT & \texttt{AOe-s\allowbreak D1.2} & \texttt{Customer\allowbreak Actor} & Confirmation officielle de la commande. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Operational\allowbreak Report} & REPORT & agent d'exécution ou superviseur du processus & coordinateur ou pilote du processus & Résultats consolidés d'une étape opérationnelle. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Process\allowbreak Status\allowbreak Report} & REPORT & coordinateur du processus & agent tactique du processus & Statut final, respect du délai, écarts. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Macro\allowbreak Process\allowbreak Report} & REPORT & agent(s) tactique(s) concerné(s) & \texttt{AS-s\allowbreak P1} & Performance consolidée du ou des processus. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+
+\multicolumn{6}{l}{\textbf{I. Retards, pannes et exceptions}} \\
+\texttt{Supplier\allowbreak Delay\allowbreak Alert} & REPORT & \texttt{Supplier\allowbreak Actor} & \texttt{AOp-s\allowbreak S1.1} & Écart entre réception nominale et réception effective. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Operational\allowbreak Exception} & REPORT & pilote opérationnel du processus concerné & coordinateur du processus concerné & Incident opérationnel consolidé. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Process\allowbreak Deviation\allowbreak Report} & REPORT & coordinateur du processus concerné & agent tactique du processus concerné & Impact sur le plan du processus. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+
+\multicolumn{6}{l}{\textbf{J. Révision de plans}} \\
+\texttt{Revised\allowbreak Material\allowbreak Availability} & REPORT & \texttt{AT-s\allowbreak P2} & \texttt{AT-s\allowbreak P3} & Nouvelle date de disponibilité des matières. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Revised\allowbreak Production\allowbreak Completion\allowbreak Date} & REPORT & \texttt{AT-s\allowbreak P3} & \texttt{AT-s\allowbreak P4} & Nouvelle date de fin de production. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Revised\allowbreak Delivery\allowbreak Plan} & AMEND & \texttt{AT-s\allowbreak P4} & \texttt{CA-s\allowbreak D1} & Nouveau plan de préparation et de livraison. & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\end{longtable}
+}
+\end{landscape}
+
+\section{Messages implémentés mais non observés dans ce run}
+
+Les six messages suivants sont confirmés par leur nom dans l'ALP, sans occurrence trouvée dans l'ABox du run de validation. Leur absence ne signifie pas une erreur: elle peut correspondre à une branche non empruntée par ce run précis, par exemple une fin d'exécution rapportée sous un autre message.
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{L{0.30\textwidth} Y}
+    \toprule
+    Message & Statut \\
+    \midrule
+    \texttt{Make\allowbreak Operational\allowbreak Feasibility} & \texttt{IMPLEMENTE\_\allowbreak NON\_\allowbreak OBSERVE} \\
+    \texttt{Execution\allowbreak End} & \texttt{IMPLEMENTE\_\allowbreak NON\_\allowbreak OBSERVE} \\
+    \texttt{Production\allowbreak Completed} & \texttt{IMPLEMENTE\_\allowbreak NON\_\allowbreak OBSERVE} \\
+    \texttt{Product\allowbreak Available\allowbreak For\allowbreak Delivery} & \texttt{IMPLEMENTE\_\allowbreak NON\_\allowbreak OBSERVE} \\
+    \texttt{Delivery\allowbreak Task\allowbreak Assignment} & \texttt{IMPLEMENTE\_\allowbreak NON\_\allowbreak OBSERVE} \\
+    \texttt{Priority\allowbreak Decision} & \texttt{IMPLEMENTE\_\allowbreak NON\_\allowbreak OBSERVE} \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Messages confirmés dans l'ALP, non retrouvés dans l'ABox du run de validation.}
+  \label{tab:messages-non-observes}
+\end{table}
+
+\section{Écart avec le document source}
+
+Six messages cités par le document de travail source n'ont été retrouvés ni dans l'ALP actuel ni dans l'ABox du run de validation: \texttt{Execution\allowbreak Delay}, \texttt{Execution\allowbreak Failure}, \texttt{Escalation\allowbreak Request}, \texttt{Policy\allowbreak Decision}, \texttt{Delivery\allowbreak Date\allowbreak Update} et \texttt{Proposed\allowbreak Delivery\allowbreak Date}. Ils sont qualifiés \texttt{SOURCE\_\allowbreak HISTORIQUE\_\allowbreak NON\_\allowbreak CONFIRMEE} et ne sont pas publiés comme des messages courants du modèle. Leur rôle générique reste plausible, notamment pour signaler un retard ou un échec d'exécution, mais aucune preuve directe ne permet de les rattacher à un nom exact utilisé par le modèle validé.
+
+\section{Return}
+
+Le document source ne détaille pas de famille de messages propre à Return au même niveau que Source, Make et Deliver. Le \cref{chap:processus-scor} établit que Return reste disponible dans le modèle sans être exécuté dans le run de validation retenu pour cette documentation; aucun message Return n'est donc publié ici comme observé.

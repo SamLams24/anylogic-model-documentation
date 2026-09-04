@@ -1,0 +1,157 @@
+\chapter{Formalisme mathématique et exemple de construction du Performance Index}
+\label{ann:formalisme-pi}
+
+Cette annexe rassemble les équations complètes du pipeline présenté au \cref{chap:scor-pi} et un exemple de bout en bout entièrement reproductible depuis les artefacts du run de validation. Le chapitre 9 reste pédagogique; cette annexe en est la référence de calcul.
+
+\section{Notation}
+
+Une métrique contributive $j$ porte une valeur physique $x_j$ dans son unité métier, un repère \emph{Bottom} $b_j$, un repère \emph{Perfect} $p_j$ et un poids local $w_j$. Six grades linguistiques $A, B, C, D, E, F$, centrés respectivement sur $10, 8, 6, 4, 2, 0$, portent le vecteur flou $G_j = [A_j, B_j, C_j, D_j, E_j, F_j]$ d'une métrique ou d'un attribut, avec $A_j+B_j+C_j+D_j+E_j+F_j = 1$.
+
+\section{Normalisation Bottom/Perfect}
+
+Le score sur 10 dépend du sens d'amélioration de la métrique.
+
+Métrique bénéfice, où une valeur plus grande est meilleure:
+\begin{equation}
+\mathrm{Score}_j = 10 \times \frac{x_j - b_j}{p_j - b_j}.
+\label{eq:score-benefit}
+\end{equation}
+
+Métrique coût ou délai, où une valeur plus petite est meilleure:
+\begin{equation}
+\mathrm{Score}_j = 10 \times \frac{b_j - x_j}{b_j - p_j}.
+\label{eq:score-cost}
+\end{equation}
+
+Le résultat est borné entre 0 et 10 dans les deux cas. Cette transformation est nécessaire parce que les secondes, les ratios, les coûts, les jours et les débits ne peuvent pas être additionnés directement: ils ne partagent ni unité ni sens de variation avant normalisation.
+
+\section{Fuzzification}
+
+Le score est ensuite réparti entre les deux grades dont les centres encadrent sa valeur. Si le score se situe entre le centre bas $c_{\mathrm{bas}}$ et le centre haut $c_{\mathrm{haut}}$ des deux grades voisins:
+\begin{equation}
+\mu_{\mathrm{haut}} = \frac{\mathrm{Score}_j - c_{\mathrm{bas}}}{c_{\mathrm{haut}} - c_{\mathrm{bas}}}, \qquad
+\mu_{\mathrm{bas}} = \frac{c_{\mathrm{haut}} - \mathrm{Score}_j}{c_{\mathrm{haut}} - c_{\mathrm{bas}}}.
+\label{eq:fuzzification}
+\end{equation}
+
+Les quatre autres grades valent 0; la somme des six degrés vaut 1 par construction.
+
+\section{Agrégation pondérée d'un attribut}
+
+Les vecteurs flous des métriques contributives d'un même attribut sont pondérés par leur poids local puis additionnés:
+\begin{equation}
+G_{\mathrm{attribut}} = \frac{\sum_j w_j \, G_j}{\sum_j w_j}.
+\label{eq:aggregation-attribut}
+\end{equation}
+
+Une métrique informative, de poids nul, est exportée pour la traçabilité mais ne contribue pas à cette somme.
+
+\section{Défuzzification d'un attribut}
+
+Le vecteur flou agrégé est ramené sur une échelle de 0 à 10 avec les centres $A=10, B=8, C=6, D=4, E=2, F=0$:
+\begin{equation}
+\mathrm{Score}_{\mathrm{attribut}} = 10A + 8B + 6C + 4D + 2E + 0F.
+\label{eq:defuzzification-attribut}
+\end{equation}
+
+\section{Agrégation globale et Performance Index}
+
+Les cinq attributs sont eux-mêmes des vecteurs flous, combinés avec les poids courants $RL=0{,}40$, $RS=0{,}20$, $AG=0{,}10$, $CO=0{,}15$, $AM=0{,}15$:
+\begin{equation}
+G_{PI} = 0{,}40\,G_{RL} + 0{,}20\,G_{RS} + 0{,}10\,G_{AG} + 0{,}15\,G_{CO} + 0{,}15\,G_{AM}.
+\label{eq:vecteur-pi}
+\end{equation}
+
+Le PI final est la défuzzification de ce vecteur global:
+\begin{equation}
+PI = 10A_{PI} + 8B_{PI} + 6C_{PI} + 4D_{PI} + 2E_{PI} + 0F_{PI}.
+\label{eq:pi-final}
+\end{equation}
+
+\AttentionDoc{Cette chaîne, vecteurs flous puis agrégation puis défuzzification, est celle réellement implémentée par le modèle et exportée dans l'ABox du run. Une écriture purement linéaire telle que $PI = 0{,}40\,RL + 0{,}20\,RS + \dots$, déjà présentée au \cref{chap:scor-pi}, conduit numériquement au même résultat lorsque la défuzzification est linéaire par construction, comme c'est le cas ici; elle reste une lecture condensée commode, pas la chaîne de calcul réellement tracée.}
+
+\section{Exemple complet: l'attribut Agility dans le run de validation}
+\label{sec:exemple-ag}
+
+Les trois métriques suivantes, extraites de l'ABox du run de validation \texttt{RUN\_1773129600000\_\allowbreak 1788264883846}, contribuent à l'attribut AG avec un poids local égal de $1/3$ chacune.
+
+\begin{landscape}
+\begin{table}[H]
+  \centering
+  \footnotesize
+  \begin{tabularx}{\linewidth}{L{0.16\linewidth} L{0.13\linewidth} L{0.05\linewidth} L{0.05\linewidth} L{0.07\linewidth} L{0.10\linewidth} Y}
+    \toprule
+    Code & Valeur réelle & Bottom & Perfect & Sens & Score & Vecteur flou $[A,B,C,D,E,F]$ \\
+    \midrule
+    \texttt{AG.1.1} & 0,5 (ratio) & 0 & 1 & bénéfice & 5,00000000 & $[0;\,0;\,0{,}5;\,0{,}5;\,0;\,0]$ \\
+    \texttt{AG.3.32} & 1,53649168 ent/h & 0 & 160 & bénéfice & 0,09603073 & $[0;\,0;\,0;\,0;\,0{,}04801536;\,0{,}95198464]$ \\
+    \texttt{PROXY.AG.\allowbreak SYSTEM\_\allowbreak UTILIZATION} & 0,1338255 (ratio) & 1,5 & 0 & coût & 9,10783003 & $[0{,}55391502;\,0{,}44608498;\,0;\,0;\,0;\,0]$ \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Métriques contributives de l'attribut AG, run de validation.}
+  \label{tab:exemple-ag-metriques}
+\end{table}
+\end{landscape}
+
+Le score de \texttt{AG.1.1} illustre directement l'équation~\ref{eq:score-benefit}: $10 \times (0{,}5 - 0)/(1-0) = 5$, exactement au milieu des centres $C=6$ et $D=4$, d'où $\mu_C = (5-4)/(6-4) = 0{,}5$ et $\mu_D = (6-5)/(6-4) = 0{,}5$ selon l'équation~\ref{eq:fuzzification}.
+
+L'agrégation des trois vecteurs, chacun pondéré par $1/3$, donne, selon l'équation~\ref{eq:aggregation-attribut}:
+\begin{equation}
+G_{AG} = \frac{1}{3}[0;0;0{,}5;0{,}5;0;0] + \frac{1}{3}[0;0;0;0;0{,}04801536;0{,}95198464] + \frac{1}{3}[0{,}55391502;0{,}44608498;0;0;0;0]
+\label{eq:exemple-ag-aggregation}
+\end{equation}
+\begin{equation}
+G_{AG} = [0{,}18463834;\ 0{,}14869499;\ 0{,}16666667;\ 0{,}16666667;\ 0{,}01600512;\ 0{,}31732821].
+\label{eq:exemple-ag-vecteur}
+\end{equation}
+
+La défuzzification, équation~\ref{eq:defuzzification-attribut}, donne:
+\begin{equation}
+\mathrm{Score}_{AG} = 10(0{,}18463834) + 8(0{,}14869499) + 6(0{,}16666667) + 4(0{,}16666667) + 2(0{,}01600512) = 4{,}73462025.
+\label{eq:exemple-ag-score}
+\end{equation}
+
+Cette valeur correspond exactement au score AG publié au \cref{chap:scor-pi} et à l'annexe D.
+
+\section{Exemple complet: agrégation globale du Performance Index}
+
+Le vecteur flou global est exporté directement dans l'ABox du run de validation et n'a pas été recalculé pour cette annexe.
+
+\begin{table}[H]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{2pt}
+  \begin{tabularx}{\textwidth}{L{0.06\textwidth} L{0.05\textwidth} L{0.13\textwidth} L{0.13\textwidth} L{0.13\textwidth} L{0.13\textwidth} L{0.13\textwidth} L{0.13\textwidth}}
+    \toprule
+    Attribut & Poids & $A$ & $B$ & $C$ & $D$ & $E$ & $F$ \\
+    \midrule
+    RL & 0,40 & 0,75000000 & 0 & 0 & 0 & 0 & 0,25000000 \\
+    RS & 0,20 & 0,57366836 & 0,02633164 & 0 & 0 & 0 & 0,40000000 \\
+    AG & 0,10 & 0,18463834 & 0,14869499 & 0,16666667 & 0,16666667 & 0,01600512 & 0,31732821 \\
+    CO & 0,15 & 0 & 0 & 0 & 0 & 0 & 1,00000000 \\
+    AM & 0,15 & 0,85294118 & 0,14705882 & 0 & 0 & 0 & 0 \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Vecteurs flous des cinq attributs, run de validation, exportés dans l'ABox.}
+  \label{tab:exemple-pi-vecteurs}
+\end{table}
+
+L'application de l'équation~\ref{eq:vecteur-pi} donne le vecteur global, également exporté dans l'ABox:
+\begin{equation}
+G_{PI} = [0{,}56113868;\ 0{,}04219465;\ 0{,}01666667;\ 0{,}01666667;\ 0{,}00160051;\ 0{,}36173282].
+\label{eq:exemple-pi-vecteur}
+\end{equation}
+
+La défuzzification finale, équation~\ref{eq:pi-final}, donne:
+{\small
+\begin{equation}
+PI = 10(0{,}56113868) + 8(0{,}04219465) + 6(0{,}01666667) + 4(0{,}01666667) + 2(0{,}00160051) = 6{,}11881172.
+\label{eq:exemple-pi-final}
+\end{equation}
+}
+
+Ce résultat correspond exactement au PI publié dans tout le document. Le calcul détaillé ci-dessus, reconstruit à partir des cinq vecteurs d'attribut, retombe sur le vecteur global exporté directement par le modèle, ce qui confirme la cohérence entre la chaîne documentée et l'export runtime.
+
+\section{Traçabilité des données}
+
+Toutes les valeurs de cette annexe proviennent de \texttt{sources/\allowbreak runs/\allowbreak vsm\_validation/\allowbreak abox\_final.ttl} et de \texttt{sources/\allowbreak runs/\allowbreak vsm\_validation/\allowbreak RUN\_\allowbreak VERIFICATION.md}, run \texttt{RUN\_1773129600000\_\allowbreak 1788264883846}. Aucune valeur d'un run antérieur n'a été reprise. Les valeurs de Bottom et Perfect proviennent des règles de notation associées à chaque métrique dans le même export et restent des paramètres du modèle, non calibrés sur des références terrain, comme rappelé à l'annexe D.

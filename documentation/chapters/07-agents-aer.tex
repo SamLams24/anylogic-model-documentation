@@ -27,6 +27,18 @@ Une décision ne descend jamais directement du niveau stratégique vers un poste
 
 Une décision change donc de forme à chaque niveau descendant, et un fait change de granularité à chaque niveau remontant. Le stratégique reçoit une synthèse, pas le détail de chaque micro-activité; l'exécutant produit un fait précis, pas une interprétation globale. Cette organisation évite qu'une intention générale soit transmise telle quelle à un poste, et qu'un événement isolé soit présenté comme une conclusion de portée stratégique.
 
+Le nom précis d'un agent combine son niveau et son processus: \texttt{AS-sP1} pour l'unique agent stratégique, \texttt{AT-sP2} à \texttt{AT-sP5} pour les quatre agents tactiques de Source, Make, Deliver et Return, \texttt{CA-sS1}, \texttt{CA-sM1}, \texttt{CA-sD1} et \texttt{CA-sR} pour les coordinateurs de chaque processus, \texttt{AOp-sS1.1} et \texttt{AOp-sM1.1} pour les pilotes opérationnels de Source et de Make. Deliver suit une règle différente: \texttt{ASup-sD1} encapsule uniquement les responsabilités sD1.3 à sD1.7, tandis que \texttt{AOe-sD1.8} Inventory, ainsi que Picking, Packing, Loading et Transport, restent des agents d'exécution distincts plutôt qu'absorbés par ce superviseur. L'\cref{ann:agents} détaille chacun de ces identifiants, avec sa responsabilité et son statut de preuve.
+
+\FigureOrPlaceholder{documentation/figures/arbre_agents_detaille.png}{Arborescence détaillée des agents confirmés, du niveau stratégique aux agents d'exécution.}{fig:arbre-agents-detaille-ch7}
+
+\subsection{Cascade descendante et boucle montante}
+
+Une décision descend d'un niveau au suivant sous la forme d'un plan, puis d'un ordre de domaine, puis d'une affectation, jusqu'à devenir une instruction reçue par un agent d'exécution. Le fait produit par cette exécution remonte ensuite en sens inverse: un fait runtime devient une décision locale pour le pilotage, un compte rendu pour la coordination, un rapport de domaine pour le niveau tactique, puis un rapport consolidé pour le niveau stratégique. Ces deux boucles ne sont pas symétriques dans leur contenu: la boucle descendante transporte une intention qui se précise à chaque niveau, la boucle montante transporte un fait qui se généralise à chaque niveau.
+
+\FigureOrPlaceholder{documentation/figures/boucle_objectif_preuve.png}{Boucle objectif/plan descendante et boucle fait/preuve montante entre les cinq niveaux de décision.}{fig:boucle-objectif-preuve}
+
+Le catalogue complet des messages échangés entre ces niveaux, organisé par famille fonctionnelle et vérifié contre l'ALP et l'ABox du run de validation, est réuni à l'\cref{ann:messages-flux-global}; ce chapitre n'en reproduit qu'un exemple représentatif à la section suivante.
+
 \section{Le Blackboard, mémoire partagée}
 
 Le Blackboard est un espace où les agents déposent des observations et des décisions qui doivent rester accessibles à plusieurs d'entre eux. Il ne prend pas de décision par lui-même. Sa fonction se limite à conserver un état partagé et à le rendre consultable, ce qui distingue nettement quatre opérations:

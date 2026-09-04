@@ -68,7 +68,7 @@ Coordination (par processus) & Coordination & Contextualise le plan tactique pou
 
 Operational\-Pilot & Pilotage opérationnel & Décompose l'ordre de domaine, affecte les tâches aux postes et surveille l'exécution; qualifie un goulot avec l'AHP local le cas échéant. & Ordre de domaine, \texttt{Supplier\-Delay\-Alert} & \texttt{Operational\-Exception}, affectation ou instruction vers l'exécution & Écrit les décisions locales, notamment un rééquilibrage & Postes et machines affectés à une instruction \\
 
-Operational\-Execution & Exécution & Réalise l'opération physique ou informationnelle et rapporte le fait obtenu. & Instruction ou affectation & \texttt{MaterialReceived}, accusé de fin de tâche, quantité produite & Écrit l'observation brute lue ensuite par les niveaux supérieurs & Poste ou machine concerné par l'opération \\
+Operational\-Execution & Exécution & Réalise l'opération physique ou informationnelle et rapporte le fait obtenu. & Instruction ou affectation & \texttt{Material\allowbreak Received}, accusé de fin de tâche, quantité produite & Écrit l'observation brute lue ensuite par les niveaux supérieurs & Poste ou machine concerné par l'opération \\
 
 Machine (instance) & Exécution & Porte la capacité, le temps de cycle et la fiabilité d'une ressource physique associée à un poste. & Instruction d'exécution transmise au poste & Fait runtime relatif au poste piloté & Ne publie pas directement; le poste rapporte l'observation & Elle-même, en tant que ressource du poste \\
 
@@ -79,6 +79,67 @@ AERMessage & Transversal & Structure tout message échangé entre agents selon s
 \end{longtable}
 }
 \end{landscape}
+
+\section{Table 2: agents et patrons d'agents réels}
+
+La table précédente décrit des familles structurelles. Le tableau suivant descend d'un niveau: il liste les identifiants d'agents réellement confirmés dans \texttt{sources/model/SCONTO\_\allowbreak SVU\_\allowbreak FINAL\_\allowbreak VALIDATED.alp}, vérifiés soit comme code de contrôle ou de fonction dans le modèle, soit comme émetteur ou destinataire effectif dans l'ABox du run de validation \texttt{RUN\_1773129600000\_1788264883846}. Aucun identifiant n'est publié uniquement parce qu'il figure dans un document de travail historique.
+
+Le statut distingue deux notions. \texttt{IMPLEMENTE} signale une structure disponible dans le modèle, confirmée par son nom dans l'ALP. \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} signale un agent ayant réellement émis ou reçu au moins un message dans le run de validation, confirmé par les champs \texttt{sender\allowbreak Id}/\texttt{receiver\allowbreak Id} de l'ABox.
+
+\begin{landscape}
+{\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{L{0.11\linewidth} L{0.09\linewidth} L{0.08\linewidth} L{0.20\linewidth} L{0.13\linewidth} L{0.13\linewidth} L{0.13\linewidth} L{0.09\linewidth}}
+\caption{Agents et patrons d'agents confirmés, avec leur statut de preuve.}\label{tab:agents-reels-annexe}\\
+\toprule
+Identifiant & Niveau & Processus & Rôle & Reçoit (exemple) & Émet (exemple) & Objet piloté & Statut \\
+\midrule
+\endfirsthead
+\toprule
+Identifiant & Niveau & Processus & Rôle & Reçoit (exemple) & Émet (exemple) & Objet piloté & Statut \\
+\midrule
+\endhead
+\midrule
+\multicolumn{8}{r}{Suite à la page suivante}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\texttt{AS-s\allowbreak P1} & Stratégique & Plan & Oriente le réseau focal à partir des rapports macro consolidés. & \texttt{Macro\allowbreak Process\allowbreak Report} & Orientation générale & Aucun objet direct & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{AT-s\allowbreak P2} & Tactique & Source & Planifie l'approvisionnement, coordonne avec Make. & \texttt{Source\allowbreak Feasibility\allowbreak Response} & \texttt{Material\allowbreak Availability\allowbreak Request} & Plan Source & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{AT-s\allowbreak P3} & Tactique & Make & Planifie la production, coordonne avec Source et Deliver. & \texttt{Material\allowbreak Available} & \texttt{Production\allowbreak Plan} & Plan Make & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{AT-s\allowbreak P4} & Tactique & Deliver & Planifie la livraison, promet la date client. & \texttt{Product\allowbreak Available\allowbreak For\allowbreak Delivery} & \texttt{Delivery\allowbreak Plan} & Plan Deliver & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{AT-s\allowbreak P5} & Tactique & Return & Planifie le retour, transversal aux deux sens de flux. & Rapport de domaine Return & Plan Return & Plan Return & \texttt{IMPLEMENTE} \\
+\texttt{CA-s\allowbreak S1} & Coordination & Source & Contextualise le plan Source, consolide les retours du pilotage. & \texttt{Source\allowbreak Feasibility\allowbreak Request} & \texttt{Source\allowbreak Feasibility\allowbreak Response} & Ordre Source & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{CA-s\allowbreak M1} & Coordination & Make & Contextualise le plan Make, consolide les retours du pilotage. & \texttt{Make\allowbreak Feasibility\allowbreak Check} & \texttt{Make\allowbreak Feasibility\allowbreak Response} & Ordre Make & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{CA-s\allowbreak D1} & Coordination & Deliver & Contextualise le plan Deliver, consolide les retours du pilotage. & \texttt{Delivery\allowbreak Plan} & \texttt{Delivery\allowbreak Order} & Ordre Deliver & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{CA-s\allowbreak R} & Coordination & Return & Coordination Return, transversale. & Rapport Return & Ordre Return & Ordre Return & \texttt{IMPLEMENTE} \\
+\texttt{AOp-s\allowbreak S1.1} & Pilotage opérationnel & Source & Décompose l'ordre Source vers les agents d'exécution matière. & \texttt{Supplier\allowbreak Check\allowbreak Order} & \texttt{Supplier\allowbreak Availability\allowbreak Check} & \texttt{AOe-s\allowbreak S1.2} à \texttt{AOe-s\allowbreak S1.4} & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{AOp-s\allowbreak M1.1} & Pilotage opérationnel & Make & Décompose l'ordre Make, qualifie un goulot avec l'AHP local le cas échéant. & \texttt{Production\allowbreak Order} & \texttt{Production\allowbreak Task\allowbreak Assignment} & \texttt{AOe-s\allowbreak M1.2} à \texttt{AOe-s\allowbreak M1.7} et \texttt{Machine\allowbreak Agent} & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{ASup-s\allowbreak D1} (trace du run: \texttt{AOp-s\allowbreak D1.1}, \texttt{AOp-s\allowbreak D1.3}, \texttt{AOp-s\allowbreak D1.7}) & Pilotage opérationnel & Deliver & Encapsule uniquement les responsabilités sD1.3 à sD1.7; \texttt{AOe-s\allowbreak D1.8} Inventory reste un agent d'exécution distinct. & \texttt{Delivery\allowbreak Order} & \texttt{Reserve\allowbreak Inventory}, \texttt{Picking\allowbreak Task} & \texttt{AOe-s\allowbreak D1.8} à \texttt{AOe-s\allowbreak D1.12} & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{AOe-s\allowbreak S1.2} & Exécution & Source & Procurement: émet la commande d'achat, reçoit la livraison entrante. & \texttt{Purchase\allowbreak Order\allowbreak Task} & \texttt{Purchase\allowbreak Order} & Poste Procurement & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{AOe-s\allowbreak S1.3} & Exécution & Source & Receiving: réceptionne la matière et rapporte sa conformité. & \texttt{Inbound\allowbreak Delivery} & \texttt{Material\allowbreak Received} & Poste Receiving & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{AOe-s\allowbreak S1.4} & Exécution & Source & Transfer/Storage: transfère la matière reçue vers le stock partagé. & Matière réceptionnée & Confirmation de transfert & Poste Transfer & \texttt{IMPLEMENTE} \\
+\texttt{AOe-s\allowbreak M1.2} & Exécution & Make & Vérifie plus spécifiquement la disponibilité matière, parmi les agents d'exécution Make. & \texttt{Material\allowbreak Check\allowbreak Request} & \texttt{Material\allowbreak Availability\allowbreak Response} & Poste Make associé & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{AOe-s\allowbreak M1.3} à \texttt{AOe-s\allowbreak M1.7} & Exécution & Make & Portent collectivement les contrôles de capacité et l'exécution des postes Make, avec les \texttt{Machine\allowbreak Agent} concernés. & \texttt{Production\allowbreak Task\allowbreak Assignment} & \texttt{Execution\allowbreak Start}, \texttt{Execution\allowbreak Progress} & Postes Make associés & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} (\texttt{AOe-s\allowbreak M1.3}); \texttt{IMPLEMENTE} (\texttt{AOe-s\allowbreak M1.4} à \texttt{.7}) \\
+\texttt{AOe-s\allowbreak D1.2} & Exécution & Deliver & Order Management: reçoit la commande client, confirme la date promise. & \texttt{Customer\allowbreak Order} & \texttt{Order\allowbreak Received}, \texttt{Order\allowbreak Confirmed} & Poste Order Management & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{AOe-s\allowbreak D1.8} & Exécution & Deliver & Inventory: reste un agent d'exécution distinct du superviseur Deliver. & \texttt{Reserve\allowbreak Inventory} & \texttt{Inventory\allowbreak Reserved} & Poste Inventory & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{AOe-s\allowbreak D1.9} & Exécution & Deliver & Picking. & \texttt{Picking\allowbreak Task} & \texttt{Picking\allowbreak Completed} & Poste Picking & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{AOe-s\allowbreak D1.10} & Exécution & Deliver & Packing. & \texttt{Packing\allowbreak Task} & \texttt{Packing\allowbreak Completed} & Poste Packing & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{AOe-s\allowbreak D1.11} & Exécution & Deliver & Loading. & \texttt{Loading\allowbreak Task} & \texttt{Loading\allowbreak Completed} & Poste Loading & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{AOe-s\allowbreak D1.12} & Exécution & Deliver & Transport. & \texttt{Shipment\allowbreak Order} & \texttt{Delivery\allowbreak Completed} & Poste Transport & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Machine\allowbreak Agent} & Exécution & Make (principalement) & Porte capacité, cycle et fiabilité d'une ressource physique. & Instruction d'exécution du poste & Fait runtime relatif au poste & Poste associé & \texttt{IMPLEMENTE} \\
+\texttt{Supplier\allowbreak Actor} & Externe & Source & Acteur externe fournisseur. & \texttt{Request\allowbreak For\allowbreak Availability}, \texttt{Purchase\allowbreak Order} & \texttt{Supplier\allowbreak Commitment}, \texttt{Inbound\allowbreak Delivery} & -- & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\texttt{Customer\allowbreak Actor} & Externe & Deliver & Acteur externe client. & \texttt{Order\allowbreak Confirmed} & \texttt{Customer\allowbreak Order} & -- & \texttt{OBSERVE\_\allowbreak RUN\_\allowbreak FINAL} \\
+\end{longtable}
+}
+\end{landscape}
+
+\FigureOrPlaceholder{documentation/figures/arbre_agents_detaille.png}{Arborescence détaillée des agents confirmés, du niveau stratégique aux agents d'exécution.}{fig:arbre-agents-detaille}
+
+L'arbre ci-dessus organise les mêmes identifiants que la Table 2 en une hiérarchie visuelle: chaque agent tactique porte son coordinateur, qui porte à son tour son pilote ou son superviseur opérationnel, qui porte enfin les agents d'exécution réellement confirmés. La branche Deliver montre explicitement la règle de l'\texttt{ASup-s\allowbreak D1}: il porte les postes sD1.3 à sD1.7, tandis qu'\texttt{AOe-s\allowbreak D1.8} Inventory, Picking, Packing, Loading et Transport restent des agents d'exécution distincts plutôt qu'absorbés par le superviseur.
+
+\BonASavoir{Pour Make, les contrôles de capacité restent portés collectivement par les agents d'exécution \texttt{AOe-s\allowbreak M1.2} à \texttt{AOe-s\allowbreak M1.7} et les \texttt{Machine\allowbreak Agent} concernés; \texttt{AOe-s\allowbreak M1.2} porte plus spécifiquement la vérification de disponibilité matière, sans qu'un agent unique concentre à lui seul tout le contrôle de capacité Make.}
 
 \section{Exemple de trace: propagation d'un retard fournisseur}
 

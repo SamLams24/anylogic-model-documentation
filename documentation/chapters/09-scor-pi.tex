@@ -1,11 +1,11 @@
 \chapter{Métriques, SCOR et Performance Index}
 \label{chap:scor-pi}
 
-Une observation VSM ne devient pas directement un score. Elle traverse une succession de transformations explicites que le lecteur peut suivre étape par étape: la valeur physique mesurée est normalisée sur une échelle commune, cette valeur normalisée devient un score, le score alimente une classe floue, les classes floues des métriques d'un même attribut sont agrégées, l'attribut obtenu est pondéré, puis les cinq attributs pondérés composent le Performance Index.
+Comment obtient-on réellement le Performance Index? Ce chapitre répond à cette question de bout en bout: de la valeur physique mesurée par la simulation jusqu'à l'indice unique publié en fin d'exécution, en passant par la normalisation, les degrés d'appartenance flous et leur agrégation. Un lecteur académique doit pouvoir reconstruire chaque étape du raisonnement; l'\cref{ann:formalisme-pi} porte les équations complètes et un exemple entièrement recalculable pour qui souhaite vérifier chaque chiffre.
 
 \FigureOrPlaceholder{documentation/figures/pipeline_scor_pi.png}{Pipeline complet, de la valeur physique mesurée jusqu'au Performance Index.}{fig:pipeline-scor-pi}
 
-\section{Le modèle SCOR mobilisé}
+\section{Position de SCOR dans la chaîne de mesure}
 
 Le modèle organise son catalogue de métriques selon la numérotation SCOR version 12,0, telle que publiée par APICS en 2017~\cite{apics2017}. Cette numérotation fournit les codes \texttt{RL}, \texttt{RS}, \texttt{AG}, \texttt{CO} et \texttt{AM} utilisés dans tout ce chapitre. Le modèle ne prétend pas implémenter le SCOR Digital Standard actuel; les correspondances internes doivent être lues comme des associations à ce référentiel, pas comme une certification de conformité.
 
@@ -13,7 +13,55 @@ Le modèle utilise des identifiants associés à SCOR, des métriques internes e
 
 \AttentionDoc{Un code proche de la numérotation SCOR ne suffit pas à faire d'une mesure interne un indicateur officiel. La qualification de chaque métrique doit accompagner sa valeur, en particulier lorsque le scénario ne contient qu'un seul produit livré.}
 
-\section{Des métriques aux attributs}
+\section{De la valeur physique au score comparable}
+
+Une observation VSM ou une métrique SCOR porte d'abord une valeur dans son unité métier: des secondes, un ratio, une quantité par heure. Cette valeur seule ne peut pas être comparée à une autre métrique d'unité différente, ni additionnée à elle. Le modèle la transforme en score sur une échelle commune de 0 à 10 grâce à deux repères nommés Bottom et Perfect: Bottom situe la valeur la plus défavorable de l'échelle, Perfect situe la valeur la plus favorable, et le score mesure la position de la valeur observée entre ces deux repères, selon le sens d'amélioration de la métrique.
+
+\FigureOrPlaceholder{documentation/figures/echelle_bottom_perfect.png}{Principe de la normalisation Bottom/Perfect, illustré avec la métrique CO.1.1.}{fig:echelle-bottom-perfect}
+
+Pour \texttt{CO.1.1}, dont le sens d'amélioration est un coût à minimiser, Bottom vaut 1,0 et Perfect vaut 0,0. La valeur observée de l'exécution validée, égale à 1,0, coïncide exactement avec Bottom, ce qui explique le score nul obtenu pour cet attribut sans qu'aucune erreur de calcul ne soit en cause.
+
+\BonASavoir{Les repères Bottom et Perfect assurent la calculabilité interne du modèle. Ils ne proviennent pas d'une campagne de calibration terrain menée auprès de ZENER SA Togo et ne constituent donc pas une norme externe publiée.}
+
+Les deux formulations exactes, pour une métrique bénéfice et pour une métrique coût ou délai, sont données à l'\cref{ann:formalisme-pi}, équations~\ref{eq:score-benefit} et~\ref{eq:score-cost}.
+
+\section{Introduction aux ensembles flous}
+
+Un ensemble classique répond par oui ou par non: un élément lui appartient, avec un degré d'appartenance de 1, ou il ne lui appartient pas, avec un degré de 0. Un ensemble flou, tel que défini par Zadeh~\cite{zadeh1965}, autorise un degré d'appartenance intermédiaire $\mu(x)$ compris dans l'intervalle $[0,1]$: un score peut ainsi appartenir partiellement à deux catégories voisines plutôt que d'être forcé dans une seule. Une fonction d'appartenance décrit précisément comment ce degré varie selon la valeur observée; le modèle en retient une forme simple, présentée à la section suivante.
+
+Cette annexe ne développe pas un cours complet de logique floue: elle retient uniquement le mécanisme utilisé par SCONTO-SVU, suffisant pour comprendre comment un score devient un grade puis contribue au Performance Index.
+
+\section{Grades flous utilisés dans SCONTO-SVU}
+
+Le modèle exploite principalement des degrés d'appartenance à six grades linguistiques nommés A à F, centrés respectivement sur 10, 8, 6, 4, 2 et 0. Il ne réalise pas l'arithmétique générale des nombres flous, telle que la multiplication ou la division de deux ensembles flous entre eux: sa représentation reste celle d'un vecteur de six degrés d'appartenance par métrique ou par attribut, avec une somme égale à 1.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{0.6\textwidth}{L{0.15\textwidth} Y}
+    \toprule
+    Grade & Centre \\
+    \midrule
+    A & 10 \\
+    B & 8 \\
+    C & 6 \\
+    D & 4 \\
+    E & 2 \\
+    F & 0 \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Les six grades flous et leur centre sur l'échelle de score.}
+  \label{tab:grades-fuzzy}
+\end{table}
+
+\FigureOrPlaceholder{documentation/figures/grades_flous_a_f.png}{Fonctions d'appartenance des six grades A à F et interpolation entre deux centres voisins.}{fig:grades-flous}
+
+Un score situé entre deux centres voisins est partagé linéairement entre les deux grades correspondants, selon l'équation~\ref{eq:fuzzification} de l'\cref{ann:formalisme-pi}; les quatre autres grades valent 0 pour cette métrique.
+
+\section{Agrégation des métriques dans un attribut}
+
+Plusieurs métriques peuvent contribuer à un même attribut. Leurs vecteurs flous respectifs sont alors pondérés par un poids local puis additionnés pour former le vecteur flou de l'attribut, selon l'équation~\ref{eq:aggregation-attribut} de l'\cref{ann:formalisme-pi}. Une métrique qualifiée informative porte un poids local nul: elle reste exportée pour la traçabilité, mais n'influence pas le score de l'attribut ni le PI.
+
+\section{Construction des cinq attributs RL, RS, AG, CO et AM}
 
 Chaque métrique retenue alimente l'un des cinq attributs de performance.
 
@@ -23,7 +71,7 @@ Reliability s'appuie sur les résultats de service de la commande cliente. \text
 Responsiveness reçoit les temps du registre de commande présentés au \cref{chap:mesures-vsm}. \texttt{RS.1.1} vaut 65\,041,24 s et correspond au Order Fulfillment Lead Time; \texttt{RS.3.94} vaut 46\,924,40 s et correspond au Order Waiting Time. Les temps macro disponibles sont 1,60 s pour Source, avec \texttt{RS.2.1}, 26,07 s pour Make, avec \texttt{RS.2.2}, et 67,12 s pour Deliver, avec \texttt{RS.2.3}. \texttt{RS.2.5}, qui porterait sur le cycle Return, est absente, car Return n'a pas été exécuté; cette absence n'est pas remplacée par une valeur nulle.
 \end{sloppypar}
 
-Agility mobilise notamment \texttt{AG.1.1}, qui vaut 0,5 dans le pipeline interne, ainsi qu'un débit observé de 1,536 entité par heure et le proxy d'utilisation du système, à 0,134. Ces données décrivent la réaction simulée sous les règles disponibles; elles ne mesurent pas l'agilité organisationnelle réelle de l'entreprise.
+Agility mobilise \texttt{AG.1.1}, qui vaut 0,5 dans le pipeline interne, \texttt{AG.3.32}, le débit observé rapporté à un débit de référence, ainsi que le proxy d'utilisation du système \path{PROXY.AG.SYSTEM_UTILIZATION}. Ces trois métriques, détaillées avec leurs vecteurs flous exacts à l'\cref{sec:exemple-ag} de l'\cref{ann:formalisme-pi}, décrivent la réaction simulée sous les règles disponibles; elles ne mesurent pas l'agilité organisationnelle réelle de l'entreprise.
 
 Cost utilise \texttt{CO.1.1}, le rapport entre le coût total simulé et le chiffre d'affaires estimé. Sa valeur brute vaut 1 pour cette exécution.
 
@@ -31,19 +79,7 @@ Cost utilise \texttt{CO.1.1}, le rapport entre le coût total simulé et le chif
 
 Asset Management utilise notamment \texttt{AM.3.9}, à 0,941, et \texttt{AM.2.2}, jours de couverture de stock, à 0 jour dans cette exécution. D'autres paramètres économiques du modèle, dont la valeur d'actif fixe déclarée par poste, restent informatifs et hors score; ils sont documentés en annexe plutôt que mobilisés dans ce chapitre.
 
-\section{Normalisation Bottom et Perfect}
-
-Chaque métrique retenue est décrite par une valeur brute, un sens d'amélioration, deux repères nommés Bottom et Perfect, un score sur une échelle de 0 à 10 et un grade flou. Bottom situe la valeur la plus défavorable de l'échelle; Perfect situe la valeur la plus favorable. Le score mesure la position de la valeur observée entre ces deux repères.
-
-\FigureOrPlaceholder{documentation/figures/echelle_bottom_perfect.png}{Principe de la normalisation Bottom/Perfect, illustré avec la métrique CO.1.1.}{fig:echelle-bottom-perfect}
-
-Pour \texttt{CO.1.1}, dont le sens d'amélioration est un coût à minimiser, Bottom vaut 1,0 et Perfect vaut 0,0. La valeur observée de cette exécution, égale à 1,0, coïncide exactement avec Bottom, ce qui explique le score nul obtenu pour cet attribut sans qu'aucune erreur de calcul ne soit en cause.
-
-\BonASavoir{Les repères Bottom et Perfect assurent la calculabilité interne du modèle. Ils ne proviennent pas d'une campagne de calibration terrain menée auprès de ZENER SA Togo et ne constituent donc pas une norme externe publiée.}
-
-\section{Logique floue et agrégation}
-
-Le score normalisé de chaque métrique alimente une logique floue: la valeur est répartie entre plusieurs degrés d'appartenance, ces degrés sont agrégés au niveau de l'attribut, puis une défuzzification produit un score unique sur dix pour l'attribut considéré. Ce mécanisme lisse les métriques d'un même attribut plutôt que de retenir une seule mesure représentative.
+\section{Agrégation des cinq attributs}
 
 Les cinq scores d'attribut obtenus pour l'exécution validée, avec leurs poids et leur contribution au Performance Index, sont regroupés dans le tableau suivant.
 
@@ -66,18 +102,37 @@ Les cinq scores d'attribut obtenus pour l'exécution validée, avec leurs poids 
   \label{tab:scores-attributs-pi-doc}
 \end{table}
 
-L'agrégation s'écrit:
+Ce tableau condense, sous une forme linéaire familière, l'agrégation flou-à-flou réellement effectuée: les cinq vecteurs flous d'attribut sont pondérés puis additionnés pour former le vecteur flou global du PI, selon l'équation~\ref{eq:vecteur-pi} de l'\cref{ann:formalisme-pi}, avant la dernière étape de défuzzification.
 
-\begin{equation}
-PI=0{,}40\,RL+0{,}20\,RS+0{,}10\,AG+0{,}15\,CO+0{,}15\,AM.
-\label{eq:aggregation-pi-doc}
-\end{equation}
+\section{Défuzzification et calcul du PI}
 
-Avec les profils de normalisation retenus par le modèle, cette exécution conduit à un PI de 6,119/10.
+Le vecteur flou global est ramené sur l'échelle de 0 à 10 par la même règle de défuzzification que celle utilisée pour chaque attribut, équation~\ref{eq:pi-final} de l'\cref{ann:formalisme-pi}. Avec les profils de normalisation retenus par le modèle, cette exécution conduit à un PI de 6,119/10.
 
-\AttentionDoc{Cette formulation doit être conservée telle quelle. Il ne faut jamais écrire que la performance réelle de ZENER SA Togo est 6,119/10: le PI est une synthèse multicritère interne, valide pour l'exécution étudiée selon les profils du modèle, pas une notation absolue de l'entreprise.}
+\AttentionDoc{Cette formulation doit être conservée telle quelle. Il ne faut jamais écrire que la performance réelle de ZENER SA Togo est 6,119/10: le PI est une synthèse interne pour l'exécution et les profils retenus, valide pour l'exécution étudiée selon les profils du modèle, pas une notation absolue de l'entreprise.}
 
-\section{AHP local et pipeline du PI: deux mécanismes distincts}
+\section{Mise en oeuvre adaptée de Theeranuphattana et Tang}
+
+\FigureOrPlaceholder{documentation/figures/theeranuphattana_sconto.png}{Correspondance entre la méthode de référence de Theeranuphattana et Tang et son adaptation dans SCONTO-SVU.}{fig:theeranuphattana-sconto}
+
+La méthode de référence de Theeranuphattana et Tang~\cite{theeranuphattanatang2008,theeranuphattanatangkhang2012} enchaîne des valeurs de performance déjà mesurées, une normalisation vers une échelle commune, une conversion en grades flous, une agrégation multicritère et un indice composite final. SCONTO-SVU adapte cette chaîne en amont: des événements de simulation AnyLogic sont d'abord transformés en observations VSM, puis en valeur physique associée à une métrique SCOR ou interne, avant d'entrer dans la même chaîne Bottom/Perfect, score, grade flou, attribut, PI décrite dans ce chapitre. La contribution propre à SCONTO-SVU se situe donc principalement en amont de la méthode de référence: dans la transformation d'une exécution simulée en mesure physique exploitable, avant même la normalisation.
+
+La méthode utilisée pour construire les scores et le PI constitue ainsi une adaptation interne inspirée de ces travaux; elle ne prétend pas reproduire exactement leur méthode de référence.
+
+Les travaux de Chan et Qi~\cite{chanqi2003} sont cités pour une raison différente: ils justifient une mesure fondée sur les processus et une agrégation multicritère assistée par la logique floue, deux principes que le pipeline decrit ici retient. Ils ne signifient pas que SCONTO-SVU reproduit à l'identique leur méthode.
+
+\section{Exemple numérique complet issu du run validé}
+
+L'attribut AG illustre la chaîne complète, du run de validation \texttt{RUN\_1773129600000\_1788264883846}: trois métriques, \texttt{AG.1.1}, \texttt{AG.3.32} et \path{PROXY.AG.SYSTEM_UTILIZATION}, portent chacune une valeur physique, un score et un vecteur flou; leur agrégation pondérée, à poids égal $1/3$, produit le vecteur flou de l'attribut AG, dont la défuzzification redonne exactement le score AG publié, 4,73462025. Le détail complet des valeurs, bornes et vecteurs, tous vérifiables dans l'ABox du run, est donné à l'\cref{sec:exemple-ag} de l'\cref{ann:formalisme-pi}.
+
+Au niveau global, les cinq vecteurs flous d'attribut, RL, RS, AG, CO et AM, également exportés dans l'ABox, s'agrègent selon l'équation~\ref{eq:vecteur-pi} en un vecteur flou global, puis se défuzzifient en un PI de 6,11881172, exactement la valeur publiée dans tout ce document. L'\cref{ann:formalisme-pi} reproduit ce calcul complet plutôt que de le recalculer indépendamment, puisque le vecteur global est directement exporté par le modèle.
+
+\section{Lecture arborescente de la construction du PI}
+
+\FigureOrPlaceholder{documentation/figures/arbre_pi_metriques.png}{Lecture arborescente du PI, des cinq attributs jusqu'aux métriques réellement contributives du pipeline.}{fig:arbre-pi-metriques}
+
+L'arbre ci-dessus se lit du sommet vers les feuilles: le PI se divise en cinq branches, une par attribut, chaque branche se divisant à son tour en les métriques réellement contributives de cet attribut dans le run de validation, et chaque métrique renvoyant à son observation physique d'origine, VSM, commande ou stock. Cette lecture rend visible qu'un attribut n'est jamais porté par une seule mesure isolée, à l'exception de Cost, où \texttt{CO.1.1} reste actuellement la seule métrique contributive.
+
+\section{Distinction AHP local et pipeline du PI}
 
 \FigureOrPlaceholder{documentation/figures/ahp_vs_pi.png}{Distinction entre l'arbitrage AHP local et le pipeline global du Performance Index.}{fig:ahp-vs-pi}
 
@@ -101,8 +156,6 @@ L'AHP local et le PI ne sont pas deux usages d'un même mécanisme: le PI n'est 
 
 Aucune relation de calcul ni causalité n'est démontrée entre le score AHP local et le PI. L'exécution simultanée d'une décision \texttt{REBALANCE} et du pipeline de performance ne prouve pas que l'une améliore l'autre; une telle relation demanderait des exécutions comparables avec et sans la décision étudiée.
 
-\section{Portée méthodologique}
-
-La méthode utilisée pour construire les scores et le PI constitue une adaptation interne inspirée notamment des travaux de Chan et Qi~\cite{chanqi2003} ainsi que de Theeranuphattana et Tang~\cite{theeranuphattanatang2008,theeranuphattanatangkhang2012} sur l'évaluation multicritère de la performance logistique; elle ne prétend pas reproduire exactement leur méthode. La logique floue mobilisée dans l'agrégation des attributs s'appuie sur les principes fondateurs posés par Zadeh~\cite{zadeh1965}. Ces références situent la méthode sans transformer son résultat en norme certifiée.
+\section{Limites méthodologiques}
 
 Trois limites restent structurantes pour toute lecture du PI de cette exécution. Les profils Bottom et Perfect doivent être calibrés sur des données métier avant une interprétation absolue. Plusieurs entrées, dont le proxy d'agilité et les métriques mono-produit, restent des approximations propres à ce scénario. Une seule exécution perturbée ne permet ni analyse de sensibilité ni intervalle d'incertitude. Le PI peut servir à comparer des exécutions construites sur un protocole homogène; il ne doit pas être lu isolément comme une vérité absolue sur la performance de ZENER SA Togo.

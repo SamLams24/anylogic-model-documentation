@@ -46,6 +46,12 @@ Le chargeur contrôle le champ \texttt{meta.schemaVersion} et avertit sans bloqu
 
 Cette description correspond au comportement actuel du chargeur; elle ne constitue pas une stratégie de versioning formalisée. Toute évolution qui ajouterait un nouveau bloc obligatoire, retirerait un bloc existant ou changerait le sens d'un champ déjà utilisé doit être accompagnée d'une mise à jour de l'annexe A et, si la compatibilité descendante est recherchée, d'un repli explicite pour les fichiers antérieurs plutôt que d'une hypothèse silencieuse.
 
+\section{Capacités internes non confirmées à l'écran}
+
+Certaines fonctions du modèle sont reliées à un contrôle d'interface réel, sans que la présente documentation ait pu confirmer que ce contrôle est visible à l'écran dans l'usage normal. La fonction \texttt{ouvrirProfilsTest}, associée au bouton \texttt{btnProfilsTest}, en est l'exemple retenu: le bouton porte les indicateurs habituels d'un contrôle actif dans le fichier du modèle, mais il n'apparaît dans aucune des captures de la vue Configuration réunies pour cette documentation, alors que les boutons voisins de réglage y figurent tous. Ce statut est noté \texttt{CAPACITE\_INTERNE\_NON\_EXPOSEE}: la capacité existe dans le code, sans confirmation qu'elle reste atteignable par un clic dans la disposition actuelle de la vue.
+
+\AttentionDoc{Avant de retirer ou de republier un contrôle qualifié \texttt{CAPACITE\_INTERNE\_NON\_EXPOSEE}, vérifier directement dans l'éditeur AnyLogic si le contrôle est superposé par un autre élément, positionné hors de la zone visible sans défilement, ou simplement absent de la disposition actuelle. Le \cref{chap:lancer-suivre} documente le mécanisme réellement accessible qui couvre la même fonction, à savoir la sélection d'un scénario \texttt{ZENER CAS 1/2/3} dans la liste des scénarios.}
+
 \section{Ajouter une fonctionnalité}
 
 \begin{table}[H]

@@ -1,9 +1,52 @@
 \chapter{Prise en main et navigation}
+\label{chap:prise-en-main}
 
-\DocumentationNote{Expliquer l'ouverture, les huit vues réelles, les commandes de navigation, la fenêtre de suivi et un parcours initial court.}
+L'interface sépare la préparation du modèle, son exécution et la consultation des résultats. Cette distinction évite de modifier une donnée de structure au moment où l'on cherche seulement à observer un flux. Les commandes de navigation restent accessibles depuis les vues principales et ne changent pas, à elles seules, la configuration.
 
 \section{Repérer les huit vues}
+
+Huit vues structurent l'utilisation du modèle. La fenêtre de suivi en temps réel est complémentaire: elle s'ouvre au-dessus de la vue courante et ne constitue pas une neuvième vue.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.23\textwidth} L{0.40\textwidth} Y}
+    \toprule
+    Vue & Question traitée & Moment conseillé \\
+    \midrule
+    Configuration & Que vais-je simuler et avec quels réglages? & Avant le démarrage. \\
+    Exécution & Que se passe-t-il maintenant et comment conduire l'exécution? & Pendant une simulation. \\
+    Vue Globale & Comment la chaîne se comporte-t-elle dans son ensemble? & Pendant ou après l'exécution. \\
+    Logistique & Quels acteurs participent et que montrent les processus? & Pendant la préparation, puis pour l'analyse. \\
+    Hiérarchie & Qui pilote les activités et selon quelle organisation? & Pour comprendre les responsabilités. \\
+    Structure animée & Comment les mouvements sont-ils représentés dans le réseau? & Pendant l'exécution. \\
+    Responsabilités et Machines & Qui est responsable et quelles ressources sont affectées? & Après la création des acteurs et des postes. \\
+    Nomenclature et matières & De quoi le produit est-il constitué et où les matières sont-elles consommées? & Avant le contrôle des stocks. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Rôle des huit vues de l'interface.}
+  \label{tab:huit-vues}
+\end{table}
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_navigation.png}{Emplacement prévu pour une capture réelle des commandes de navigation communes.}{fig:ui-navigation}
+
 \section{Naviguer sans modifier le modèle}
+
+Les commandes \texttt{Configuration}, \texttt{Exécution}, \texttt{Vue Globale}, \texttt{Logistique}, \texttt{Hiérarchie} et \texttt{Vue Structure animée} changent uniquement la vue affichée. Les vues \texttt{Responsabilités et Machines} et \texttt{Nomenclature et matières} sont ouvertes depuis la zone de configuration par les commandes qui leur sont consacrées.
+
+La commande \texttt{Suivi temps réel simulation} ouvre une fenêtre de lecture disponible depuis les huit vues. Elle peut donc rester le point de contrôle commun lorsque l'utilisateur passe de l'animation à une vue de résultats.
+
+\BonASavoir{Un changement de vue n'arrête pas l'exécution en cours. Pour agir sur l'exécution, utiliser les commandes de la vue Exécution.}
+
 \section{Choisir un parcours selon l'objectif}
+
+Il n'existe pas un parcours unique imposé. Une première prise en main peut suivre l'un des trois objectifs de la \cref{fig:parcours-utilisateur}.
+
+\FigureOrPlaceholder{documentation/figures/parcours_utilisateur.png}{Parcours de préparation, d'exécution et d'analyse proposés à l'utilisateur.}{fig:parcours-utilisateur}
+
+Pour préparer une nouvelle configuration, commencer par les acteurs, poursuivre avec les postes et les scénarios, puis renseigner les responsabilités, les machines et les matières. Pour exécuter une configuration existante, la charger, contrôler les réglages de commandes, de stocks et de temps, puis démarrer. Pour analyser, ouvrir la vue adaptée à la question sans modifier les paramètres utilisés pour produire les résultats.
+
 \section{Reconnaître les fenêtres complémentaires}
 
+Plusieurs commandes ouvrent une fenêtre au lieu de remplacer la vue courante. Les fenêtres \texttt{Stocks initiaux}, \texttt{Contrôle commandes}, \texttt{Temps et budgets}, \texttt{Profils de test}, \texttt{Retours et qualité}, \texttt{Animation} et \texttt{Perturbations} préparent l'exécution. La fenêtre \texttt{Suivi temps réel simulation} sert à l'observation. Les rapports et tableaux détaillés sont traités dans les chapitres consacrés aux vues et aux résultats.
+
+\AttentionDoc{Fermer une fenêtre de réglage ne signifie pas nécessairement annuler les valeurs qui y ont été appliquées. Après une modification, vérifier le message de confirmation ou rouvrir la fenêtre avant de démarrer.}

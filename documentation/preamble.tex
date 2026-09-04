@@ -12,6 +12,7 @@
 \usepackage{longtable}
 \usepackage{tabularx}
 \usepackage{array}
+\usepackage{pdflscape}
 \usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage[nameinlink,noabbrev]{cleveref}
@@ -115,7 +116,7 @@
       \includegraphics[width=#1]{#2}%
     }{%
       \fbox{\parbox[c][4.5cm][c]{0.86\textwidth}{\centering\small
-        Illustration planifiée : \texttt{#2}}}%
+        Illustration planifiée : \texttt{\detokenize{#2}}}}%
     }%
     \caption{#3}
     \label{#4}

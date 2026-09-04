@@ -15,7 +15,7 @@ Un garde empêche le lancement de plusieurs productions autonomes concurrentes p
 
 \section{Commande cliente et ordre interne}
 
-La commande \texttt{CMD\_*} porte un besoin externe. Elle vérifie la disponibilité, attend si nécessaire, puis déclenche Deliver. L'ordre \texttt{REAPPRO\_*} est créé par la politique de stock pour produire des unités destinées au magasin. Il calcule les besoins matière, déclenche Source lorsque des quantités manquent et pilote Make.
+La commande \texttt{CMD\_*} porte un besoin externe. Elle vérifie la disponibilité, attend si nécessaire, puis déclenche Deliver. L'ordre interne \texttt{REAPPRO\_*} porte la quantité destinée à reconstituer le magasin. Sa création par la politique de stock conduit au calcul des besoins matière, à la sollicitation de Source lorsque des quantités manquent, puis à l'engagement de Make.
 
 \FigureOrPlaceholder{documentation/figures/cmd_reappro.png}{Séparation entre demande cliente et reconstitution interne du stock fini.}{fig:cmd-reappro}
 

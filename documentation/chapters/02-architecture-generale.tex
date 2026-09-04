@@ -30,7 +30,7 @@ Le JSON et l'interface alimentent les structures métier. À l'initialisation, c
 
 Le flux physique concerne les matières et les produits. Il commence par les approvisionnements nécessaires à Source, se poursuit dans Make et alimente le stock de produits finis avant Deliver. Le flux informationnel porte les commandes, les contrôles de disponibilité, les ordres, les plans et les confirmations échangés entre agents. Le flux probatoire rassemble les événements et mesures qui rendent l'exécution vérifiable.
 
-Ces trois lectures restent synchronisées sans être interchangeables. Un message \texttt{MaterialReceived} signale une réception dans la coordination, mais la preuve d'un délai ou d'une quantité observée doit être recherchée dans les traces et les exports du run. De même, une ligne de JSON peut annoncer un stock initial sans constituer une observation d'exécution.
+Ces trois lectures restent synchronisées sans être interchangeables. Un message \texttt{MaterialReceived} signale une réception dans la coordination, mais la preuve d'un délai ou d'une quantité observée doit être recherchée dans les traces et les exports de l'exécution. De même, une ligne de JSON peut annoncer un stock initial sans constituer une observation d'exécution.
 
 \FigureOrPlaceholder{documentation/figures/trois_flux.png}{Articulation des flux physique, informationnel et probatoire.}{fig:trois-flux}
 

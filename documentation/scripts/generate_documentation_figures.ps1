@@ -456,3 +456,56 @@ $loadNodes = @(
 )
 $loadEdges = @((New-Edge 0 1), (New-Edge 1 2), (New-Edge 2 3), (New-Edge 3 4), (New-Edge 4 5))
 Write-Diagram 'Chargement et reconstruction d''une configuration' $loadNodes $loadEdges 'workflow_chargement_json.png'
+
+$userPathNodes = @(
+    (New-Node 70 350 300 140 'Choisir un objectif' 'decision'),
+    (New-Node 500 90 260 110 "Pr${chEAcute}parer" 'input'),
+    (New-Node 850 90 300 110 "Configuration et nomenclature" 'process'),
+    (New-Node 1260 90 300 110 "Contr${chOCirc}ler puis sauvegarder" 'output'),
+    (New-Node 500 350 260 110 "Ex${chEAcute}cuter" 'input'),
+    (New-Node 850 350 300 110 "R${chEAcute}gler puis d${chEAcute}marrer" 'process'),
+    (New-Node 1260 350 300 110 "Suivre l'ex${chEAcute}cution" 'output'),
+    (New-Node 500 610 260 110 'Analyser' 'input'),
+    (New-Node 850 610 300 110 "Vue Globale et vues cibl${chEAcute}es" 'process'),
+    (New-Node 1260 610 300 110 "Interpr${chEAcute}ter les sorties" 'output')
+)
+$userPathEdges = @(
+    (New-Edge 0 1), (New-Edge 1 2), (New-Edge 2 3),
+    (New-Edge 0 4), (New-Edge 4 5), (New-Edge 5 6),
+    (New-Edge 0 7), (New-Edge 7 8), (New-Edge 8 9)
+)
+Write-Diagram "Trois parcours possibles dans le mod${chEGrave}le" $userPathNodes $userPathEdges 'parcours_utilisateur.png' 1700 850
+
+$jsonBlockNodes = @(
+    (New-Node 680 330 320 150 "Configuration JSON`n13 blocs racine" 'actor'),
+    (New-Node 50 70 430 160 "Identification`nmeta" 'input'),
+    (New-Node 580 70 520 190 "Configuration m${chEAcute}tier`nparametresGlobaux, acteurs, postes, scenarios`nmachines, fichesMatiere" 'process'),
+    (New-Node 1200 70 500 190 "Mesure et pond${chEAcute}ration`nnormalizationProfiles, ahpConfiguration`nperformanceMeasurement" 'process'),
+    (New-Node 180 650 450 170 "Tra${chCCedilla}abilit${chEAcute}`naboxExport" 'output'),
+    (New-Node 1050 650 500 170 "Hi${chEAcute}rarchie d'${chEAcute}quipements`nisa95Hierarchy, isa95Assignments" 'output')
+)
+$jsonBlockEdges = @(
+    (New-Edge 1 0), (New-Edge 2 0), (New-Edge 3 0), (New-Edge 0 4), (New-Edge 0 5)
+)
+Write-Diagram "Organisation m${chEAcute}tier des blocs JSON" $jsonBlockNodes $jsonBlockEdges 'blocs_json.png' 1800 900
+
+$jsonSelectionParticipants = @(
+    'Utilisateur',
+    'Vue Configuration',
+    'Liste des fichiers',
+    'Chargeur JSON',
+    "Mod${chEGrave}le"
+)
+$jsonSelectionMessages = @(
+    (New-SequenceMessage 0 1 'Rafraichir la liste'),
+    (New-SequenceMessage 1 2 'rechercher scenario_*.json'),
+    (New-SequenceMessage 2 1 "noms tri${chEAcute}s" 'return'),
+    (New-SequenceMessage 1 0 'afficher les choix' 'return'),
+    (New-SequenceMessage 0 1 "s${chEAcute}lectionner puis charger"),
+    (New-SequenceMessage 1 3 "transmettre le fichier s${chEAcute}lectionn${chEAcute}"),
+    (New-SequenceMessage 3 3 "refuser si une ex${chEAcute}cution est active"),
+    (New-SequenceMessage 3 4 "lire, contr${chOCirc}ler et reconstruire"),
+    (New-SequenceMessage 4 1 "actualiser l'interface" 'return'),
+    (New-SequenceMessage 1 0 'confirmer le chargement' 'return')
+)
+Write-SequenceDiagram "S${chEAcute}lection et chargement d'une configuration JSON" $jsonSelectionParticipants $jsonSelectionMessages 'sequence_selection_json.png' 1900 1120

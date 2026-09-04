@@ -1,14 +1,87 @@
 \chapter{Sauvegarder et charger une configuration JSON}
+\label{chap:json}
 
-\DocumentationNote{Présenter le JSON à deux niveaux. Le corps explique les blocs métier et les deux workflows; l'annexe A donnera les propriétés et valeurs de repli. Signaler l'asymétrie actuelle du bloc responsabilités.}
+Le fichier JSON conserve une configuration réutilisable du modèle. Il ne constitue ni un résultat de simulation ni une reprise d'une exécution interrompue. Cette distinction détermine ce que l'utilisateur peut attendre après un chargement.
 
 \section{Ce que conserve une configuration}
+
+Le fichier de référence audité comporte treize blocs à la racine. La \cref{fig:blocs-json} les regroupe selon leur rôle afin d'éviter une lecture limitée à une suite de noms techniques.
+
+\FigureOrPlaceholder{documentation/figures/blocs_json.png}{Organisation pédagogique des treize blocs de la configuration JSON de référence.}{fig:blocs-json}
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.26\textwidth} Y Y}
+    \toprule
+    Famille & Informations conservées & Informations non reprises \\
+    \midrule
+    Identification et réglages & Métadonnées, paramètres globaux et nom d'entreprise. & Temps courant et fenêtres ouvertes. \\
+    Chaîne métier & Acteurs, postes, scénarios, machines et fiches matière. & Commandes actives, files d'attente et encours. \\
+    Mesure et pondération & Profils de normalisation, configuration AHP et mesure de performance. & Valeurs de KPI produites par une exécution. \\
+    Traçabilité & Réglages d'export de l'ABox. & Historique complet des événements, décisions et messages déjà échangés. \\
+    Équipements & Hiérarchie ISA-95 et affectations. & Pannes en cours et mouvements animés. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Portée d'une configuration JSON par rapport à l'état d'exécution.}
+  \label{tab:portee-json}
+\end{table}
+
+Le mécanisme de sauvegarde courant peut ajouter un bloc de responsabilités. Le fichier de référence disponible dans les sources ne contient pas ce bloc et en comporte treize. Cette asymétrie doit être conservée à l'esprit lors de la comparaison de deux fichiers produits à des dates différentes.
+
+\AttentionDoc{Un chargement reconstruit la configuration et efface l'état d'exécution présent en mémoire. Il est refusé lorsqu'une exécution est encore active.}
+
 \section{Sauvegarder la configuration courante}
+
+Dans la vue Configuration, renseigner le nom de l'entreprise puis utiliser \texttt{Sauver config JSON}. Le modèle assemble les blocs de configuration et écrit un fichier JSON en UTF-8 dont le nom est dérivé de l'entreprise. Le message final indique le chemin utilisé et les principaux nombres d'objets sauvegardés, ou signale l'erreur rencontrée.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_json_zone.png}{Emplacement prévu pour une capture réelle de la zone de sauvegarde et de chargement JSON.}{fig:ui-json-zone}
+
+\FigureOrPlaceholder{documentation/figures/workflow_sauvegarde_json.png}{Workflow de sauvegarde de la configuration courante au format JSON.}{fig:json-sauvegarde}
+
+Une sauvegarde doit être réalisée après les contrôles de structure, mais avant de modifier la configuration pour un autre essai. Conserver un nom d'entreprise stable facilite la détection du fichier lors d'une prochaine ouverture.
+
 \section{Détecter et sélectionner un fichier}
+
+La zone de sélection propose un parcours distinct du chargement direct. \texttt{Rafraichir la liste} recherche dans le répertoire courant les fichiers dont le nom correspond à \texttt{scenario\_*.json}, puis les trie et les affiche. Choisir le fichier souhaité dans la liste et utiliser \texttt{Charger le scenario selectionne}.
+
+Les libellés affichés par ces deux commandes ne comportent actuellement pas tous les accents. Ils sont reproduits ici à l'identique pour permettre leur repérage dans l'interface.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_json_liste.png}{Emplacement prévu pour une capture réelle de la liste des configurations JSON détectées.}{fig:ui-json-liste}
+
+\FigureOrPlaceholder{documentation/figures/sequence_selection_json.png}{Séquence de détection, de sélection et de chargement d'une configuration JSON.}{fig:json-selection}
+
+Si le fichier attendu n'apparaît pas, vérifier son préfixe \texttt{scenario\_}, son extension \texttt{.json} et le répertoire depuis lequel le modèle est exécuté. La commande \texttt{Charger config JSON} utilise directement le fichier associé au nom d'entreprise, tandis que la liste permet un choix explicite parmi les fichiers détectés.
+
 \section{Charger et reconstruire la configuration}
+
+Le chargement lit le fichier en UTF-8, analyse sa structure et avertit lorsque le schéma déclaré n'est pas reconnu. Il nettoie ensuite l'état courant avant de reconstruire les paramètres, acteurs, postes, agents associés, scénarios, matières, machines, pondérations, réglages de traçabilité et données ISA-95 disponibles.
+
+Les relations entre postes, les regroupements et l'affichage sont recalculés. Le scénario nominal est sélectionné lorsqu'il est disponible, puis l'interface est actualisée et un message confirme l'opération.
+
+\FigureOrPlaceholder{documentation/figures/workflow_chargement_json.png}{Workflow de lecture et de reconstruction d'une configuration JSON.}{fig:json-chargement}
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_json_charge.png}{Emplacement prévu pour une capture réelle de la confirmation après chargement JSON.}{fig:ui-json-charge}
+
 \section{Contrôles après chargement}
 
-\FigureOrPlaceholder{documentation/figures/workflow_sauvegarde_json.png}{Parcours de sauvegarde de la configuration au fichier JSON.}{fig:json-sauvegarde}
+Le message de succès atteste que le fichier a été lu et que la reconstruction est arrivée à son terme. Il ne remplace pas les contrôles métier. Comparer les nombres d'acteurs, de postes et de scénarios visibles dans les tableaux de contrôle avec la configuration attendue, puis vérifier les éléments suivants:
 
-\FigureOrPlaceholder{documentation/figures/workflow_chargement_json.png}{Parcours de chargement et de reconstruction depuis un fichier JSON.}{fig:json-chargement}
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.31\textwidth} Y}
+    \toprule
+    Point de contrôle & Question à résoudre \\
+    \midrule
+    Acteurs et responsabilités & Tous les responsables cités par les postes existent-ils? \\
+    Postes et gammes & Chaque poste du scénario est-il présent et ordonné comme attendu? \\
+    Nomenclatures et fiches matière & Les identifiants, quantités, stocks et fournisseurs sont-ils cohérents? \\
+    Pondérations & Les valeurs des attributs et des métriques N3 correspondent-elles à l'étude? \\
+    Paramètres d'exécution & Commandes, stocks initiaux, temps, budgets, retours et perturbations sont-ils réglés pour le cas voulu? \\
+    Nom et provenance & Le fichier chargé est-il bien celui qui doit produire les résultats à archiver? \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Contrôles utilisateur après chargement d'une configuration JSON.}
+  \label{tab:controle-apres-json}
+\end{table}
 
+\EnPratique{Pour rendre une exécution reproductible, archiver le fichier JSON utilisé avec les sorties produites. Ne pas supposer que le JSON contient les commandes, événements ou indicateurs générés pendant l'exécution.}

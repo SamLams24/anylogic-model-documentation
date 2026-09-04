@@ -46,10 +46,10 @@ Les signatures complètes et les agents relais sont volontairement omis. Le but 
 
 Après la réservation, le plan et les instructions de livraison font progresser la commande dans Deliver. La réception par le client conduit à un état servi ou en retard selon l'échéance, puis à la clôture du suivi associé.
 
-\subsection{Illustration issue du run archivé}
+\subsection{Illustration issue de l'exécution archivée}
 
 Dans l'exécution de validation archivée, \texttt{CMD\_1} a effectivement suivi le chemin nécessitant une reconstitution. La trace associe l'attente de cette commande à un ordre \texttt{REAPPRO\_1}, puis montre le passage par Source, Make et Deliver avant la clôture.
 
-Cette observation confirme que ce chemin a été exécuté pour ce cas précis. Elle ne prouve pas que toutes les configurations, quantités ou politiques conduisent au même enchaînement. Le chemin avec stock initial suffisant reste disponible dans l'implémentation, mais aucun second run archivé n'est utilisé ici pour en revendiquer la validation expérimentale.
+Cette observation confirme que ce chemin a été exécuté pour ce cas précis. Elle ne prouve pas que toutes les configurations, quantités ou politiques conduisent au même enchaînement. Le chemin avec stock initial suffisant reste disponible dans l'implémentation, mais aucune seconde exécution archivée n'est utilisée ici pour en revendiquer la validation expérimentale.
 
 \AttentionDoc{Une commande \texttt{CMD\_*} et un ordre \texttt{REAPPRO\_*} peuvent être liés, mais ils n'ont ni la même origine ni la même fonction. Les confondre masque le principe Make-to-Stock du modèle.}

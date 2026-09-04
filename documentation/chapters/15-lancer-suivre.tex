@@ -1,10 +1,129 @@
 \chapter{Lancer et suivre une simulation}
+\label{chap:lancer-suivre}
 
-\DocumentationNote{Expliquer les paramètres de commande, stocks, temps, budgets, profils, retours et animation, puis le démarrage, le suivi, l'arrêt et la réinitialisation.}
+Le lancement ne doit intervenir qu'après la validation de la structure et des paramètres propres à l'essai. Les valeurs saisies dans les fenêtres de réglage décrivent les conditions d'exécution. Elles ne sont pas des résultats et ne prouvent pas qu'un comportement a été observé.
 
-\section{Contrôler les paramètres avant lancement}
+\section{Régler les commandes}
+
+La fenêtre \texttt{Contrôle commandes} permet de limiter le nombre de commandes automatiques et de régler leur rythme. L'utilisateur peut activer des intervalles en temps métier, fixer le délai avant la première commande, puis définir les intervalles minimal et maximal. La quantité peut être fixe ou tirée entre un minimum et un maximum.
+
+Les options de message métier règlent leur affichage et leur niveau de détail. Elles facilitent une démonstration, mais ne modifient pas à elles seules la logique des commandes. Les commandes de pic ponctuel et de rafale sont des sollicitations disponibles pour un essai ciblé. Leur disponibilité ne constitue pas une validation quantitative de la réaction du modèle.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_controle_commandes.png}{Emplacement prévu pour une capture réelle de la fenêtre Contrôle commandes.}{fig:ui-controle-commandes}
+
+\section{Régler le temps et les budgets}
+
+La fenêtre \texttt{Temps et budgets} rassemble la date de départ, l'échelle entre temps simulé et temps réel, le budget global et les budgets de Plan, Source, Make, Deliver et Return. Une option permet d'activer les budgets, une autre d'afficher cette fenêtre au démarrage.
+
+L'échelle temporelle influence la conversion utilisée par la simulation. Les durées de message et de déplacement configurées dans la fenêtre \texttt{Animation} règlent seulement la représentation visuelle. Modifier l'animation ne doit donc pas être interprété comme une modification d'un délai métier.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_temps_budgets.png}{Emplacement prévu pour une capture réelle de la fenêtre Temps et budgets.}{fig:ui-temps-budgets}
+
+\section{Choisir les stocks initiaux et un profil}
+
+La fenêtre \texttt{Stocks initiaux} propose le stock initial de produit fini et un override global de matière. Le premier initialise le magasin de produit fini. Le second applique volontairement une même valeur à toutes les fiches matière et ne doit pas remplacer sans raison les stocks détaillés définis dans la vue Nomenclature.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_stocks_initiaux.png}{Emplacement prévu pour une capture réelle de la fenêtre Stocks initiaux.}{fig:ui-stocks-initiaux}
+
+Quatre profils facilitent la préparation de situations de départ. Un profil fixe des stocks initiaux et sélectionne le scénario nominal, mais ne représente pas un scénario métier distinct.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.30\textwidth} L{0.20\textwidth} L{0.20\textwidth} Y}
+    \toprule
+    Profil & Produit fini & Matières & Lecture attendue \\
+    \midrule
+    Cas 1, livraison directe & 100 & 100 & Le stock de départ permet de privilégier Deliver. \\
+    Cas 2, production & 0 & 100 & Les matières sont disponibles, le produit fini doit être reconstitué. \\
+    Cas 3, approvisionnement et production & 0 & 0 & Source doit précéder la production lorsque les besoins l'exigent. \\
+    Personnalisé & Valeurs conservées & Valeurs conservées & Les réglages courants restent sous le contrôle de l'utilisateur. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Effet des profils sur l'état initial des stocks.}
+  \label{tab:profils-stocks}
+\end{table}
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_profils_test.png}{Emplacement prévu pour une capture réelle de la fenêtre Profils de test.}{fig:ui-profils-test}
+
+Les valeurs des trois cas sont des paramètres implémentés. Elles ne doivent pas être présentées comme des résultats expérimentaux sans une exécution archivée correspondant au profil.
+
+\section{Préparer retours, qualité et perturbations}
+
+La fenêtre \texttt{Retours et qualité} permet de conserver un cas nominal sans retour ou d'activer les retours produit et matière avec leur probabilité respective. Chaque probabilité doit rester comprise entre 0 et 1. Ces options changent le comportement métier attendu et doivent être relevées avec les résultats.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_retours_qualite.png}{Emplacement prévu pour une capture réelle de la fenêtre Retours et qualité.}{fig:ui-retours-qualite}
+
+La fenêtre \texttt{Perturbations} peut forcer un retard fournisseur sur une matière et un fournisseur ciblés. Le facteur de délai est au moins égal à 1 et un nombre d'heures supplémentaires peut être ajouté. La perturbation vise la première réception correspondante lorsqu'elle est activée pour un usage unique.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_perturbations.png}{Emplacement prévu pour une capture réelle de la fenêtre Perturbations.}{fig:ui-perturbations}
+
+\AttentionDoc{La perturbation modifie l'arrivée effective. Elle ne remplace pas le délai nominal de la fiche matière utilisé par la politique de stock. Les deux valeurs doivent être distinguées lors de l'analyse.}
+
+\section{Adapter l'animation}
+
+La fenêtre \texttt{Animation} règle le mode lent de démonstration, les durées minimale et maximale des messages, les durées minimale et maximale des véhicules, les pauses et les vitesses de référence. Ces paramètres rendent le déroulement plus ou moins lisible à l'écran.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_animation_parametres.png}{Emplacement prévu pour une capture réelle de la fenêtre Animation.}{fig:ui-animation-parametres}
+
+\BonASavoir{Une animation plus lente ne prouve pas que le processus métier est plus long. Pour mesurer un délai, utiliser le temps simulé et les sorties d'exécution.}
+
 \section{Démarrer}
-\section{Suivre l'exécution}
-\section{Arrêter et clôturer}
-\section{Réinitialiser}
 
+Dans la vue Configuration, utiliser \texttt{Démarrer simulation}. Le modèle contrôle la présence des acteurs, des postes et des scénarios, la validité des codes SCOR, l'existence de l'acteur responsable de chaque poste et celle de chaque poste cité par une gamme. Un échec de validation bloque le démarrage et doit être corrigé dans la configuration.
+
+Lorsque les contrôles réussissent, l'état d'exécution est préparé, les stocks initiaux et le profil choisi sont appliqués, les mécanismes de pilotage sont reconstruits et l'horloge est initialisée. L'interface passe ensuite à la vue Exécution. Ces opérations ne constituent pas encore un résultat quantitatif.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.31\textwidth} Y}
+    \toprule
+    Contrôle avant démarrage & Critère utilisateur \\
+    \midrule
+    Configuration chargée & Le nom et la provenance du fichier JSON sont connus. \\
+    Structure & Acteurs, postes, responsabilités, scénario et gamme sont cohérents. \\
+    Matières & Nomenclatures, fiches, fournisseurs et stocks ont été relus. \\
+    Conditions de l'essai & Commandes, temps, budgets, profil, retours et perturbations sont relevés. \\
+    Lisibilité & Les réglages d'animation sont adaptés sans être confondus avec le temps métier. \\
+    Archivage & L'emplacement des sorties et l'identifiant de l'exécution sont prévus. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Contrôle opérationnel avant le démarrage.}
+  \label{tab:controle-demarrage}
+\end{table}
+
+\section{Suivre l'exécution}
+
+La vue Exécution présente les commandes de conduite et les accès aux rapports. La commande \texttt{Suivi temps réel simulation} ouvre la fenêtre \texttt{Suivi temps reel de la simulation}. Son contenu est actualisé automatiquement et peut aussi être rafraîchi immédiatement.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_suivi_temps_reel.png}{Emplacement prévu pour une capture réelle de la fenêtre de suivi en temps réel.}{fig:ui-suivi-temps-reel}
+
+La fenêtre indique le nombre d'événements et le temps de simulation. Son tableau relie la chronologie, la catégorie et l'explication métier de l'événement, les responsables de décision et d'exécution, l'élément suivi, la quantité ou valeur, la source, la destination, le chemin, le processus SCOR, la décision métier, l'évolution du statut et les indicateurs associés.
+
+Les commandes de navigation restent utilisables pendant l'exécution et ne changent pas le scénario. Pour reconnaître qu'une commande avance ou attend, suivre son identifiant, l'événement principal et l'évolution de son statut dans la fenêtre, puis confirmer sa position dans la vue adaptée.
+
+Le journal de la vue Exécution donne une lecture synthétique des actions récentes. Le WIP affiché dans les tableaux de bord représente un état instantané des éléments engagés dans le flux. Il doit être lu avec l'heure simulée et ne doit pas être confondu avec le nombre total d'éléments traités sur toute l'exécution.
+
+\EnPratique{Pour diagnostiquer un flux, partir de l'événement principal, identifier l'élément suivi, puis lire la source, la destination, le processus SCOR et l'évolution du statut.}
+
+\section{Arrêter ou réinitialiser}
+
+La commande \texttt{Arreter et voir resultats} met fin à l'exécution active, calcule les indicateurs prévus et peut déclencher l'export de l'ABox si cette option a été configurée. Elle ouvre la phase d'analyse, mais ne signifie pas qu'une commande particulière a atteint sa clôture métier.
+
+La commande \texttt{Reinitialiser} remet à zéro l'arrivée automatique, le tableau de suivi, le nombre d'éléments terminés et les entités de flux affichées. Elle ne remplace pas le chargement d'une nouvelle configuration JSON.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.23\textwidth} Y Y}
+    \toprule
+    Opération & Portée & Effet à retenir \\
+    \midrule
+    Clôture métier & Une commande particulière. & Marque l'achèvement de son parcours métier. \\
+    Arrêt manuel & L'exécution active. & Stoppe la conduite globale et prépare l'analyse des résultats disponibles. \\
+    Réinitialisation & Les états d'observation et entités visées par la commande. & Remet à zéro sans charger une autre configuration JSON. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Distinction entre clôture métier, arrêt manuel et réinitialisation.}
+  \label{tab:fin-execution}
+\end{table}
+
+\AttentionDoc{Avant de réinitialiser, exporter les sorties nécessaires. La remise à zéro retire des éléments d'observation qui ne sont pas contenus dans le fichier JSON de configuration.}

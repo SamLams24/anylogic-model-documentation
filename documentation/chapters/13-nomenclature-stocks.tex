@@ -1,10 +1,78 @@
 \chapter{Nomenclature, matières et stocks}
+\label{chap:nomenclature-stocks}
 
-\DocumentationNote{Construire une fiche homogène de la vue Nomenclature. Expliquer ses quatre zones, leurs commandes, l'effet de chaque réglage et l'ordre conseillé des opérations.}
+La vue \texttt{Nomenclature et matières} réunit les données qui transforment une quantité de produit à fabriquer en besoins matière. Elle distingue la composition du produit, la fiche de chaque matière, son mode d'approvisionnement et les postes qui la consomment.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_nomenclature.png}{Emplacement prévu pour une capture réelle de la vue Nomenclature et matières.}{fig:ui-nomenclature}
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_nomenclature_annotee.png}{Emplacement prévu pour un agrandissement annoté des quatre zones de la vue Nomenclature.}{fig:ui-nomenclature-annotee}
 
 \section{Définir la composition d'un produit}
+
+Un produit doit d'abord exister comme scénario. Dans la zone de nomenclature, choisir le produit, la matière et la quantité nécessaire pour une unité de produit, puis utiliser \texttt{Ajouter ou mettre à jour ligne}. La même commande corrige une ligne déjà associée au couple produit et matière.
+
+La commande \texttt{Voir nomenclature} offre une vérification d'ensemble. \texttt{Supprimer ligne} retire uniquement la relation sélectionnée. Une quantité unitaire erronée se répercute sur tous les besoins calculés pour ce produit, elle doit donc provenir d'une donnée métier identifiée.
+
 \section{Créer une fiche matière}
+
+La fiche matière porte l'identifiant stable, le stock disponible de départ, le stock de sécurité, le délai en heures et le fournisseur. Après saisie, la commande \texttt{Enregistrer fiche} crée ou met à jour la fiche. \texttt{Voir fiches matière} permet de relire les valeurs enregistrées.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_fiche_matiere.png}{Emplacement prévu pour une capture réelle des champs d'une fiche matière.}{fig:ui-fiche-matiere}
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.26\textwidth} Y Y}
+    \toprule
+    Donnée & Rôle & Précaution \\
+    \midrule
+    Identifiant de matière & Relie la fiche, la nomenclature et les consommations. & Employer exactement le même identifiant dans les zones liées. \\
+    Stock disponible de départ & Initialise la quantité détaillée disponible. & Ne pas le confondre avec l'override global de la fenêtre Stocks initiaux. \\
+    Stock de sécurité & Alimente la politique de protection contre la rupture. & Justifier la valeur selon le contexte étudié. \\
+    Délai en heures & Décrit le délai nominal d'approvisionnement. & Le distinguer du retard supplémentaire d'une perturbation. \\
+    Fournisseur & Désigne l'acteur sollicité pour la matière. & Créer cet acteur avant d'enregistrer la fiche. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Données d'une fiche matière et contrôles associés.}
+  \label{tab:fiche-matiere}
+\end{table}
+
+La commande \texttt{Supprimer fiche} peut rendre une ligne de nomenclature inexploitable. Il faut donc contrôler ses références avant suppression.
+
+Le stock initial charge la quantité disponible au début de l'exécution. Le stock de sécurité sert de seuil de protection. Le stock projeté ajoute au disponible les réceptions attendues; il intervient dans la politique décrite au \cref{chap:stocks-reapprovisionnement}, sans constituer un champ supplémentaire de la fiche.
+
 \section{Choisir le mode d'approvisionnement}
+
+La zone du mode d'approvisionnement cible un acteur fournisseur. Choisir l'acteur, régler la case \texttt{Pilotage par besoin net}, puis utiliser la commande \texttt{Appliquer} située dans cette zone. Le résultat décrit une politique de configuration, pas une commande déjà émise.
+
+\BonASavoir{Le stock de départ de la fiche matière constitue la valeur détaillée normale. L'override global de la fenêtre Stocks initiaux ne doit être appliqué que pour un profil ou un essai qui exige la même valeur pour toutes les fiches.}
+
 \section{Désigner les postes consommateurs}
+
+Choisir une matière et un poste, indiquer si ce poste consomme la matière, puis utiliser la commande \texttt{Appliquer} de la zone de consommation. Cette affectation complète la quantité unitaire de nomenclature en indiquant où la consommation intervient.
+
+Les deux commandes visibles sous le libellé \texttt{Appliquer} n'ont pas le même effet. L'une enregistre le mode MRP de la matière, l'autre enregistre la consommation du poste sélectionné. Toujours relire la zone active avant de valider.
+
 \section{Contrôler le besoin matière}
 
+La commande \texttt{Voir rapport besoins matières} restitue un besoin calculable à partir des produits, quantités, nomenclatures et stocks renseignés. Ce rapport ne prouve pas qu'une consommation a été observée pendant une exécution. La consommation réelle doit être vérifiée dans les sorties correspondantes d'une exécution identifiée.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.08\textwidth} L{0.31\textwidth} Y}
+    \toprule
+    Ordre & Opération & Vérification \\
+    \midrule
+    1 & Créer les acteurs fournisseurs. & Chaque fournisseur est disponible dans la configuration. \\
+    2 & Créer le scénario représentant le produit. & Le produit apparaît dans la liste de nomenclature. \\
+    3 & Enregistrer chaque fiche matière. & Identifiant, stock, sécurité, délai et fournisseur sont cohérents. \\
+    4 & Ajouter les lignes de nomenclature. & Chaque quantité par unité est contrôlée. \\
+    5 & Appliquer le mode d'approvisionnement. & La case de pilotage par besoin net correspond à la politique souhaitée. \\
+    6 & Affecter les postes consommateurs. & Les postes existent et les cases de consommation sont correctes. \\
+    7 & Ouvrir le rapport des besoins. & Les matières attendues apparaissent sans être prises pour des consommations observées. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Ordre conseillé pour configurer matières et nomenclatures.}
+  \label{tab:ordre-nomenclature}
+\end{table}
+
+\EnPratique{Avant le démarrage, contrôler au moins une fois la nomenclature de chaque produit, les fiches matière correspondantes et la liste des postes consommateurs.}

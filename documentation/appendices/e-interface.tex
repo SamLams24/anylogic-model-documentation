@@ -1,4 +1,107 @@
 \chapter{Référence des champs et commandes de l'interface}
+\label{ann:interface}
 
-\DocumentationNote{Transformer l'inventaire UI audité en référence exhaustive, avec les identifiants techniques utiles aux mainteneurs.}
+Cette annexe recense les contrôles mobilisés dans les \cref{chap:prise-en-main,chap:configurer,chap:nomenclature-stocks,chap:json,chap:lancer-suivre}. Les libellés reproduisent l'interface auditée. Les identifiants servent à retrouver sans ambiguïté le contrôle dans le modèle.
 
+\begin{landscape}
+{\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{L{0.10\linewidth} L{0.14\linewidth} L{0.07\linewidth} L{0.24\linewidth} L{0.09\linewidth} L{0.09\linewidth} L{0.10\linewidth} L{0.10\linewidth}}
+\caption{Contrôles d'interface utilisés dans les chapitres 11 à 15.}\label{tab:reference-interface}\\
+\toprule
+Vue ou fenêtre & Libellé visible exact & Type & Identifiant technique & Rôle & Valeur attendue & Effet & Précaution \\
+\midrule
+\endfirsthead
+\toprule
+Vue ou fenêtre & Libellé visible exact & Type & Identifiant technique & Rôle & Valeur attendue & Effet & Précaution \\
+\midrule
+\endhead
+\midrule
+\multicolumn{8}{r}{Suite à la page suivante}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+Toutes vues & Configuration; Exécution; Vue Globale; Logistique; Hiérarchie; Vue Structure animée & commandes & \texttt{viewEdition}; \texttt{viewExecution}; \texttt{viewAll}; \texttt{viewLogistique}; \texttt{viewHolons}; \texttt{viewAnimation} & Changer de vue & Un clic & Affiche la vue choisie & Ne change pas la configuration. \\
+Configuration & Configurer acteurs; Configurer nomenclature & commandes & \texttt{viewLogistique}; \texttt{viewNomenclature} & Ouvrir les vues de saisie liées & Un clic & Affiche la vue ciblée & Respecter l'ordre des dépendances. \\
+Toutes vues & Suivi temps réel simulation & commande & \texttt{ouvrirSuiviTempsReel} & Ouvrir le suivi & Un clic & Ouvre une fenêtre complémentaire & Lecture seulement. \\
+
+Logistique & Nom de l'acteur & champ & \texttt{champActeurNom} & Identifier l'acteur & Texte non vide et stable & Prépare la création & Éviter les variantes d'un même nom. \\
+Logistique & Description & champ & \texttt{champActeurDescription} & Décrire l'acteur & Texte concis & Complète sa fiche & Ne pas y placer un résultat. \\
+Logistique & Délai de paiement & champ & \texttt{champDelaiPaiementJours} & Paramétrer le délai & Nombre de jours & Modifie la fiche acteur & Ne pas le présenter comme observé. \\
+Logistique & Catégorie de l'acteur & liste & \texttt{champActeurCategorie} & Situer l'acteur & Catégorie admise & Oriente certains traitements et exports & Choisir selon le rôle réel. \\
+Logistique & Type annexe & liste & \texttt{champActeurTypeAnnexe} & Qualifier un cas particulier & Type admis ou vide & Complète la catégorie & Laisser vide si non applicable. \\
+Logistique & Ajouter acteur & commande & \texttt{ajouterActeurSCUI} & Enregistrer l'acteur & Un clic après saisie & Ajoute l'acteur en mémoire & Contrôler l'unicité du nom. \\
+Logistique & Vider tous les acteurs & commande & \texttt{viderActeursSC} & Retirer les acteurs & Un clic confirmé & Vide la liste & Peut invalider postes et responsabilités. \\
+
+Configuration & Nom du poste; Code SCOR; Type de poste & champs et listes & \texttt{champNom}; \texttt{combobox}; \texttt{comboProcessus}; \texttt{champCodeSCOR}; \texttt{comboTypeActivite} & Identifier la micro-activité & Nom unique, code et type admis & Prépare le poste & Conserver le code SCOR stable. \\
+Configuration & Loi de distribution; P1; P2 & liste et champs & \texttt{comboLoiDist}; \texttt{champP1}; \texttt{champP2} & Régler la durée & Loi et nombres compatibles & Définit le tirage de durée & Interpréter P1 et P2 selon la loi. \\
+Configuration & Capacité simultanée; Débit & champs & \texttt{champCapacite}; \texttt{champDebit} & Régler le traitement & Valeurs positives cohérentes & Paramètre capacité et débit prévu & Distinguer débit prévu et observé. \\
+Configuration & Poste alternatif & case & \texttt{checkbox} & Autoriser une alternative & Oui ou non & Marque un routage possible & Prévoir une destination cohérente. \\
+Configuration & Contrôle qualité sortie; Type de contrôle qualité; Taux conforme; Cible échec & case, liste et champs & \texttt{chkControleQualite}; \texttt{comboTypeControleQualite}; \texttt{champTauxConforme}; \texttt{champCibleEchec} & Régler le contrôle de sortie & Type, proportion de 0 à 1 et cible & Active la décision de conformité & Vérifier la cible d'échec. \\
+Configuration & Poste générateur autonome & case & \texttt{chkGenereAutonome} & Autoriser la génération autonome & Oui ou non & Active le comportement prévu & Réserver aux postes concernés. \\
+Configuration & Politique d'approvisionnement du poste; Intervalle; Taux Poisson; Quantité & liste et champs & \texttt{comboPolitiqueApproPoste}; \texttt{champIntervalleApproPoste}; \texttt{champTauxArriveePoissonPoste}; \texttt{champQuantiteParApproPoste} & Régler la génération autonome & Politique et nombres positifs & Applique la règle sélectionnée & Renseigner les champs utiles à la politique. \\
+Configuration & Taille lot; Attendre tous les prédécesseurs & champ et case & \texttt{champTailleLot}; \texttt{chkAttendTousLesPredecesseurs} & Régler lot et jonction & Taille positive, oui ou non & Groupe et synchronise les arrivées & Contrôler les gammes multi-amont. \\
+Configuration & Poste sélectionné & liste & \texttt{comboPostes}; \texttt{champPosteSelectionne} & Cibler un poste & Poste existant & Oriente les commandes suivantes & Rafraîchir après un changement. \\
+Configuration & Ajouter micro-activité; Modifier ce poste; Supprimer ce poste; Vider postes & commandes & \texttt{ajouterPoste}; \texttt{modifierPoste}; \texttt{supprimerPoste}; \texttt{remove\_postes} & Gérer les postes & Un clic après sélection & Crée, corrige ou retire & Suppression et vidage sont structurels. \\
+Configuration & Fixer la position; Revenir au positionnement auto & commandes & \texttt{fixerPositionPosteUI}; \texttt{libererPositionPosteUI} & Régler l'affichage & Un clic & Modifie la position visuelle & Aucun effet métier. \\
+Configuration & Nom du scénario; Débit du scénario; Scénario sélectionné & champs et liste & \texttt{champScenarioNom}; \texttt{champScenarioDebit}; \texttt{comboScenarios}; \texttt{champScenarioSelectionne} & Identifier le scénario & Nom, débit positif, scénario existant & Prépare création ou modification de gamme & Distinguer débit prévu et observé. \\
+Configuration & Ajouter scénario; Supprimer ce scénario & commandes & \texttt{ajouterScenarioUI}; \texttt{supprimerScenarioUI} & Gérer les scénarios & Un clic & Ajoute ou retire le scénario & Vérifier les nomenclatures liées. \\
+Configuration & Ajouter à la séquence; Vider séquence; Voir la gamme & commandes & \texttt{ajouterPosteASequenceUI}; \texttt{viderSequenceUI}; \texttt{gammeScenarioText} & Construire la gamme & Poste et scénario sélectionnés & Modifie ou affiche la séquence & Relire l'ordre complet. \\
+Configuration & Chiffre d'affaire par unité & champ & \texttt{chiffreAffaireParUnite} & Paramétrer la valeur unitaire & Valeur monétaire ou 0 & Alimente les calculs disponibles & Ne pas la présenter comme observée. \\
+Configuration & Taux de valeur ajoutée & champ & \texttt{champTauxVA} & Répartir le temps du poste & Proportion de 0 à 1 & Paramètre les parts VA et NVA & La valeur doit être justifiée. \\
+Configuration & Coût horaire de main d'oeuvre; Coût matière par unité; Valeur de l'actif fixe & champs & \texttt{champCoutHoraireMainOeuvre}; \texttt{champCoutMatierePremiereParUnite}; \texttt{champValeurActifFixe} & Paramétrer les données économiques & Valeurs monétaires ou 0 & Alimente les calculs disponibles & Zéro signifie non renseigné. \\
+
+Responsabilités & Micro-activité; Acteur; Niveau hiérarchique; Quantité & listes et champ & \texttt{champRespMicro}; \texttt{champRespActeur}; \texttt{champRespNiveau}; \texttt{champRespQuantite} & Préparer une responsabilité & Objets existants et quantité positive & Définit l'affectation & Créer acteur et poste auparavant. \\
+Responsabilités & Ajouter responsabilité & commande & \texttt{ajouterResponsabiliteMicroUI} & Enregistrer l'affectation & Un clic & Ajoute la responsabilité & Vérifier le niveau choisi. \\
+Machines & Type de machine; Capacité machine; Temps de cycle machine; MTBF; MTTR & champs & \texttt{champMachineType}; \texttt{champMachineCapacite}; \texttt{champMachineCycleTime}; \texttt{champMachineMTBF}; \texttt{champMachineMTTR} & Décrire la machine & Type et nombres cohérents & Paramètre la ressource & Distinguer capacité machine et poste. \\
+Responsabilités & Tables responsabilités, machines, acteurs et micro-activités & commandes & fonctions \texttt{show*Table} & Contrôler les affectations & Un clic & Ouvre les tableaux de lecture & Ne modifie pas les données. \\
+
+Configuration & RL; RS; AG; CO; AM & champs & \texttt{champPoidsRL}; \texttt{champPoidsRS}; \texttt{champPoidsAG}; \texttt{champPoidsCO}; \texttt{champPoidsAM} & Pondérer les attributs & Poids numériques & Prépare la pondération & Ces valeurs ne sont pas des résultats. \\
+Configuration & Appliquer la pondération & commande & \texttt{appliquerPoidsAttributsSCOR} & Valider les poids d'attribut & Un clic & Applique la pondération & Relire les cinq valeurs. \\
+Configuration & Métrique N3; Poids métrique N3 & liste et champ & \texttt{comboMetriqueN3}; \texttt{champPoidsMetriqueN3} & Cibler une métrique & Métrique existante et poids numérique & Prépare un poids N3 & Niveau distinct des attributs. \\
+Configuration & Rafraîchir liste; Appliquer ce poids; Réinitialiser tous; Voir le détail des poids & commandes & \texttt{btnRafraichirMetriquesN3}; \texttt{btnAppliquerPoidsN3}; \texttt{btnResetPoidsN3}; \texttt{btnVoirRapportPoidsN3} & Gérer les poids N3 & Un clic & Actualise, applique, remet à zéro ou affiche & Réinitialiser agit sur tous les poids N3. \\
+
+Nomenclature & Produit; Matière; Quantité par unité & listes et champ & \texttt{champNomProduitNomenclature}; \texttt{champNomMatiereNomenclature}; \texttt{champQuantiteNomenclature} & Définir une ligne & Produit et matière existants, quantité positive & Relie matière et produit & Contrôler la quantité unitaire. \\
+Nomenclature & Ajouter ou mettre à jour ligne; Supprimer ligne; Voir nomenclature & commandes & \texttt{btnAjouterLigneNomenclature}; \texttt{btnSupprimerLigneNomenclature}; \texttt{btnVoirNomenclatureProduit} & Gérer la composition & Un clic après sélection & Crée, retire ou affiche la ligne & Une suppression change le besoin. \\
+Nomenclature & Identifiant de matière; Stock disponible de départ; Stock de sécurité; Délai d'obtention; Fournisseur & listes et champs & \texttt{champMatiereIdFiche}; \texttt{champMatiereStockInitial}; \texttt{champMatiereStockSecurite}; \texttt{champMatiereDelaiObtention}; \texttt{champMatiereFournisseur} & Définir la fiche matière & Identifiant, quantités, délai en heures et acteur cohérents & Paramètre stock et approvisionnement & Garder le même identifiant partout. \\
+Nomenclature & Enregistrer fiche; Supprimer fiche; Voir fiches matière & commandes & \texttt{btnEnregistrerFicheMatiere}; \texttt{btnSupprimerFicheMatiere}; \texttt{btnVoirFichesMatiereConfig} & Gérer les fiches & Un clic & Crée, retire ou affiche & Une suppression peut invalider une nomenclature. \\
+Nomenclature & Acteur fournisseur à piloter; Pilotage par besoin net; Appliquer & liste, case et commande & \texttt{champActeurIdModeAppro}; \texttt{chkModeApproMRP}; commande de mode & Régler l'approvisionnement & Acteur existant, oui ou non, puis un clic & Applique le mode à l'acteur & Choisir le fournisseur cible. \\
+Nomenclature & Poste consommateur; Ce poste consomme la matière; Appliquer & liste, case et commande & \texttt{champPosteIdConsomme}; \texttt{chkConsommeMatiere}; commande de consommation & Affecter la consommation & Poste existant, oui ou non, puis un clic & Lie le poste à la matière & Ne pas confondre avec l'autre commande Appliquer. \\
+Nomenclature & Voir rapport besoins matières & commande & \texttt{getRapportBesoinsMatieres} & Consulter le besoin & Un clic & Ouvre le rapport calculé & Ce n'est pas une consommation observée. \\
+
+Configuration & Nom entreprise & champ & \texttt{editNomEntrepriseJson}; \texttt{nomEntreprise} & Nommer la configuration & Texte non vide et stable & Détermine le fichier associé & Contrôler la provenance avant chargement. \\
+Configuration & Sauver config JSON; Charger config JSON & commandes & \texttt{sauverScenarioJSON}; \texttt{chargerScenarioJSON} & Écrire ou charger directement & Un clic & Utilise le fichier associé au nom & Chargement refusé pendant l'exécution. \\
+Configuration & Configuration JSON disponible & liste & \texttt{comboScenariosJson} & Choisir un fichier & Nom détecté & Cible le chargement par sélection & Répertoire courant utilisé. \\
+Configuration & Rafraichir la liste; Charger le scenario selectionne & commandes & \texttt{listerScenariosJsonDisponibles}; \texttt{chargerScenarioJSONDepuisSelection} & Détecter puis charger & Un clic après sélection & Recherche \texttt{scenario\_}\allowbreak\texttt{*.json} et reconstruit & Vérifier le fichier avant remplacement. \\
+
+Configuration & Stocks initiaux; Contrôle commandes; Temps et budgets; Profils de test; Retours et qualité; Animation; Perturbations & commandes & fonctions \texttt{ouvrirParametres*}; \texttt{ouvrirProfilsTest} & Ouvrir les réglages & Un clic & Ouvre la fenêtre ciblée & Paramètres, pas résultats. \\
+Contrôle commandes & Limiter les commandes automatiques; Nombre total de commandes & case et champ & réglages du contrôle des commandes & Borner la génération & Oui ou non, entier positif & Limite les commandes automatiques & Relever la valeur pour l'essai. \\
+Contrôle commandes & Activer les intervalles en temps métier; Délai avant la première; Intervalle minimal; Intervalle maximal & case et champs & réglages temporels des commandes & Régler le rythme & Durées cohérentes & Planifie les arrivées & Minimum inférieur ou égal au maximum. \\
+Contrôle commandes & Quantité fixe; Quantité; Quantité minimale; Quantité maximale & case et champs & réglages de quantité des commandes & Régler les volumes & Quantités positives & Fixe ou borne les commandes & Minimum inférieur ou égal au maximum. \\
+Contrôle commandes & Afficher les messages métier; Niveau des messages; Délai minimal entre messages & case, liste et champ & réglages des messages métier & Régler la démonstration & Oui ou non, niveau admis, durée & Change l'affichage des messages & Aucun résultat métier par lui-même. \\
+Contrôle commandes & Pic ponctuel (200 unités); Rafale (5 commandes / 15s) & commandes & commandes de sollicitation & Produire un essai ciblé & Un clic & Génère le choc indiqué & Disponible sans validation quantitative dédiée. \\
+
+Temps et budgets & Date de départ; Échelle temps simulé / temps réel & champs & réglages d'horloge & Initialiser le temps & Date valide, échelle au moins égale à 1 & Paramètre l'horloge & Distinguer du temps d'animation. \\
+Temps et budgets & Budget global; Plan; Source; Make; Deliver; Return & champs & réglages budgétaires & Fixer les budgets & Valeurs numériques cohérentes & Paramètre les enveloppes & Ne sont pas des coûts observés. \\
+Temps et budgets & Activer les budgets; Afficher au démarrage & cases & activation budgets et panneau & Activer les contrôles & Oui ou non & Applique les budgets ou ouvre la fenêtre & Vérifier avant chaque essai. \\
+Stocks initiaux & Stock initial produit fini & champ & réglage de stock fini initial & Initialiser le magasin & Quantité positive ou nulle & Fixe le stock de départ & Paramètre, pas résultat. \\
+Stocks initiaux & Override global matière (toutes fiches) & champ & réglage global matière & Écraser les stocks détaillés & Quantité positive ou nulle & Applique la valeur à toutes les fiches & N'utiliser que volontairement. \\
+Profils de test & Cas 1; Cas 2; Cas 3; Personnalisé & choix & fonctions de profils & Choisir un état initial & Un profil & Applique ou conserve les stocks initiaux & Un profil n'est pas un scénario. \\
+Retours et qualité & Activer les retours produit; Probabilité & case et champ & réglages des retours produit & Simuler les retours produit & Oui ou non, proportion de 0 à 1 & Active le comportement & Archiver la probabilité utilisée. \\
+Retours et qualité & Activer les retours matière; Probabilité & case et champ & réglages des retours matière & Simuler les retours matière & Oui ou non, proportion de 0 à 1 & Active le comportement & Archiver la probabilité utilisée. \\
+Perturbations & Forcer un retard fournisseur; Matière; Fournisseur & case et listes & réglages de cible de perturbation & Cibler le retard & Oui ou non et objets existants & Arme la perturbation & Vérifier le couple ciblé. \\
+Perturbations & Facteur de délai; Heures supplémentaires & champs & réglages du retard & Définir l'intensité & Facteur au moins égal à 1 et durée positive ou nulle & Retarde l'arrivée effective & Ne change pas le délai nominal. \\
+Perturbations & Première réception cible seulement & case & réglage d'application unique & Limiter la perturbation & Oui ou non & Restreint l'effet à la première réception & Relever son état avant démarrage. \\
+Animation & Mode lent de démonstration & case & réglage du mode lent & Faciliter la lecture & Oui ou non & Ralentit la représentation & Aucun effet métier attendu. \\
+Animation & Durée message min; Durée message max; Pause & champs & réglages visuels des messages & Régler l'affichage & Durées cohérentes & Modifie la lisibilité & Distinguer du temps simulé. \\
+Animation & Durée véhicule min; Durée véhicule max; Vitesse de référence & champs & réglages visuels des véhicules & Régler les mouvements & Durées et vitesse cohérentes & Modifie l'animation & Distinguer du transport métier. \\
+
+Configuration & Démarrer simulation & commande & \texttt{demarrerSimulation} & Valider et lancer & Un clic & Prépare l'état et ouvre Exécution & Corriger tout blocage de validation. \\
+Suivi temps réel & Rafraîchir maintenant; Fermer & commandes & actualisation et fermeture du suivi & Piloter la fenêtre & Un clic & Actualise ou ferme & La fermeture n'arrête pas la simulation. \\
+Suivi temps réel & Tableau des événements & tableau & fenêtre \texttt{Suivi temps reel de la simulation} & Lire la chronologie & Lignes générées & Relie événements, flux, décisions et statuts & Interpréter dans une exécution identifiée. \\
+Exécution & Arreter et voir resultats & commande & \texttt{arreterSimulation} & Arrêter l'exécution & Un clic & Calcule les indicateurs et ouvre l'analyse & Différent d'une clôture métier. \\
+Exécution & Reinitialiser & commande & \texttt{button5} & Remettre à zéro l'observation courante & Un clic & Réinitialise arrivée, tableau, compteurs et entités affichées & Exporter auparavant les sorties utiles. \\
+\end{longtable}
+}
+\end{landscape}

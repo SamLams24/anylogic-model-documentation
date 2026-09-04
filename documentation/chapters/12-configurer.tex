@@ -1,10 +1,87 @@
 \chapter{Configurer une simulation}
+\label{chap:configurer}
 
-\DocumentationNote{Décrire les zones de Configuration, Logistique et Responsabilités/Machines. Traiter les postes, acteurs, scénarios, pondérations, politiques et perturbations avec les précautions utiles.}
+Une configuration cohérente relie quatre ensembles: les acteurs, les micro-activités, les scénarios et les ressources. L'ordre de saisie compte, car une responsabilité exige un acteur et un poste déjà créés, tandis qu'une gamme exige un scénario et des postes disponibles.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_configuration.png}{Emplacement prévu pour une capture réelle de la vue Configuration.}{fig:ui-configuration}
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_configuration_annotee.png}{Emplacement prévu pour un agrandissement annoté de la création des postes et des scénarios.}{fig:ui-configuration-annotee}
 
 \section{Préparer les acteurs}
-\section{Créer les micro-activités}
-\section{Construire les scénarios et les gammes}
-\section{Affecter responsabilités et machines}
-\section{Régler les pondérations et perturbations}
 
+Depuis la vue Configuration, la commande \texttt{Configurer acteurs} ouvre la vue Logistique. Pour chaque acteur, renseigner un nom stable, une description utile, le délai de paiement, la catégorie et, s'il s'applique, le type annexe. La commande \texttt{Ajouter acteur} enregistre l'acteur dans la configuration courante.
+
+La catégorie situe l'acteur dans la chaîne, par exemple fournisseur, entreprise focale ou client. Le type annexe apporte une qualification complémentaire, notamment pour un prestataire. Il peut rester vide lorsqu'il n'a pas de sens pour l'acteur considéré.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_logistique.png}{Emplacement prévu pour une capture réelle de la création d'un acteur dans la vue Logistique.}{fig:ui-logistique}
+
+\AttentionDoc{La commande \texttt{Vider tous les acteurs} retire la liste en mémoire. Les responsabilités ou postes qui s'appuient sur ces acteurs peuvent alors devenir incohérents. Sauvegarder la configuration avant un vidage volontaire.}
+
+\section{Créer les micro-activités}
+
+La vue Configuration décrit un poste au moyen de son nom, de son code SCOR, de son type, de sa loi de distribution, de ses paramètres de durée, de sa capacité simultanée et de son débit. La commande \texttt{Ajouter micro-activité} crée le poste. Pour corriger un poste existant, le choisir dans la liste des postes, modifier les champs concernés, puis utiliser \texttt{Modifier ce poste}.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.25\textwidth} Y Y}
+    \toprule
+    Groupe de réglages & Effet attendu & Contrôle avant validation \\
+    \midrule
+    Identité et code SCOR & Identifie la micro-activité et son rattachement au processus. & Employer un nom unique et un code admis. \\
+    Loi, P1 et P2 & Définit la durée utilisée par le poste. & Vérifier le sens des paramètres pour la loi choisie. \\
+    Capacité et débit & Limite le traitement simultané et décrit le débit prévu. & Ne pas confondre capacité du poste et capacité d'une machine. \\
+    Contrôle qualité & Active le contrôle de sortie, son type, le taux conforme et la cible d'un échec. & Utiliser une proportion comprise entre 0 et 1. \\
+    Poste alternatif & Marque la possibilité d'un routage alternatif. & Vérifier que la gamme offre une destination cohérente. \\
+    Génération autonome & Autorise le poste à produire selon sa logique propre, avec une politique, un intervalle ou un taux et une quantité. & Renseigner seulement les paramètres utilisés par la politique choisie. \\
+    Taille de lot et prédécesseurs & Règle le groupement et la synchronisation des arrivées. & Vérifier la jonction lorsque plusieurs postes précèdent celui-ci. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Contrôles de base lors de la création d'une micro-activité.}
+  \label{tab:configuration-poste}
+\end{table}
+
+Les commandes \texttt{Fixer la position} et \texttt{Revenir au positionnement auto} modifient la présentation du poste. Elles ne changent pas son rôle métier. La commande \texttt{Vider postes} est, au contraire, structurelle et doit rester réservée à une reconstruction volontaire.
+
+Pour un poste autonome, choisir la politique d'approvisionnement puis compléter l'intervalle, le taux d'arrivée de Poisson ou la quantité selon cette politique. Les champs inutiles pour la politique choisie ne doivent pas être interprétés comme des réglages actifs.
+
+\section{Construire les scénarios et les gammes}
+
+Un scénario associe un nom, un débit prévu et une séquence de postes. Saisir le nom et le débit, puis utiliser \texttt{Ajouter scénario}. Sélectionner ensuite le scénario et un poste avant chaque appel à \texttt{Ajouter à la séquence}. La commande \texttt{Voir la gamme} permet de relire l'ordre obtenu.
+
+La liste du scénario sélectionné désigne la cible des commandes de gamme et de suppression. Après un chargement JSON, le modèle sélectionne le scénario nominal par défaut lorsqu'il est disponible. Avant une modification, vérifier que la liste vise bien le scénario souhaité.
+
+La commande \texttt{Vider séquence} retire la gamme du scénario sélectionné, sans supprimer tous les postes. \texttt{Supprimer ce scénario} retire le scénario lui-même. Avant l'une de ces opérations, vérifier ses liens avec la nomenclature et la configuration sauvegardée.
+
+\EnPratique{Après chaque modification structurelle, relire la gamme et contrôler le premier poste, le dernier poste et les jonctions à plusieurs prédécesseurs.}
+
+\section{Affecter responsabilités et machines}
+
+La vue \texttt{Responsabilités et Machines} relie une micro-activité à un acteur, à un niveau hiérarchique et à une quantité. Choisir ces quatre valeurs puis utiliser \texttt{Ajouter responsabilité}. Les tableaux de responsabilités, d'acteurs et de micro-activités servent à contrôler l'affectation obtenue.
+
+La même vue permet de décrire une machine par son type, sa capacité, son temps de cycle, son MTBF et son MTTR. La capacité machine complète celle du poste, elle ne la remplace pas. Le MTBF décrit l'intervalle théorique entre pannes et le MTTR la durée théorique de réparation. Une valeur nulle désactive l'effet correspondant lorsqu'il est prévu par le réglage.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_responsabilites_machines.png}{Emplacement prévu pour une capture réelle des affectations et des paramètres machine.}{fig:ui-responsabilites-machines}
+
+\section{Compléter les paramètres de performance}
+
+Le chiffre d'affaire par unité est associé au scénario. Le taux de valeur ajoutée, le coût horaire de main d'oeuvre, le coût matière par unité et la valeur de l'actif fixe complètent les données du poste. Une valeur nulle signifie que l'information n'est pas renseignée lorsque cette convention est appliquée par le modèle.
+
+Ces valeurs alimentent les calculs disponibles, mais restent des paramètres d'entrée. Elles ne doivent pas être présentées comme un coût, un taux ou une valeur observés pendant une exécution sans sortie correspondante.
+
+\section{Régler les pondérations}
+
+La première pondération porte sur les cinq attributs RL, RS, AG, CO et AM. Les valeurs saisies sont appliquées par \texttt{Appliquer la pondération}. Elles expriment une priorité relative entre attributs et ne constituent pas, à elles seules, un résultat de performance. Contrôler la somme et la cohérence des priorités avant application; le chargement JSON normalise les poids enregistrés. Le pipeline scientifique du PI est détaillé au chapitre 9.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_poids_attributs.png}{Emplacement prévu pour une capture réelle de la pondération des attributs.}{fig:ui-poids-attributs}
+
+La seconde pondération agit sur les métriques N3. Utiliser \texttt{Rafraîchir liste}, choisir une métrique, saisir son poids, puis appliquer \texttt{Appliquer ce poids}. \texttt{Voir le détail des poids} permet un contrôle global, tandis que \texttt{Réinitialiser tous} revient aux valeurs prévues par le modèle.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_poids_n3.png}{Emplacement prévu pour une capture réelle de la pondération des métriques N3.}{fig:ui-poids-n3}
+
+\BonASavoir{Les poids des attributs et les poids N3 interviennent à deux niveaux différents. Une même valeur numérique saisie dans les deux zones n'a donc pas le même sens.}
+
+\section{Contrôler avant la sauvegarde}
+
+Avant d'enregistrer la configuration, vérifier qu'au moins un acteur, un poste et un scénario existent, que chaque poste possède un code SCOR admis et que son acteur responsable est présent. Chaque poste cité dans une gamme doit également exister. Ces contrôles sont repris au démarrage et peuvent bloquer l'exécution.
+
+Les perturbations fournisseur, les retours, les profils et les paramètres de temps relèvent de la préparation d'une exécution. Ils sont décrits au \cref{chap:lancer-suivre}, car ils doivent être distingués de la structure durable des acteurs, postes et scénarios.

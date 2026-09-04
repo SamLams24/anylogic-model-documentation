@@ -41,3 +41,13 @@ Le socle permet de commencer la rédaction des chapitres 1 à 5 puis 11 à 15. L
 | 3 | `REDIGE` | Acteurs, objets métier, scénarios, nomenclature et stocks distingués. |
 | 4 | `REDIGE` | Cycle `CMD_*`, décision de disponibilité, messages et run archivé intégrés. |
 | 5 | `REDIGE` | Distinction `CMD_*` et `REAPPRO_*`, politiques de stock, besoin matière et réveil documentés. |
+
+## État de rédaction des chapitres 11 à 15
+
+| Chapitre | Statut | Justification |
+|---:|---|---|
+| 11 | `REDIGE_AVEC_CAPTURES_A_FAIRE` | Huit vues, navigation, fenêtres complémentaires et trois parcours utilisateur décrits. Capture réelle de navigation à réaliser. |
+| 12 | `REDIGE_AVEC_CAPTURES_A_FAIRE` | Acteurs, micro-activités, scénarios, gammes, responsabilités, machines et pondérations documentés. Six captures réelles à réaliser. |
+| 13 | `REDIGE_AVEC_CAPTURES_A_FAIRE` | Nomenclature, fiche matière, mode d'approvisionnement, postes consommateurs et ordre de contrôle documentés. Trois captures réelles à réaliser. |
+| 14 | `REDIGE_AVEC_CAPTURES_A_FAIRE` | Portée du JSON, sauvegarde, détection, chargement, reconstruction et contrôles expliqués. Trois captures réelles à réaliser. |
+| 15 | `REDIGE_AVEC_CAPTURES_A_FAIRE` | Réglages, démarrage, suivi, arrêt, clôture métier et réinitialisation distingués. Huit captures réelles à réaliser. |

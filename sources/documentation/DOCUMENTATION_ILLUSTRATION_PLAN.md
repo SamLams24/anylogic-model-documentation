@@ -10,17 +10,17 @@ Les statuts autorisés sont `A_GENERER`, `CAPTURE_EXISTANTE_A_VALIDER`, `CAPTURE
 
 | ID | Chapitre | Concept | Type d'illustration | Source | Statut | Preuve nécessaire | Futur fichier |
 |---|---:|---|---|---|---|---|---|
-| DOC-A01 | 1 | Finalité et publics du simulateur | Schéma pédagogique | Brief et rapport final | `A_GENERER` | Périmètre vérifié | `figures/finalite_publics.png` |
+| DOC-A01 | 1 | Finalité et publics du simulateur | Schéma pédagogique | Brief et rapport final | `VALIDE` | Périmètre vérifié | `figures/finalite_publics.png` |
 | DOC-A02 | 2 | Architecture générale | Diagramme de composants simplifié | ALP validé | `VALIDE` | Couches et sorties de `Main` | `figures/architecture_generale.png` |
-| DOC-A03 | 2 | Flux physique, informationnel et probatoire | Diagramme d'activité | ALP et rapport | `A_GENERER` | Fonctions de flux et exports | `figures/trois_flux.png` |
-| DOC-A04 | 3 | Acteurs de la chaîne ZENER | Carte de chaîne logistique | JSON courant | `A_GENERER` | Cinq acteurs courants | `figures/chaine_acteurs.png` |
-| DOC-A05 | 3 | Relations produit, scénario, poste et matière | Diagramme de classes métier | ALP et JSON | `A_GENERER` | Propriétés persistées | `figures/modele_donnees_metier.png` |
+| DOC-A03 | 2 | Flux physique, informationnel et probatoire | Diagramme d'activité | ALP et rapport | `VALIDE` | Fonctions de flux et exports | `figures/trois_flux.png` |
+| DOC-A04 | 3 | Acteurs de la chaîne ZENER | Carte de chaîne logistique | JSON courant | `VALIDE` | Cinq acteurs courants | `figures/chaine_acteurs.png` |
+| DOC-A05 | 3 | Relations produit, scénario, poste et matière | Diagramme de classes métier | ALP et JSON | `VALIDE` | Propriétés persistées | `figures/modele_donnees_metier.png` |
 | DOC-A06 | 4 | Cycle de vie d'une commande | Diagramme d'activité UML | ALP validé | `VALIDE` | États et fonctions de commande | `figures/cycle_commande.png` |
-| DOC-A07 | 4 | Échanges d'une commande cliente | Diagramme de séquence UML | ALP et traces validées | `A_GENERER` | Ordre des messages `CMD_*` | `figures/sequence_commande_client.png` |
+| DOC-A07 | 4 | Échanges d'une commande cliente | Diagramme de séquence UML | ALP et traces validées | `VALIDE` | Ordre des messages `CMD_*` | `figures/sequence_commande_client.png` |
 | DOC-A08 | 5 | Distinction `CMD_*` et `REAPPRO_*` | Diagramme d'activité | ALP validé | `VALIDE` | Politique autonome consolidée | `figures/cmd_reappro.png` |
-| DOC-A09 | 5 | Décision de service depuis le stock fini | Arbre de décision | ALP validé | `A_GENERER` | Conditions de stock et attente | `figures/decision_stock_fini.png` |
-| DOC-A10 | 5 | Besoin net matière | Diagramme de calcul | ALP et JSON | `A_GENERER` | Nomenclature, stock et sécurité | `figures/besoin_net_matiere.png` |
-| DOC-A11 | 5 | Reconstitution du stock fini | Diagramme de séquence UML | ALP validé | `A_GENERER` | Source, Make, crédit, réveil | `figures/sequence_reconstitution_stock.png` |
+| DOC-A09 | 5 | Décision de service depuis le stock fini | Arbre de décision | ALP validé | `VALIDE` | Conditions de stock et attente | `figures/decision_stock_fini.png` |
+| DOC-A10 | 5 | Besoin net matière | Diagramme de calcul | ALP et JSON | `VALIDE` | Nomenclature, stock et sécurité | `figures/besoin_net_matiere.png` |
+| DOC-A11 | 5 | Reconstitution du stock fini | Diagramme de séquence UML | ALP validé | `VALIDE` | Source, Make, crédit, réveil | `figures/sequence_reconstitution_stock.png` |
 | DOC-A12 | 6 | Enchaînement Plan, Source, Make, Deliver, Return | Diagramme d'activité | ALP et JSON | `A_GENERER` | Codes et séquences courants | `figures/workflow_scor.png` |
 | DOC-A13 | 6 | Micro-activités et jonctions | Graphe pédagogique | JSON courant | `A_GENERER` | Prédécesseurs et tailles de lot | `figures/graphe_micro_activites.png` |
 | DOC-A14 | 7 | Hiérarchie des agents consolidée | Diagramme de classes ou hiérarchie | ALP et ABox | `A_GENERER` | Identités sans alias historique | `figures/hierarchie_agents.png` |

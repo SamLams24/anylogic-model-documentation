@@ -32,3 +32,12 @@ Le socle permet de commencer la rédaction des chapitres 1 à 5 puis 11 à 15. L
 5. Compiler deux fois et vérifier les listes, les références et les annexes.
 6. Relire tout énoncé quantitatif contre le run ou le fichier source cité.
 
+## État de rédaction des chapitres 1 à 5
+
+| Chapitre | Statut | Justification |
+|---:|---|---|
+| 1 | `REDIGE` | Finalité, publics, périmètre et limites probatoires explicités. |
+| 2 | `REDIGE` | Architecture, trois flux, exécution, données et sorties décrits. |
+| 3 | `REDIGE` | Acteurs, objets métier, scénarios, nomenclature et stocks distingués. |
+| 4 | `REDIGE` | Cycle `CMD_*`, décision de disponibilité, messages et run archivé intégrés. |
+| 5 | `REDIGE` | Distinction `CMD_*` et `REAPPRO_*`, politiques de stock, besoin matière et réveil documentés. |

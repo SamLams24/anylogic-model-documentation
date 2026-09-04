@@ -1,11 +1,46 @@
 \chapter{Présentation de SCONTO-SVU}
-
-\DocumentationNote{Expliquer la finalité du simulateur, ses quatre publics, son périmètre et la différence entre configuration, exécution et preuve.}
+\label{chap:presentation}
 
 \section{Finalité du modèle}
+
+SCONTO-SVU est un simulateur de chaîne logistique qui associe une représentation métier, une coordination multi-agents et des mécanismes de mesure. Son cas d'application décrit la chaîne de ZENER SA Togo, depuis l'approvisionnement en matières jusqu'à la livraison du produit fini. Le modèle permet de configurer cette chaîne, d'exécuter ses flux et de conserver des traces exploitables pour l'analyse.
+
+La simulation reste pilotée par un mode Make-to-Stock. Une commande cliente demande un produit fini disponible en stock. Si cette disponibilité est insuffisante, la commande attend une reconstitution interne identifiée par \texttt{REAPPRO\_*}. Cette distinction évite d'assimiler la demande commerciale à un ordre de fabrication client. Elle structure aussi la lecture des flux Source, Make et Deliver.
+
+\FigureOrPlaceholder{documentation/figures/finalite_publics.png}{Finalités du simulateur et principaux publics de la documentation.}{fig:finalites-publics}
+
+\BonASavoir{Le modèle, sa configuration et les exports remplissent trois fonctions différentes. Le modèle exécute la logique, le JSON fournit des données d'entrée persistantes, tandis que les exports et les traces décrivent une exécution particulière.}
+
 \section{Lecteurs et parcours de lecture}
+
+La documentation s'adresse à des lecteurs qui n'attendent pas tous le même niveau de détail. Le tableau~\ref{tab:publics-usages} indique le point d'entrée adapté à chaque besoin. La première partie pose le vocabulaire et les mécanismes communs. Les parties suivantes détaillent le fonctionnement, la mesure, l'utilisation et la maintenance.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.23\textwidth} Y Y}
+    \toprule
+    Public & Question principale & Parcours conseillé \\
+    \midrule
+    Responsable académique & Le modèle est-il explicite, cohérent et traçable ? & Comprendre le simulateur, le fonctionnement et la mesure. \\
+    Responsable de projet & Quels flux, décisions et résultats le modèle couvre-t-il ? & Architecture, chaîne métier, commandes, stocks et sorties. \\
+    Utilisateur ou démonstrateur & Comment configurer, lancer et lire une simulation ? & Guide d'utilisation, puis chapitres sur les résultats et exports. \\
+    Développeur ou mainteneur & Où se trouvent les objets et les mécanismes à faire évoluer ? & Architecture, agents, reproduction, contrôles et annexes techniques. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Publics et usages de la documentation.}
+  \label{tab:publics-usages}
+\end{table}
+
 \section{Périmètre fonctionnel}
+
+Le périmètre documenté comprend la configuration des acteurs, des scénarios, des postes, des machines, des nomenclatures et des paramètres de stock. Il couvre le traitement des commandes, la coordination AER, les processus Source, Make et Deliver, la politique de reconstitution du stock fini, l'approvisionnement des matières, les mesures VSM, les indicateurs associés à SCOR, les PI internes, les vues d'interface et les exports. La persistance JSON et la génération d'une ABox font également partie du système.
+
+Les fonctionnalités consolidées comprennent notamment la séparation entre commandes clientes et ordres internes de reconstitution, le calcul d'un besoin net de matière, la protection contre les reconstitutions concurrentes pour un même produit, le crédit unitaire du stock fini en sortie de production et le réveil des commandes en attente. Les chapitres~\ref{chap:cycle-commande} et~\ref{chap:stocks-reapprovisionnement} expliquent ces mécanismes.
+
 \section{Limites de la documentation}
 
-\TablePlaceholder{Publics et usages de la documentation}{tab:publics-usages}
+La documentation décrit ce qui est présent dans le modèle validé et dans les données disponibles. Une capacité implémentée n'est pas automatiquement un résultat expérimental. Les exemples issus du JSON illustrent une configuration, alors qu'une trace d'exécution établit seulement ce qui s'est produit pendant le run concerné.
 
+Le run de validation VSM archivé fournit un exemple contrôlé du chemin avec reconstitution. Il ne permet pas, à lui seul, de quantifier la robustesse du modèle sur d'autres demandes, d'autres paramètres ou plusieurs réplications. Les métriques SCOR associées dans l'application doivent être lues comme des correspondances du modèle, et non comme une certification de conformité à une métrique officielle.
+
+\AttentionDoc{Toute conclusion quantitative doit rester rattachée à un export d'exécution identifiable. L'absence de run correspondant impose de présenter la fonctionnalité comme disponible, et non comme validée expérimentalement.}

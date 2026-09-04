@@ -1,11 +1,51 @@
 \chapter{Architecture générale}
-
-\DocumentationNote{Présenter les composants du modèle, les données, les agents, les flux, les mesures et les sorties sans entrer encore dans les signatures techniques.}
+\label{chap:architecture}
 
 \section{Vue d'ensemble}
-\section{Flux physique, informationnel et probatoire}
+
+L'architecture relie cinq ensembles: les données de configuration, les objets métier, les agents et leurs communications, l'exécution des flux, puis l'observation. Ces ensembles appartiennent à une même application AnyLogic. Ils ne constituent donc pas des services indépendants, mais des responsabilités qu'il faut distinguer pour comprendre le comportement du modèle.
+
+Le JSON et l'interface alimentent les structures métier. À l'initialisation, ces structures permettent de créer ou de paramétrer le réseau logistique. Les agents utilisent ensuite les informations disponibles pour coordonner les décisions et déclencher les chaînes Source, Make et Deliver. Les événements produits pendant cette exécution alimentent les mesures, les tableaux, les fichiers et la représentation ontologique.
+
+\FigureOrPlaceholder{documentation/figures/architecture_generale.png}{Architecture fonctionnelle du modèle et articulation de ses principales responsabilités.}{fig:architecture-generale}
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.21\textwidth} Y Y}
+    \toprule
+    Ensemble & Responsabilité & Objets ou sorties caractéristiques \\
+    \midrule
+    Configuration & Décrire le cas simulé et conserver les paramètres éditables. & JSON, contrôles d'interface, paramètres globaux. \\
+    Données métier & Représenter la chaîne, les produits, les ressources et les stocks. & Acteurs, scénarios, postes, machines, fiches matière, nomenclatures. \\
+    Coordination & Distribuer les demandes et réponses entre rôles spécialisés. & Agents, messages AER, plans et ordres. \\
+    Exécution & Faire progresser les entités dans Source, Make et Deliver. & Flux, délais, files, ressources et mouvements de stock. \\
+    Observation & Rendre une exécution lisible et exportable. & Événements, mesures VSM, PI, tables, CSV, Excel et ABox. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Responsabilités des principaux ensembles de l'architecture.}
+  \label{tab:responsabilites-architecture}
+\end{table}
+
+\section{Trois flux complémentaires}
+
+Le flux physique concerne les matières et les produits. Il commence par les approvisionnements nécessaires à Source, se poursuit dans Make et alimente le stock de produits finis avant Deliver. Le flux informationnel porte les commandes, les contrôles de disponibilité, les ordres, les plans et les confirmations échangés entre agents. Le flux probatoire rassemble les événements et mesures qui rendent l'exécution vérifiable.
+
+Ces trois lectures restent synchronisées sans être interchangeables. Un message \texttt{MaterialReceived} signale une réception dans la coordination, mais la preuve d'un délai ou d'une quantité observée doit être recherchée dans les traces et les exports du run. De même, une ligne de JSON peut annoncer un stock initial sans constituer une observation d'exécution.
+
+\FigureOrPlaceholder{documentation/figures/trois_flux.png}{Articulation des flux physique, informationnel et probatoire.}{fig:trois-flux}
+
+\EnPratique{Pour diagnostiquer un comportement, suivre d'abord l'objet métier concerné, puis les messages qui le pilotent, et enfin les événements ou exports qui attestent son parcours.}
+
 \section{Composants d'exécution}
-\section{Données et sorties}
 
-\FigureOrPlaceholder{documentation/figures/architecture_generale.png}{Architecture générale du modèle et articulation de ses principales fonctions.}{fig:architecture-generale}
+Le niveau métier décrit ce qui doit être traité. Le niveau agent décide qui prend en charge la demande et quelle information doit circuler. Le niveau processus matérialise l'avancement dans les blocs AnyLogic. Cette séparation explique pourquoi une commande peut changer d'état sans être elle-même une entité de production.
 
+La coordination AER s'appuie sur des agents nommés selon leur rôle et leur position dans les processus. Par exemple, la réception d'une commande et le pilotage de Deliver sont confiés à des agents distincts. Les chapitres consacrés au cycle de commande et aux agents donnent les échanges utiles, sans exposer chaque méthode Java de l'implémentation.
+
+Les blocs de processus traitent les entités et déclenchent des effets de stock à des points précis. Le stock fini est crédité à la sortie réelle de production. La réservation destinée à une commande cliente intervient avant Deliver. Cette chronologie préserve la distinction entre production, disponibilité et service client.
+
+\section{Données, mesures et sorties}
+
+Une donnée de configuration possède une durée de vie différente d'une donnée d'exécution. Les fiches matière, la nomenclature ou les capacités peuvent être sauvegardées puis rechargées. Les commandes, les événements et les mesures appartiennent à une exécution et doivent être archivés avec son identifiant lorsqu'ils servent de preuve.
+
+Les sorties ne forment pas une base unique. Les vues servent au suivi humain, les tables structurent certains états internes, les CSV et classeurs permettent l'analyse, tandis que l'ABox exprime des individus et des relations dans le vocabulaire ontologique prévu. Un écart entre deux sorties doit donc être analysé à partir de leur fonction, de leur moment de production et de leur source interne.

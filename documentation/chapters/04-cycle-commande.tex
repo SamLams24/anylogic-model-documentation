@@ -1,11 +1,55 @@
-\chapter{Cycle de vie d'une commande}
-
-\DocumentationNote{Suivre une commande cliente externe depuis son émission jusqu'à sa clôture. Montrer l'analyse du stock, l'attente éventuelle, le réveil et la livraison.}
+\chapter{Cycle d'une commande cliente}
+\label{chap:cycle-commande}
 
 \section{Émission et prise en charge}
+
+Une demande externe crée une commande \texttt{CMD\_*}. Cet objet reste de type Make-to-Stock. L'agent de gestion des commandes le reçoit, puis transmet sa prise en charge au pilotage de Deliver. Celui-ci demande l'état du stock produit fini avant de choisir le chemin de service.
+
+La commande n'entre pas directement dans Make. Elle représente une demande commerciale portant sur un produit déjà destiné au stock. Si une production devient nécessaire, un ordre interne distinct porte cette reconstitution.
+
+\FigureOrPlaceholder{documentation/figures/cycle_commande.png}{Diagramme d'activité du cycle d'une commande cliente.}{fig:cycle-commande}
+
 \section{Décision sur le stock fini}
+
+Le contrôle compare le stock fini disponible au besoin de la commande. Lorsque la quantité est suffisante, le système prépare la livraison, réserve le stock et consomme la quantité correspondante avant le parcours Deliver.
+
 \section{Attente et réveil}
+
+Si la quantité est insuffisante, la commande est mise en attente et reliée à une reconstitution existante ou nouvellement créée. Une nouvelle analyse du stock est planifiée. Cette boucle n'est pas un mécanisme de production périodique: elle maintient la demande en attente jusqu'à ce que la disponibilité permette le service.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.22\textwidth} Y Y}
+    \toprule
+    Situation & Traitement & Conséquence pour la commande \\
+    \midrule
+    Commande reçue & Enregistrer la demande et interroger le stock fini. & La commande attend une décision de disponibilité. \\
+    Stock suffisant & Réserver la quantité, préparer Deliver et consommer le stock réservé. & La commande passe au service logistique. \\
+    Stock insuffisant & Ouvrir l'attente et rattacher la demande à un \texttt{REAPPRO\_*}. & La commande reste cliente et n'entre pas dans Make. \\
+    Stock reconstitué & Réveiller les commandes liées et répéter le contrôle. & Le service devient possible si le nouveau stock couvre le besoin. \\
+    Réception client & Enregistrer la réception et comparer l'échéance. & La commande est servie ou signalée en retard, puis clôturée. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Étapes fonctionnelles du traitement d'une commande cliente.}
+  \label{tab:etats-commande}
+\end{table}
+
+\subsection{Échanges entre rôles}
+
+Le diagramme de séquence de la \cref{fig:sequence-commande} retient les messages nécessaires à la compréhension. \texttt{CustomerOrder} et \texttt{OrderReceived} matérialisent la prise en charge. \texttt{InventoryCheckRequest} et sa réponse rendent explicite la consultation du stock. Les plans et instructions de livraison ne sont émis qu'après une disponibilité suffisante.
+
+\FigureOrPlaceholder{documentation/figures/sequence_commande_client.png}{Diagramme de séquence simplifié du traitement d'une commande cliente.}{fig:sequence-commande}
+
+Les signatures complètes et les agents relais sont volontairement omis. Le but est de montrer la responsabilité de chaque rôle, non de reproduire la totalité de la messagerie interne. Le chapitre consacré à AER fournit le niveau technique complémentaire.
+
 \section{Livraison et clôture}
 
-\FigureOrPlaceholder{documentation/figures/cycle_commande.png}{Cycle fonctionnel d'une commande cliente externe.}{fig:cycle-commande}
+Après la réservation, le plan et les instructions de livraison font progresser la commande dans Deliver. La réception par le client conduit à un état servi ou en retard selon l'échéance, puis à la clôture du suivi associé.
 
+\subsection{Illustration issue du run archivé}
+
+Dans l'exécution de validation archivée, \texttt{CMD\_1} a effectivement suivi le chemin nécessitant une reconstitution. La trace associe l'attente de cette commande à un ordre \texttt{REAPPRO\_1}, puis montre le passage par Source, Make et Deliver avant la clôture.
+
+Cette observation confirme que ce chemin a été exécuté pour ce cas précis. Elle ne prouve pas que toutes les configurations, quantités ou politiques conduisent au même enchaînement. Le chemin avec stock initial suffisant reste disponible dans l'implémentation, mais aucun second run archivé n'est utilisé ici pour en revendiquer la validation expérimentale.
+
+\AttentionDoc{Une commande \texttt{CMD\_*} et un ordre \texttt{REAPPRO\_*} peuvent être liés, mais ils n'ont ni la même origine ni la même fonction. Les confondre masque le principe Make-to-Stock du modèle.}

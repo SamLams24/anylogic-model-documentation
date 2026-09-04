@@ -1,9 +1,73 @@
 \chapter{Chaîne logistique et données métier}
+\label{chap:chaine-donnees}
 
-\DocumentationNote{Définir acteurs, postes, machines, produits, matières, scénarios, nomenclatures et relations. Utiliser le JSON courant comme exemple configuré, sans transformer l'exemple en résultat de run.}
+\section{Acteurs de la chaîne ZENER}
 
-\section{Acteurs de la chaîne}
+La configuration courante relie trois fournisseurs à l'entreprise focale ZENER SA Togo, puis l'entreprise à un client générique. Chaque fournisseur est associé à une famille d'intrants: GPL en vrac, bouteilles vides ou accessoires. ZENER transforme et assemble ces intrants pour constituer le produit fini servi au client.
+
+\FigureOrPlaceholder{documentation/figures/chaine_acteurs.png}{Acteurs de la configuration courante et sens principal du flux physique.}{fig:chaine-acteurs}
+
+Les acteurs servent à localiser une responsabilité dans le réseau. Leur présence dans le JSON décrit une configuration possible. Leur activité effective pendant une simulation dépend des besoins générés et des décisions prises pendant le run.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.20\textwidth} L{0.27\textwidth} Y}
+    \toprule
+    Identifiant & Désignation & Rôle dans la configuration courante \\
+    \midrule
+    \texttt{ACT\_1} & Fournisseur du GPL & Fournir le GPL en vrac utilisé par la nomenclature. \\
+    \texttt{ACT\_2} & Fournisseur de bouteilles vides & Fournir les contenants nécessaires au produit fini. \\
+    \texttt{ACT\_3} & Fournisseur des accessoires & Fournir le kit d'accessoires associé à une unité produite. \\
+    \texttt{ACT\_4} & ZENER SA Togo & Porter les opérations de l'entreprise focale. \\
+    \texttt{ACT\_5} & Client générique & Émettre la demande externe et recevoir le produit fini. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Acteurs déclarés dans la configuration JSON courante.}
+  \label{tab:acteurs-configuration}
+\end{table}
+
 \section{Produits, matières et nomenclatures}
+
+Un scénario relie un produit à la gamme qui doit être parcourue. La gamme ordonne les postes, chaque poste porte une micro-activité et peut mobiliser une machine. La nomenclature associe au produit les matières et les quantités nécessaires par unité. Une fiche matière complète cette identité par des paramètres de stock, de sécurité, de délai et de fournisseur.
+
+\FigureOrPlaceholder{documentation/figures/modele_donnees_metier.png}{Diagramme de classes simplifié des principales données métier.}{fig:modele-donnees-metier}
+
+Le diagramme est volontairement conceptuel. Il rassemble les relations utiles à la configuration sans reproduire les classes Java, les collections internes ou les mécanismes de sérialisation. Les cardinalités et attributs détaillés sont reportés aux annexes techniques et aux chapitres d'utilisation.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.20\textwidth} Y Y}
+    \toprule
+    Objet & Question à laquelle il répond & Effet principal \\
+    \midrule
+    Acteur & Qui fournit, transforme ou reçoit ? & Positionne les responsabilités dans le réseau. \\
+    Scénario & Quel produit suit quelle gamme ? & Donne le contexte d'une commande et d'une production. \\
+    Poste & Quelle micro-activité est exécutée ? & Organise le parcours opérationnel. \\
+    Machine & Quelle ressource porte une capacité ou un cycle ? & Paramètre une partie de l'exécution de Make. \\
+    Nomenclature & Quelles matières faut-il par unité ? & Transforme une quantité à produire en besoins bruts. \\
+    Fiche matière & Quel stock et quel délai encadrent une matière ? & Alimente les décisions d'approvisionnement. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Fonctions des principaux objets métier.}
+  \label{tab:objets-metier}
+\end{table}
+
 \section{Postes et ressources}
+
+Un poste représente une micro-activité de la gamme et fournit le point de rattachement des responsabilités opérationnelles. Une machine peut lui être affectée lorsqu'une capacité ou un cycle doit être représenté. Cette relation ne signifie pas que tout poste exige une ressource mécanisée.
+
+La configuration courante associe le carrousel de remplissage au poste correspondant de Make. Les propriétés enregistrées décrivent la ressource disponible pour la simulation, sans constituer une mesure de performance observée.
+
 \section{Scénarios et gammes}
 
+Une commande référence un scénario plutôt qu'une suite de blocs codée dans la commande. Ce scénario fournit l'identité du produit et le parcours attendu. Le modèle peut ainsi conserver une logique commune de traitement tout en appliquant des gammes différentes.
+
+La configuration courante contient cinq scénarios. Le scénario de distribution associe le produit fini à une nomenclature constituée de GPL en vrac, d'une bouteille vide et d'un kit d'accessoires. Les quantités du fichier décrivent les coefficients de configuration. Elles ne prouvent ni une consommation réalisée ni un rendement observé.
+
+\ExempleDoc{Pour une quantité donnée dans le scénario de distribution, la nomenclature permet de calculer un besoin brut par multiplication. Le besoin réellement commandé à un fournisseur dépend ensuite du stock matière disponible et des réceptions déjà attendues.}
+
+\paragraph{Paramètres de stock.}
+
+Le JSON courant enregistre un stock initial nul pour le GPL, un stock de bouteilles vides et un stock d'accessoires. Il enregistre aussi un stock initial nul pour le produit fini. Ces valeurs préparent l'exécution. Les stocks observés après un mouvement doivent provenir de l'état d'exécution ou d'un export correspondant.
+
+La configuration distingue le stock de sécurité, le délai fournisseur et les paramètres nécessaires aux politiques de stock. Ces valeurs peuvent influencer une décision autonome même lorsqu'aucune commande cliente n'est immédiatement servie. Le chapitre~\ref{chap:stocks-reapprovisionnement} décrit séparément la disponibilité pour une commande et le franchissement d'un point de commande.

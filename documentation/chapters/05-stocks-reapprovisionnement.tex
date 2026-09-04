@@ -1,12 +1,80 @@
-\chapter{Stocks, besoins et réapprovisionnement}
-
-\DocumentationNote{Expliquer la politique Make-to-Stock consolidée. Distinguer la commande cliente externe de l'ordre interne autonome de reconstitution, puis décrire le besoin matière, Source, Make et le crédit du stock fini.}
+\chapter{Stocks et réapprovisionnement}
+\label{chap:stocks-reapprovisionnement}
 
 \section{Politique de stock fini}
+
+La politique Make-to-Stock surveille le niveau du produit fini indépendamment du traitement immédiat d'une commande. Elle estime la demande horaire à partir des commandes clientes, sans compter les ordres internes de reconstitution. Le point de commande associe le stock de sécurité à la demande attendue pendant le délai de reconstitution.
+
+Deux décisions proches en apparence répondent donc à des questions différentes. La première vérifie si le stock disponible couvre une commande donnée. La seconde évalue si le stock projeté a atteint le point de commande du produit fini. Une commande peut être servie alors qu'une reconstitution préventive devient nécessaire, ou attendre alors qu'une reconstitution est déjà en cours.
+
+\FigureOrPlaceholder{documentation/figures/decision_stock_fini.png}{Arbre de décision distinguant le service d'une commande et la reconstitution du stock fini.}{fig:decision-stock-fini}
+
+Lorsque le seuil est franchi, la politique propose une quantité économique de commande, ou EOQ, fondée sur la demande annuelle, le coût de lancement et le coût annuel de possession. L'implémentation borne ensuite cette proposition. Lorsqu'un carnet de commandes clientes est ouvert, la quantité ne dépasse pas son besoin net. Une autre borne limite la proposition par rapport à la taille moyenne des commandes.
+
+Un garde empêche le lancement de plusieurs productions autonomes concurrentes pour un même produit. Cette protection est nécessaire car le stock peut être réévalué pendant qu'un ordre déjà créé poursuit Source ou Make.
+
 \section{Commande cliente et ordre interne}
+
+La commande \texttt{CMD\_*} porte un besoin externe. Elle vérifie la disponibilité, attend si nécessaire, puis déclenche Deliver. L'ordre \texttt{REAPPRO\_*} est créé par la politique de stock pour produire des unités destinées au magasin. Il calcule les besoins matière, déclenche Source lorsque des quantités manquent et pilote Make.
+
+\FigureOrPlaceholder{documentation/figures/cmd_reappro.png}{Séparation entre demande cliente et reconstitution interne du stock fini.}{fig:cmd-reappro}
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.20\textwidth} Y Y}
+    \toprule
+    Propriété & \texttt{CMD\_*} & \texttt{REAPPRO\_*} \\
+    \midrule
+    Origine & Demande d'un client externe. & Décision interne de la politique Make-to-Stock. \\
+    Objet & Service d'une quantité commandée. & Reconstitution d'une quantité de produit fini. \\
+    Parcours & Contrôle du stock, attente éventuelle, Deliver. & Besoin matière, Source éventuel, Make, crédit du stock. \\
+    Effet sur le stock fini & Réserve et consomme une quantité disponible. & Crédite le stock à mesure de la production réelle. \\
+    Lien entre objets & Peut attendre une reconstitution. & Peut réveiller plusieurs commandes liées. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Responsabilités comparées de la commande cliente et de l'ordre interne.}
+  \label{tab:cmd-reappro}
+\end{table}
+
+\BonASavoir{Une rupture de stock ne transforme pas la commande cliente en ordre de fabrication. Le modèle reste Make-to-Stock: une demande externe attend le résultat d'une reconstitution interne distincte.}
+
 \section{Besoin net matière}
+
+Pour un ordre interne, le besoin brut d'une matière est le produit de la quantité à fabriquer par le coefficient de nomenclature. La quantité manquante est obtenue après comparaison avec le stock disponible. Ce calcul directement rattaché à l'ordre détermine ce que Source doit recevoir avant la préparation de Make.
+
+\FigureOrPlaceholder{documentation/figures/besoin_net_matiere.png}{Lecture pédagogique des données mobilisées pour déterminer un besoin matière.}{fig:besoin-net-matiere}
+
+Le schéma rassemble aussi les réceptions attendues, le stock de sécurité et le délai, car ces données interviennent dans la politique autonome de matière. Il ne représente pas une formule unique appliquée indistinctement aux deux mécanismes.
+
 \section{Approvisionnement et production}
+
+Lorsqu'une matière manque pour \texttt{REAPPRO\_*}, le plan Source émet l'ordre nécessaire vers le fournisseur associé. La réception crédite la matière, puis \texttt{MaterialReceived} et \texttt{MaterialAvailable} rendent sa disponibilité explicite pour le plan Make. Si le stock couvre déjà le besoin, ce détour par le fournisseur n'est pas requis.
+
+Une politique autonome existe également au niveau matière. Elle calcule un point de commande à partir du stock de sécurité, de la demande horaire et d'un délai équivalent. Elle compare ce seuil au stock projeté, formé du disponible et des réceptions attendues. Si le seuil est atteint, une EOQ de matière peut être commandée. Cette quantité est bornée par le besoin représentatif d'une commande cliente.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.24\textwidth} Y Y}
+    \toprule
+    Paramètre ou état & Produit fini & Matière \\
+    \midrule
+    Demande de référence & Commandes clientes, hors ordres internes. & Besoins dérivés des produits et nomenclatures. \\
+    Stock projeté & Disponible augmenté des reconstitutions attendues. & Disponible augmenté des réceptions attendues. \\
+    Point de commande & Sécurité augmentée de la demande pendant le délai de reconstitution. & Sécurité augmentée de la demande pendant le délai fournisseur équivalent. \\
+    Quantité proposée & EOQ bornée par les besoins clients et la taille moyenne des commandes. & EOQ bornée par le besoin représentatif d'une commande cliente. \\
+    Protection & Une production autonome par produit. & Prise en compte des réceptions attendues dans le stock projeté. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Principes comparés des politiques de stock fini et de matière.}
+  \label{tab:politiques-stock}
+\end{table}
+
+\FigureOrPlaceholder{documentation/figures/sequence_reconstitution_stock.png}{Diagramme de séquence simplifié de la reconstitution autonome du stock fini.}{fig:sequence-reconstitution}
+
 \section{Crédit du stock et réveil des commandes}
 
-\FigureOrPlaceholder{documentation/figures/cmd_reappro.png}{Distinction entre commande cliente et ordre interne de reconstitution du stock.}{fig:cmd-reappro}
+Le crédit de stock fini suit la sortie réelle des unités de Make, au poste de stockage final. Il ne repose pas sur la seule création de l'ordre. Lorsque la reconstitution se termine, l'ordre interne est marqué comme servi, le verrou de production autonome est libéré et les commandes clientes liées sont immédiatement réanalysées.
 
+Cette chronologie évite trois incohérences: rendre disponible une quantité encore non produite, lancer des reconstitutions concurrentes pour un même produit et laisser une commande en attente après le retour du stock. Elle conserve aussi un découplage net entre la production destinée au magasin et la livraison destinée au client.
+
+\EnPratique{Lors d'un diagnostic, vérifier successivement l'identifiant de l'ordre interne, les besoins matière, les réceptions attendues, le passage réel en stockage final et le réveil des commandes liées.}

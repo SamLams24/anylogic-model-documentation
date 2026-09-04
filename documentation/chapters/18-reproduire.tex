@@ -1,9 +1,41 @@
 \chapter{Reproduire un scénario}
+\label{chap:reproduire-scenario}
 
-\DocumentationNote{Donner une procédure reproductible depuis le contrôle des fichiers jusqu'à l'archivage des sorties. Les valeurs propres au run validé doivent rester citées.}
+Reproduire une exécution SCONTO-SVU signifie retrouver la même chaîne entre le modèle, la configuration et les résultats, pas nécessairement obtenir une trajectoire identique au dixième de seconde près. Ce chapitre rassemble en une procédure unique ce que les chapitres précédents ont expliqué séparément.
 
-\section{Préparer l'environnement}
-\section{Contrôler les sources}
-\section{Charger et vérifier la configuration}
-\section{Exécuter et archiver}
+\FigureOrPlaceholder{documentation/figures/reproduire_scenario.png}{Chaîne de reproduction, du modèle source jusqu'à l'archive vérifiée.}{fig:reproduire-scenario}
 
+\section{Ce qui est reproductible}
+
+La configuration chargée depuis un fichier JSON est reproductible: acteurs, postes, scénarios, matières, pondérations et perturbation fournisseur déterministe reprennent exactement les valeurs enregistrées. Les stocks initiaux, les quantités de commande et l'échelle temporelle suivent la même règle lorsqu'ils proviennent du JSON ou d'un profil explicite plutôt que d'une saisie manuelle non documentée. Les exports produits à la clôture, Excel et ABox, sont eux-mêmes reproductibles dans leur structure et leur méthode de calcul pour une configuration donnée.
+
+\section{Limites de la reproductibilité}
+
+\AttentionDoc{La graine aléatoire du modèle n'est pas accessible depuis \texttt{Main} et n'est donc pas exportée dans le manifeste. Le SHA-256 du fichier JSON utilisé n'est pas calculé automatiquement par AnyLogic. Une nouvelle exécution construite avec la même configuration peut donc suivre une trajectoire aléatoire différente, même lorsque tous les paramètres visibles concordent.}
+
+La validation actuelle repose sur une seule exécution primaire archivée. Aucune réplication statistique n'est disponible pour estimer la variabilité d'un indicateur d'une exécution à l'autre. Certaines valeurs runtime, notamment celles liées au moteur de simulation lui-même, ne sont pas garanties strictement identiques entre deux lancements du même JSON. Reproduire un scénario établit donc la même configuration et la même méthode de calcul, pas une répétition bit à bit du déroulement.
+
+\section{Le manifeste comme repère de reproduction}
+
+\begin{sloppypar}
+Chaque exécution archivée porte un manifeste minimal qui doit être conservé avec les exports. Le run de validation retenu dans ce guide illustre ce qu'il faut relever: l'identifiant \texttt{RUN\_1773129600000\_1788264883846}, le scénario \texttt{SCENARIO DISTRIBUTION}, la quantité de la commande configurée, l'échelle \texttt{simToRealSeconds}, les paramètres de la perturbation fournisseur, l'instant de clôture simulé et le motif d'export. Il n'est pas nécessaire de recopier l'intégralité du manifeste dans un rapport d'analyse; ces quelques champs suffisent à identifier sans ambiguïté l'exécution dont proviennent des valeurs citées.
+\end{sloppypar}
+
+\section{Procédure}
+
+\begin{enumerate}
+  \item Identifier le modèle source à utiliser: \texttt{sources/model/SCONTO\_SVU\_FINAL\_VALIDATED.alp}.
+  \item Contrôler que ce fichier correspond bien à la version attendue avant toute exécution.
+  \item Identifier le fichier JSON de configuration à charger.
+  \item Ouvrir le modèle et charger la configuration depuis la vue Configuration, comme décrit au \cref{chap:json}.
+  \item Contrôler les comptages annoncés après chargement: nombre d'acteurs, de postes et de scénarios.
+  \item Vérifier les réglages propres à l'essai: commandes, stocks initiaux, temps et budgets, retours, perturbations, comme décrit au \cref{chap:lancer-suivre}.
+  \item Démarrer la simulation et corriger tout blocage de validation signalé.
+  \item Suivre l'exécution depuis la vue Exécution ou la fenêtre de suivi temps réel.
+  \item Arrêter proprement l'exécution une fois l'objectif de l'essai atteint.
+  \item Exporter le classeur Excel et l'ABox runtime.
+  \item Relever le manifeste de l'exécution: runId, scénario, paramètres d'essai et instant de clôture.
+  \item Archiver ensemble le fichier JSON utilisé, le classeur Excel, l'ABox et les notes de configuration, comme expliqué au \cref{chap:resultats-exports}.
+\end{enumerate}
+
+\EnPratique{Avant de citer une valeur dans une analyse, vérifier qu'elle provient bien du dossier archivé correspondant au runId annoncé, et non d'une exécution ultérieure faite sur la même configuration.}

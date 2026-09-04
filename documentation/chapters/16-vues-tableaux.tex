@@ -1,12 +1,90 @@
 \chapter{Comprendre les vues et les tableaux de bord}
+\label{chap:vues-tableaux}
 
-\DocumentationNote{Créer une fiche homogène pour chaque vue de lecture. Décrire ce qui est visible, les commandes, les effets et les limites d'interprétation.}
+Savoir où aller dans l'interface ne suffit pas à comprendre ce qui s'affiche une fois la vue ouverte. Le \cref{chap:prise-en-main} répond à la première question; ce chapitre répond à la seconde: pour chaque vue de consultation, que faut-il regarder, et avec quelle prudence faut-il lire ce qui apparaît à l'écran.
+
+Les vues Configuration et Nomenclature et matières sont volontairement absentes de ce chapitre: la première a été détaillée au \cref{chap:configurer}, la seconde au \cref{chap:nomenclature-stocks}. Elles ne sont mentionnées ici que par renvoi.
 
 \section{Vue Exécution}
+
+La vue Exécution est le poste de conduite d'une simulation en cours. Elle reste utile juste après le démarrage, pendant tout le déroulement et immédiatement après l'arrêt, avant que les résultats ne soient exportés ou que la configuration ne soit rechargée.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_execution.png}{Vue Exécution.}{fig:ui-execution}
+
+Elle affiche les entités terminées, le WIP courant, le temps simulé, la date simulée, l'échelle temporelle et le débit courant. Les commandes de conduite couvrent l'arrêt avec calcul des résultats, la réinitialisation de l'affichage et les deux exports CSV décrits au \cref{chap:resultats-exports}. Un ensemble de commandes ouvre les rapports et tableaux détaillés: rapport VSM et SCOR, détail des métriques N3, efficacité globale, KPI par micro-activité, goulots, décisions holoniques, traçabilité et journal d'événements.
+
+\AttentionDoc{Les valeurs affichées dans la vue Exécution décrivent l'état courant de la simulation en mémoire, pas un résultat final archivé. Pour une valeur destinée à une analyse ou une preuve, utiliser un export réalisé après l'arrêt, comme expliqué au \cref{chap:resultats-exports}.}
+
+Le WIP affiché doit être lu avec l'heure simulée qui l'accompagne: c'est un état instantané, pas un cumul depuis le début de l'exécution. Le nombre d'entités terminées, en revanche, est bien cumulatif.
+
 \section{Vue Globale}
-\section{Vue Logistique}
-\section{Vue Hiérarchie}
-\section{Vue Structure animée}
-\section{Vue Responsabilités et Machines}
+
+La vue Globale offre une lecture consolidée de la chaîne: postes, acteurs et liaisons apparaissent ensemble, sans le détail des champs de configuration. Elle convient pour situer un poste ou un acteur dans l'ensemble du réseau, pendant la préparation comme pendant l'exécution.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_vue_globale.png}{Vue Globale.}{fig:ui-vue-globale}
+
+Les représentations de postes, d'acteurs, de connexions et d'états qu'elle montre restent des repères visuels de structure. Les indicateurs chiffrés qui accompagnent la chaîne, notamment ceux liés au dashboard SCOR ou aux mesures VSM, doivent être rattachés à l'exécution en cours: une vue ouverte sans exécution active, ou après un rechargement de configuration, n'affiche pas nécessairement les résultats d'un run archivé.
+
+\BonASavoir{La Vue Globale montre la structure et l'état courant du réseau. Pour une valeur de performance destinée à une analyse, se référer au dashboard et aux exports plutôt qu'à une lecture visuelle de cette vue.}
+
+\section{Logistique}
+
+Le \cref{chap:configurer} explique comment saisir un acteur dans la vue Logistique. Ce chapitre revient sur la même vue pour expliquer comment la lire une fois la chaîne construite.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_logistique.png}{Lecture de la vue Logistique: fournisseurs, entreprise focale et clients autour des cinq processus.}{fig:ui-logistique-lecture}
+
+La vue organise la lecture en trois bandes: les fournisseurs à gauche, l'entreprise focale ZENER SA Togo au centre, les clients à droite. Le centre affiche les cinq colonnes Plan, Source, Make, Deliver et Return, chacune avec une commande d'accès au détail du processus correspondant. Les responsabilités logistiques se lisent donc par colonne: un fournisseur alimente Source, l'entreprise focale opère Plan, Source, Make et Deliver, le client reçoit le résultat de Deliver. Return reste une colonne présente dans cette lecture même lorsque le processus n'a pas été exécuté, conformément à ce qui a été établi au \cref{chap:processus-scor}.
+
+Les panneaux KPI associés aux bandes fournisseurs et clients, ainsi que l'indicateur de PCE affiché en bas de la vue, restent des valeurs calculées pour l'exécution courante; ils ne remplacent pas le rapport détaillé du \cref{chap:mesures-vsm} lorsqu'une valeur précise est nécessaire.
+
+\section{Hiérarchie}
+
+La vue Hiérarchie, intitulée \texttt{Schema holonique ADACOR} dans l'interface, donne une lecture organisationnelle plutôt que temporelle: elle montre comment les responsabilités se répartissent entre les cinq niveaux de décision présentés au \cref{chap:agents-aer}, du stratégique jusqu'à l'exécution.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_hierarchie.png}{Vue Hiérarchie.}{fig:ui-hierarchie}
+
+Lire cette vue consiste à identifier, pour un poste ou un acteur donné, son niveau de rattachement: stratégique, tactique, coordination, pilotage opérationnel ou exécution, ce dernier niveau couvrant aussi bien les agents d'exécution que les machines associées aux postes. Le \cref{chap:agents-aer} détaille déjà le rôle de chaque niveau et la nature des transformations qu'il opère; ce chapitre n'y revient pas.
+
+\section{Structure animée}
+
+La vue Structure animée représente les mouvements physiques et informationnels du réseau: déplacements de matières et de produits, messages échangés entre agents, véhicules en transit.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_structure_animee.png}{Vue Structure animée.}{fig:ui-structure-animee}
+
+La commande \texttt{Voir tout} ouvre l'historique des flux informationnels observés, utile pour retrouver un échange précis sans devoir suivre l'animation en direct.
+
+\AttentionDoc{La cadence visuelle de l'animation ne représente pas la durée métier. Les paramètres réglés dans la fenêtre \texttt{Animation}, présentée au \cref{chap:lancer-suivre}, contrôlent uniquement la vitesse d'affichage des messages et des véhicules. Un mouvement rapide ou lent à l'écran ne doit jamais être interprété comme une mesure de performance; le temps simulé et les exports restent la seule source pour une durée.}
+
+\section{Responsabilités et Machines}
+
+La vue Responsabilités et Machines réunit deux informations complémentaires: qui est responsable de quelle micro-activité, et quelles ressources machine lui sont associées. Le \cref{chap:configurer} explique comment y créer une affectation; ce chapitre en explique la lecture une fois les affectations en place.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_responsabilites_machines.png}{Vue Responsabilités et Machines.}{fig:ui-responsabilites-machines-lecture}
+
+Les quatre tableaux de contrôle accessibles depuis cette vue, responsabilités, machines, acteurs et micro-activités, servent à vérifier qu'une affectation existe bien et qu'elle correspond au poste attendu, plutôt qu'à la créer. La capacité déclarée pour une machine complète celle du poste sans la remplacer; les deux valeurs répondent à des questions différentes, l'une portant sur la ressource, l'autre sur le poste lui-même.
+
 \section{Fenêtre de suivi temps réel}
 
+Le suivi temps réel reste une fenêtre complémentaire, accessible depuis les huit vues, et non une neuvième vue au même titre que les précédentes. Il complète les vues de consultation par une lecture chronologique, ligne par ligne, des événements de l'exécution en cours.
+
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_suivi_temps_reel.png}{Fenêtre de suivi en temps réel.}{fig:ui-suivi-temps-reel-vues}
+
+Chaque ligne relie le temps simulé, la catégorie et l'explication métier de l'événement, les agents responsables de la décision et de l'exécution, l'élément suivi, la source, la destination, le processus SCOR concerné, la décision métier et l'évolution du statut, ainsi que les indicateurs qui s'y rattachent.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.20\textwidth} Y}
+    \toprule
+    Pour suivre & Colonnes à lire ensemble \\
+    \midrule
+    Une commande précise & Élément suivi, catégorie, évolution du statut. \\
+    Une décision & Agent décideur, décision métier, catégorie. \\
+    Un flux matière ou produit & Source, destination, chemin, processus SCOR. \\
+    Le déroulement global & Horodatage simulé, nombre d'événements, indicateurs associés. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Lecture ciblée du tableau de suivi selon la question posée.}
+  \label{tab:suivi-lecture-ciblee}
+\end{table}
+
+\EnPratique{Pour reconstituer le parcours d'une commande, filtrer mentalement les lignes sur son identifiant, suivre l'évolution du statut colonne par colonne, puis confirmer sa position dans la vue Exécution ou la vue Logistique avant de conclure.}

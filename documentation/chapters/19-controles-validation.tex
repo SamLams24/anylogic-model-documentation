@@ -1,10 +1,58 @@
 \chapter{Contrôles et validation}
+\label{chap:controles-validation}
 
-\DocumentationNote{Distinguer validation structurelle, observation runtime, validation calculatoire et validation ontologique. Reprendre uniquement les preuves déjà archivées.}
+Dire qu'un élément du modèle est validé n'a de sens que si l'on précise validé comment et par quoi. Ce chapitre donne le vocabulaire probatoire employé dans tout ce guide et explique comment il s'applique concrètement.
 
-\section{Contrôles structurels}
-\section{Contrôles fonctionnels}
-\section{Contrôles des mesures}
-\section{Contrôles ontologiques}
-\section{Limites probatoires}
+\section{Les statuts documentaires}
 
+Chaque affirmation technique importante de ce guide reçoit implicitement l'un des statuts suivants.
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{L{0.27\textwidth} Y}
+    \toprule
+    Statut & Sens \\
+    \midrule
+    \texttt{IMPLEMENTE} & La logique existe dans le modèle validé, indépendamment de toute exécution. \\
+    \texttt{OBSERVE\_\hspace{0pt}RUNTIME} & Un run archivé montre effectivement le comportement ou la valeur. \\
+    \texttt{VALIDE\_\hspace{0pt}EXPERIMENTALEMENT} & Le comportement est confirmé par les artefacts primaires d'un run vérifié, pour ce run précisément. \\
+    \texttt{DISPONIBLE\_\hspace{0pt}NON\_\hspace{0pt}QUANTIFIE} & La fonction est présente, mais aucun run archivé ne permet une conclusion quantitative. \\
+    \texttt{PCE\_ESTIME} & Le calcul est vérifié, mais une de ses entrées, la valeur ajoutée, provient d'un taux configuré plutôt que d'un chronométrage. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Statuts probatoires utilisés dans la documentation.}
+  \label{tab:statuts-probatoires}
+\end{table}
+
+\AttentionDoc{L'existence d'un bouton, d'une fonction ou d'un calcul dans le modèle ne vaut pas, à elle seule, validation expérimentale. Un mécanisme \texttt{IMPLEMENTE} le reste tant qu'aucun run archivé ne l'a observé; un mécanisme \texttt{OBSERVE\_RUNTIME} le reste tant qu'aucune vérification croisée entre artefacts ne l'a confirmé.}
+
+\section{Quatre familles de contrôle}
+
+La validation du modèle consolidé combine quatre familles de contrôle complémentaires.
+
+Le contrôle structurel porte sur la présence et la cohérence des éléments déclarés: la garde ISA-95, qui refuse toute exécution où la hiérarchie d'équipements ne compte pas exactement 190 noeuds et 71 affectations, en est l'exemple le plus strict. Le contrôle fonctionnel porte sur le comportement du modèle pendant une exécution: l'enchaînement Source avant Make lorsque la matière manque, ou le réveil d'une commande après reconstitution, appartiennent à cette famille. Le contrôle calculatoire porte sur l'exactitude d'un calcul lorsque ses entrées sont connues: l'identité additive entre traitement, attente et Lead Time de commande, vérifiée à la précision exportée près, en est un exemple direct. Le contrôle ontologique porte sur la cohérence des individus et des relations exportés dans l'ABox: la présence croisée des relations \texttt{contributesToCustomerOrderFulfillment} et \texttt{dependsOnInternalReplenishmentOrder} entre une commande et son ordre interne relève de cette famille.
+
+\begin{sloppypar}
+Les traces runtime, classeur Excel et export ABox, jouent un rôle particulier: elles seules permettent de faire passer un élément du statut \texttt{IMPLEMENTE} au statut \texttt{OBSERVE\_RUNTIME}, puis \texttt{VALIDE\_EXPERIMENTALEMENT} lorsque plusieurs artefacts concordent sur le même run.
+\end{sloppypar}
+
+\FigureOrPlaceholder{documentation/figures/niveaux_validation.png}{Chaîne de preuve, du mécanisme implémenté à l'exécution validée.}{fig:niveaux-validation}
+
+\section{Exemples}
+
+La structure ISA-95 de 190 noeuds et 71 affectations est \texttt{VALIDE\_EXPERIMENTALEMENT}: la garde du modèle, la déclaration du JSON et l'ABox du run de validation concordent tous les trois sur ces deux cardinalités, comme établi au \cref{chap:isa95-ontologie}.
+
+La relation entre \texttt{CMD\_1} et \texttt{REAPPRO\_1} est \texttt{OBSERVE\_RUNTIME}: le run de validation montre la commande, l'ordre interne et leur dépendance croisée, mais cette observation porte sur une seule commande et un seul ordre, pas sur le comportement général d'un partage entre plusieurs commandes.
+
+Le PCE ZENER reste qualifié \texttt{PCE\_ESTIME}: le calcul lui-même, présenté au \cref{chap:mesures-vsm}, est vérifié depuis les observations de traitement et d'attente, mais la part de valeur ajoutée provient d'un taux configuré par poste, pas d'une mesure chronométrée sur le terrain.
+
+\begin{sloppypar}
+Return reste \texttt{DISPONIBLE\_NON\_QUANTIFIE}: le catalogue interne du modèle décrit ses micro-activités, comme établi au \cref{chap:processus-scor}, mais aucune exécution archivée ne l'a traversé.
+\end{sloppypar}
+
+\section{Limites de la campagne actuelle}
+
+La validation disponible aujourd'hui repose sur une seule exécution primaire archivée, sans réplication statistique. Aucune exécution de référence synchronisée sans retard fournisseur n'est disponible, ce qui interdit d'isoler l'effet causal net de la perturbation observée. La graine aléatoire reste inaccessible depuis \texttt{Main}. Return, un scénario de qualité avec défauts, une panne machine et une perturbation de demande par pic ou rafale restent des capacités disponibles sans validation quantitative. Un scénario où plusieurs commandes partagent un même ordre de reconstitution n'a pas été testé. Aucune relation de calcul n'existe entre un score AHP local et le Performance Index, et aucune optimisation globale de la chaîne n'est démontrée par les mécanismes de politique de stock disponibles.
+
+\BonASavoir{Ces limites ne remettent pas en cause ce qui est validé; elles délimitent la portée de cette validation. Une fonctionnalité correctement qualifiée \texttt{DISPONIBLE\_NON\_QUANTIFIE} reste une capacité réelle du modèle, simplement pas encore démontrée par un run archivé.}

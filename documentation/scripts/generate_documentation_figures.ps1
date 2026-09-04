@@ -699,3 +699,89 @@ $tboxAboxEdges = @(
     (New-Edge 0 1 'instancie'), (New-Edge 1 2 "rattach${chEAcute} ${chAGrave}"), (New-Edge 1 3 "export${chEAcute} vers")
 )
 Write-Diagram "TBox, ABox et export d'un run" $tboxAboxNodes $tboxAboxEdges 'tbox_abox_run.png' 1450 620
+
+# --- Chapitres 16 a 20 : exports, reproduction, validation, maintenance ---
+
+$exportsPipelineNodes = @(
+    (New-Node 40 350 260 110 "Ex${chEAcute}cution" 'input'),
+    (New-Node 380 350 260 110 "Cl${chOCirc}ture" 'decision'),
+    (New-Node 720 350 260 110 "R${chEAcute}sultats calcul${chEAcute}s" 'process'),
+    (New-Node 1060 130 240 110 'Excel' 'output'),
+    (New-Node 1060 350 240 110 'CSV' 'output'),
+    (New-Node 1060 570 240 110 'ABox' 'output'),
+    (New-Node 1380 350 260 110 'Archivage' 'actor')
+)
+$exportsPipelineEdges = @(
+    (New-Edge 0 1), (New-Edge 1 2), (New-Edge 2 3), (New-Edge 2 4), (New-Edge 2 5),
+    (New-Edge 3 6), (New-Edge 4 6), (New-Edge 5 6)
+)
+Write-Diagram "De l'ex${chEAcute}cution ${chAGrave} l'archivage" $exportsPipelineNodes $exportsPipelineEdges 'pipeline_exports.png' 1720 750
+
+$artefactsNodes = @(
+    (New-Node 700 340 360 130 "Ex${chEAcute}cution identifi${chEAcute}e`n(runId)" 'actor'),
+    (New-Node 60 80 340 120 "JSON`nconfiguration utilis${chEAcute}e" 'input'),
+    (New-Node 700 80 360 110 "Excel`nmesures et m${chEAcute}triques" 'process'),
+    (New-Node 1340 80 340 120 "CSV`nextraits tabulaires" 'process'),
+    (New-Node 60 600 340 120 "ABox`nindividus et relations" 'process'),
+    (New-Node 700 600 360 110 "Journal et suivi`nobservation en direct" 'input')
+)
+$artefactsEdges = @(
+    (New-Edge 1 0 'avant'), (New-Edge 0 2), (New-Edge 0 3), (New-Edge 0 4), (New-Edge 0 5)
+)
+Write-Diagram "Les artefacts d'une ex${chEAcute}cution identifi${chEAcute}e" $artefactsNodes $artefactsEdges 'artefacts_et_preuves.png' 1750 850
+
+$reproduireNodes = @(
+    (New-Node 40 90 260 110 "Mod${chEGrave}le" 'input'),
+    (New-Node 340 90 260 110 "Configuration`nJSON" 'input'),
+    (New-Node 640 90 260 110 "Contr${chOCirc}les" 'decision'),
+    (New-Node 940 90 300 110 "Param${chEGrave}tres`nd'ex${chEAcute}cution" 'process'),
+    (New-Node 1280 90 260 110 'Lancement' 'process'),
+    (New-Node 40 350 260 110 'Suivi' 'process'),
+    (New-Node 340 350 260 110 "Cl${chOCirc}ture" 'process'),
+    (New-Node 640 350 260 110 'Export' 'output'),
+    (New-Node 940 350 300 110 'Archivage' 'actor'),
+    (New-Node 1280 350 260 110 "V${chEAcute}rification" 'output')
+)
+$reproduireEdges = @(
+    (New-Edge 0 1), (New-Edge 1 2), (New-Edge 2 3), (New-Edge 3 4), (New-Edge 4 5),
+    (New-Edge 5 6), (New-Edge 6 7), (New-Edge 7 8), (New-Edge 8 9)
+)
+Write-Diagram "Cha${chICirc}ne de reproduction d'un sc${chEAcute}nario" $reproduireNodes $reproduireEdges 'reproduire_scenario.png' 1620 700
+
+$validationNodes = @(
+    (New-Node 500 60 500 110 "VALIDE_EXPERIMENTALEMENT`nconfirm${chEAcute} par un run archiv${chEAcute} et v${chEAcute}rifi${chEAcute}" 'output'),
+    (New-Node 500 260 500 110 "OBSERVE_RUNTIME`nconstat${chEAcute} dans une trace ou un export" 'process'),
+    (New-Node 500 460 500 110 "IMPLEMENTE`npr${chEAcute}sent et fonctionnel dans le mod${chEGrave}le" 'process'),
+    (New-Node 500 660 500 110 "DISPONIBLE_NON_QUANTIFIE`ncapacit${chEAcute} existante, sans r${chEAcute}sultat quantitatif" 'input')
+)
+$validationEdges = @(
+    (New-Edge 3 2 "preuve renforc${chEAcute}e"), (New-Edge 2 1), (New-Edge 1 0)
+)
+Write-Diagram "Cha${chICirc}ne de preuve du mod${chEGrave}le" $validationNodes $validationEdges 'niveaux_validation.png' 1500 850
+
+$maintenanceNodes = @(
+    (New-Node 40 350 240 110 'Modifier' 'input'),
+    (New-Node 340 350 240 110 'Compiler' 'process'),
+    (New-Node 640 350 240 110 'Tester' 'process'),
+    (New-Node 940 350 240 110 "Ex${chEAcute}cuter" 'process'),
+    (New-Node 1240 350 240 110 'Exporter' 'process'),
+    (New-Node 1540 350 240 110 "V${chEAcute}rifier" 'process'),
+    (New-Node 1840 350 260 110 'Documenter' 'output')
+)
+$maintenanceEdges = @(
+    (New-Edge 0 1), (New-Edge 1 2), (New-Edge 2 3), (New-Edge 3 4), (New-Edge 4 5), (New-Edge 5 6),
+    (New-Edge 6 0 "nouvelle ${chEAcute}volution" 'dashed')
+)
+Write-Diagram "Cycle de maintenance recommand${chEAcute}" $maintenanceNodes $maintenanceEdges 'cycle_maintenance.png' 2140 700
+
+$invariantsNodes = @(
+    (New-Node 750 340 400 130 "Invariants`ndu mod${chEGrave}le" 'actor'),
+    (New-Node 60 60 380 150 "Commande et stock`nCMD != REAPPRO`ncr${chEAcute}dit ${chAGrave} la sortie de Make" 'input'),
+    (New-Node 1440 60 380 150 "Mesure`ntemps commande != temps VSM`njetons exclus du WIP" 'process'),
+    (New-Node 60 620 380 150 "Agents`nAHP local != PI`nphases AER fixes" 'process'),
+    (New-Node 1440 620 380 150 "Configuration`nJSON != ${chEAcute}tat runtime`ngarde ISA-95 190 / 71" 'output')
+)
+$invariantsEdges = @(
+    (New-Edge 1 0), (New-Edge 2 0), (New-Edge 3 0), (New-Edge 4 0)
+)
+Write-Diagram "Invariants du mod${chEGrave}le regroup${chEAcute}s par domaine" $invariantsNodes $invariantsEdges 'invariants_modele.png' 1900 900

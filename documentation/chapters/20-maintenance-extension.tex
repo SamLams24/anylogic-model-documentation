@@ -1,10 +1,73 @@
 \chapter{Maintenance et extension du modèle}
+\label{chap:maintenance-extension}
 
-\DocumentationNote{Présenter les invariants, les points d'extension, la compatibilité JSON, les contrôles et la mise à jour de la documentation après une évolution du modèle.}
+Ce chapitre s'adresse d'abord à qui doit faire évoluer SCONTO-SVU: ajouter une matière, un poste, un agent, une métrique, ou modifier une vue. Il reste utile à tout lecteur qui veut comprendre ce qui rend une modification sûre ou risquée dans ce modèle.
 
 \section{Invariants à préserver}
-\section{Étendre les données et les agents}
-\section{Faire évoluer l'interface}
-\section{Maintenir la compatibilité JSON}
-\section{Vérifier et documenter une évolution}
 
+Certains principes structurent l'ensemble du modèle et de sa documentation. Les modifier sans le vouloir invaliderait des mécanismes déjà validés, présentés dans les chapitres précédents.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{Y}
+    \toprule
+    Invariant \\
+    \midrule
+    \texttt{CMD\_*} et \texttt{REAPPRO\_*} restent deux objets distincts; la commande cliente reste Make-to-Stock et n'est jamais convertie en ordre de fabrication direct. \\
+    Le stock de produit fini est crédité à la sortie réelle de Make, hors jetons réservés à l'animation. \\
+    Source, Make et Deliver restent des processus distincts, même lorsqu'ils s'enchaînent pour une même reconstitution. \\
+    Le temps de la commande cliente et le temps VSM du périmètre \texttt{ACT\_4} restent deux périmètres de mesure séparés. \\
+    Un score AHP local et le Performance Index restent deux mécanismes sans lien de calcul démontré. \\
+    Une configuration JSON et l'état d'exécution runtime restent deux notions distinctes; charger un JSON reconstruit la configuration, pas une simulation en cours. \\
+    AER conserve sa seule expansion autorisée: classification des communications selon les phases AMENDMENT, EXECUTION et REPORT. \\
+    La garde ISA-95 impose 190 noeuds et 71 affectations pour le snapshot actuel de la hiérarchie. \\
+    Lorsque le classeur Excel et l'export ABox forment une paire de preuve, ils doivent décrire le même run, identifié par le même \texttt{runId}. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Invariants du modèle à préserver lors d'une évolution.}
+  \label{tab:invariants-modele}
+\end{table}
+
+\FigureOrPlaceholder{documentation/figures/invariants_modele.png}{Les invariants du modèle regroupés par domaine.}{fig:invariants-modele}
+
+\AttentionDoc{Rompre l'un de ces invariants sans le documenter explicitement invalide silencieusement les statuts probatoires établis au \cref{chap:controles-validation}. Une évolution qui les affecte volontairement doit être signalée dans le registre de validation avant d'être considérée comme acquise.}
+
+\section{Cycle de maintenance recommandé}
+
+Une évolution du modèle suit un cycle court plutôt qu'une modification isolée: modifier le code ou la configuration, compiler le modèle, exécuter un test ciblé, lancer une exécution complète, exporter les résultats, vérifier qu'aucun invariant n'est rompu, puis documenter le changement.
+
+\FigureOrPlaceholder{documentation/figures/cycle_maintenance.png}{Cycle recommandé pour toute évolution du modèle.}{fig:cycle-maintenance}
+
+Ce cycle s'applique aussi bien à l'ajout d'une matière ou d'un poste qu'à l'ajout d'un agent, d'une métrique, d'un champ JSON ou à la modification d'une vue. La nature de la modification change l'étendue des tests utiles, pas la présence de chacune de ces étapes.
+
+\section{Compatibilité JSON}
+
+Le chargeur contrôle le champ \texttt{meta.schemaVersion} et avertit sans bloquer lorsque la version déclarée n'est pas reconnue. Les valeurs absentes ou invalides retombent sur des replis documentés en annexe A plutôt que sur une erreur d'arrêt. Un bloc absent du fichier, tel que \texttt{responsabilites} dans le fichier de référence, est chargé lorsqu'il existe et ignoré sans échec lorsqu'il manque. Cette tolérance permet à un fichier plus ancien de rester exploitable après une évolution du modèle, tant que la structure des blocs qu'il contient reste reconnue par le chargeur.
+
+Cette description correspond au comportement actuel du chargeur; elle ne constitue pas une stratégie de versioning formalisée. Toute évolution qui ajouterait un nouveau bloc obligatoire, retirerait un bloc existant ou changerait le sens d'un champ déjà utilisé doit être accompagnée d'une mise à jour de l'annexe A et, si la compatibilité descendante est recherchée, d'un repli explicite pour les fichiers antérieurs plutôt que d'une hypothèse silencieuse.
+
+\section{Ajouter une fonctionnalité}
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.24\textwidth} Y Y}
+    \toprule
+    Type d'évolution & Impact principal & Documents à mettre à jour \\
+    \midrule
+    Ajouter une matière & Nomenclature, fiche matière, besoin net. & \Cref{chap:nomenclature-stocks} et annexe A. \\
+    Ajouter un poste & Gamme du scénario, code SCOR, éventuelle affectation ISA-95. & \Cref{chap:configurer} et annexe E si un nouveau contrôle apparaît. \\
+    Ajouter un agent & Niveau de décision concerné, messages AER associés. & \Cref{chap:agents-aer} et annexe C. \\
+    Ajouter une métrique & Statut SCOR officiel, association ou proxy; profil de normalisation. & \Cref{chap:scor-pi} et annexe D. \\
+    Ajouter un champ JSON & Compatibilité de chargement, valeur de repli. & Annexe A et ce chapitre. \\
+    Modifier une vue & Libellés, contrôles, captures existantes. & Chapitre concerné, annexe E et \texttt{UI\_CAPTURE\_CHECKLIST.md}. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Impacts et documents concernés selon le type d'évolution.}
+  \label{tab:impacts-evolution}
+\end{table}
+
+\section{Vérifier une évolution avant de la considérer acquise}
+
+Avant de documenter une évolution comme terminée, contrôler successivement: la structure, notamment la garde ISA-95 et les identifiants attendus; les flux Source, Make, Deliver et Return; les stocks et leur initialisation; le temps et l'échelle temporelle; les mesures VSM et leur périmètre; les exports Excel et ABox et leur concordance; l'interface, en particulier les contrôles nouveaux ou modifiés; enfin la documentation elle-même, chapitres et annexes concernés.
+
+\EnPratique{Une évolution qui ne peut pas être vérifiée par au moins un export Excel ou ABox reste \texttt{IMPLEMENTE} au sens du \cref{chap:controles-validation}, pas \texttt{OBSERVE\_RUNTIME}. La qualifier autrement dans la documentation serait une erreur, même après un test manuel convaincant dans l'interface.}

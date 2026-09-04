@@ -1,10 +1,76 @@
 \chapter{Lire, exporter et archiver les résultats}
+\label{chap:resultats-exports}
 
-\DocumentationNote{Regrouper les sorties par question : exécutions, performance, flux, décisions, traçabilité et ontologie. Expliquer la différence entre arrêt manuel et clôture métier.}
+Une exécution vient de se terminer. Cette dernière question du guide utilisateur est aussi la plus concrète: où regarder pour trouver une information précise, et que faut-il conserver pour qu'un résultat reste vérifiable plus tard.
 
-\section{Choisir le bon tableau}
-\section{Interpréter les résultats}
+\section{Choisir le bon tableau selon la question}
+
+Le point de départ n'est pas l'écran mais la question posée. Le tableau suivant relie chaque besoin d'analyse courant à l'endroit où le chercher.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.28\textwidth} Y}
+    \toprule
+    Besoin & Où regarder \\
+    \midrule
+    Comprendre les événements survenus & Journal de la vue Exécution et fenêtre de suivi temps réel, présentés au \cref{chap:vues-tableaux}. \\
+    Examiner un poste ou une micro-activité & Tableaux KPI par micro-activité et rapport des goulots, accessibles depuis la vue Exécution. \\
+    Examiner la performance globale & Dashboard SCOR, mesures VSM et Performance Index, détaillés aux \cref{chap:mesures-vsm,chap:scor-pi}. \\
+    Examiner une décision & Tableau des décisions holoniques et traçabilité AER, présentés au \cref{chap:agents-aer}. \\
+    Auditer un calcul & Export ABox runtime, qui conserve la relation entre une mesure et l'individu qui l'a produite. \\
+    Archiver une exécution & Classeur Excel final, ABox et fichier JSON utilisé, réunis dans un même dossier de preuve. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Correspondance entre une question d'analyse et la sortie qui y répond.}
+  \label{tab:besoin-vers-sortie}
+\end{table}
+
+\FigureOrPlaceholder{documentation/figures/pipeline_exports.png}{De l'exécution à l'archivage: enchaînement des sorties disponibles après la clôture.}{fig:pipeline-exports}
+
+\section{Distinguer les artefacts}
+
+Les quatre types d'artefacts produits par le modèle ne se substituent pas les uns aux autres. Chacun conserve une information particulière et laisse une question ouverte que seul un autre artefact peut résoudre.
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{L{0.14\textwidth} Y Y Y}
+    \toprule
+    Artefact & Ce qu'il contient & À quoi il sert & Ce qu'il ne prouve pas seul \\
+    \midrule
+    JSON & Configuration: acteurs, postes, scénarios, matières, pondérations. & Reconstruire ou partager une configuration de départ. & Qu'une exécution a eu lieu; c'est une configuration, pas un résultat. \\
+    Excel & Manifeste, mesures VSM, métriques SCOR, dashboards, tables de trace. & Analyser les résultats chiffrés d'une exécution identifiée. & La provenance individuelle d'une valeur sans le contexte du runId. \\
+    CSV & Extraits tabulaires ciblés d'une exécution. & Réutiliser une table précise dans un autre outil. & La cohérence d'ensemble, que seul le classeur complet porte. \\
+    ABox TTL & Individus, relations, runId et manifeste au format RDF. & Tracer la provenance exacte d'une valeur ou d'une relation. & Une performance en elle-même; elle porte la structure, pas un jugement. \\
+    Journal et suivi & Événements affichés en direct dans l'interface. & Observer le déroulement pendant l'exécution. & Un résultat archivé; son contenu n'est pas conservé après fermeture. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Rôle et limite de chaque type d'artefact produit par le modèle.}
+  \label{tab:artefacts-preuves}
+\end{table}
+
+\FigureOrPlaceholder{documentation/figures/artefacts_et_preuves.png}{Les artefacts d'une exécution identifiée se complètent sans se remplacer.}{fig:artefacts-et-preuves}
+
+\AttentionDoc{Un document de documentation, y compris ce guide, est un support de compréhension. Il n'est jamais lui-même une preuve qu'une exécution a produit telle valeur; seule la paire Excel et ABox d'un run identifié joue ce rôle.}
+
 \section{Exporter en CSV et Excel}
-\section{Produire l'ABox runtime}
-\section{Archiver un run}
 
+Depuis la vue Exécution, les commandes \texttt{Exporter CSV} et \texttt{Exporter Traces CSV} produisent des extraits tabulaires. Le classeur Excel complet, généré à la clôture ou sur demande explicite selon la configuration, rassemble notamment les feuilles suivantes: un manifeste de run, la performance par produit, les acteurs, les micro-activités, les responsabilités et les machines, le KPI par poste, l'exécution brute, les traces agrégées, les dashboards micro, macro et global, le pipeline SCOR vers PI, la traçabilité de performance, la couverture des métriques SCOR, une feuille de validation croisée, le catalogue SCOR, les métriques calculables, les flux de la chaîne logistique, la propagation entre agents et les décisions holoniques.
+
+Cette liste correspond aux feuilles effectivement présentes dans le classeur du run de validation; elle ne doit pas être complétée par des feuilles supposées. Le \cref{chap:mesures-vsm} et le \cref{chap:scor-pi} détaillent déjà le contenu des feuilles de mesure et de performance; ce chapitre ne les répète pas.
+
+\section{Produire l'ABox runtime}
+
+L'export ABox complète le classeur Excel en conservant les individus et les relations d'une exécution au format RDF: le \texttt{runId}, les commandes clientes et les ordres internes avec leur relation de dépendance, les messages AER échangés, les affectations ISA-95 et les métriques calculées. Le \cref{chap:isa95-ontologie} explique déjà la distinction entre la TBox, qui porte le vocabulaire, et l'ABox, qui porte les faits d'un run précis; ce chapitre n'y revient pas en détail.
+
+L'intérêt pratique de l'ABox pour l'archivage est de conserver la provenance exacte d'une valeur: une mesure de performance peut être retrouvée depuis l'individu qui la porte, puis reliée à son contexte de calcul, ce que ne permet pas une simple lecture de cellule dans un tableur.
+
+\section{Arrêt manuel et clôture métier}
+
+L'arrêt manuel d'une exécution, décrit au \cref{chap:lancer-suivre}, calcule les indicateurs disponibles et peut déclencher les exports configurés. La clôture métier d'une commande particulière est un événement distinct, interne au déroulement de l'exécution: une commande peut se clore bien avant l'arrêt manuel de la simulation. Confondre les deux conduirait à interpréter l'instant d'arrêt comme le moment où toutes les commandes ont été servies, ce qui n'est vérifiable que dans les tables de résultats.
+
+\section{Archiver une exécution}
+
+Un dossier de preuve reproductible réunit, pour une même exécution identifiée par son \texttt{runId}: le fichier JSON utilisé au départ, le classeur Excel final, l'export ABox, une note résumant les réglages de l'essai qui ne figurent pas déjà dans le JSON, et les captures utiles si l'analyse en dépend. Le \cref{chap:reproduire-scenario} reprend cette liste sous la forme d'une procédure complète, depuis les sources jusqu'à l'archive.
+
+\BonASavoir{Le fichier JSON reste une configuration, jamais un résultat. Archiver uniquement le JSON revient à conserver le point de départ d'une exécution, pas sa preuve; les deux autres artefacts, Excel et ABox, restent nécessaires pour établir ce qui s'est réellement produit.}

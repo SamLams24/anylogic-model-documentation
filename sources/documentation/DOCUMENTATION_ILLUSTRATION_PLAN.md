@@ -42,7 +42,7 @@ Les statuts autorisés sont `A_GENERER`, `CAPTURE_EXISTANTE_A_VALIDER`, `CAPTURE
 | DOC-B03 | 12 | Pondération des attributs | Capture réelle | Ancienne image 6 | `VALIDE` | Nouvelle capture du modèle courant | `figures/screenshots/ui_poids_attributs.png` |
 | DOC-B04 | 12 | Pondération des métriques N3 | Capture réelle | Ancienne image 7 | `VALIDE` | Nouvelle capture du modèle courant | `figures/screenshots/ui_poids_n3.png` |
 | DOC-B05 | 12 | Vue Logistique | Capture réelle | ALP | `VALIDE` | Acteurs et commandes visibles | `figures/screenshots/ui_logistique.png` |
-| DOC-B06 | 12 | Vue Responsabilités et Machines | Capture réelle | ALP | `CAPTURE_A_REALISER` | Neuf champs et sept boutons | `figures/screenshots/ui_responsabilites_machines.png` |
+| DOC-B06 | 12 | Vue Responsabilités et Machines | Capture réelle | ALP | `VALIDE` | Neuf champs et sept boutons | `figures/screenshots/ui_responsabilites_machines.png` |
 | DOC-B07 | 13 | Vue Nomenclature et matières | Capture réelle | ALP, anciennes images 8 et 9 | `VALIDE` | Sans icône de développement | `figures/screenshots/ui_nomenclature.png` |
 | DOC-C02 | 13 | Les quatre zones de la Nomenclature | Zoom annoté | Future capture B07 | `VALIDE` | Nomenclature, fiche, fournisseur, consommateur | `figures/screenshots/ui_nomenclature_annotee.png` |
 | DOC-B21 | 13 | Fiche matière lisible | Capture réelle | ALP | `VALIDE` | Identifiant, stocks, délai et fournisseur visibles | `figures/screenshots/ui_fiche_matiere.png` |
@@ -52,27 +52,29 @@ Les statuts autorisés sont `A_GENERER`, `CAPTURE_EXISTANTE_A_VALIDER`, `CAPTURE
 | DOC-A30 | 14 | Détection et sélection d'un fichier | Diagramme de séquence | ALP validé | `VALIDE` | Liste, sélection et délégation | `figures/sequence_selection_json.png` |
 | DOC-B22 | 14 | Zone de sauvegarde et chargement JSON | Capture réelle | ALP | `VALIDE` | Nom d'entreprise et commandes visibles | `figures/screenshots/ui_json_zone.png` |
 | DOC-B23 | 14 | Liste des configurations JSON | Capture réelle | ALP | `VALIDE` | Liste rafraîchie et fichier sélectionné | `figures/screenshots/ui_json_liste.png` |
-| DOC-B24 | 14 | Confirmation de chargement JSON | Capture réelle | ALP | `CAPTURE_A_REALISER` | Message lisible sans donnée sensible | `figures/screenshots/ui_json_charge.png` |
-| DOC-B08 | 15 | Contrôle des commandes | Capture réelle | Ancienne image 15 | `CAPTURE_A_REALISER` | Nouvelle capture de la fenêtre courante | `figures/screenshots/ui_controle_commandes.png` |
-| DOC-B09 | 15 | Temps et budgets | Capture réelle | Ancienne image 16 | `CAPTURE_A_REALISER` | Nouvelle capture de la fenêtre courante | `figures/screenshots/ui_temps_budgets.png` |
+| DOC-B24 | 14 | Confirmation de chargement JSON | Capture réelle | ALP | `VALIDE` | Message lisible sans donnée sensible | `figures/screenshots/ui_json_charge.png` |
+| DOC-B08 | 15 | Contrôle des commandes | Capture réelle | Ancienne image 15 | `VALIDE` | Nouvelle capture de la fenêtre courante | `figures/screenshots/ui_controle_commandes.png` |
+| DOC-B09 | 15 | Temps et budgets | Capture réelle | Ancienne image 16 | `VALIDE` | Nouvelle capture de la fenêtre courante | `figures/screenshots/ui_temps_budgets.png` |
 | DOC-B10 | 15 | Retours et qualité | Capture réelle | Ancienne image 17 | `VALIDE` | Nouvelle capture de la fenêtre courante | `figures/screenshots/ui_retours_qualite.png` |
 | DOC-B11 | 15 | Paramètres d'animation | Capture réelle | Ancienne image 18 | `VALIDE` | Nouvelle capture de la fenêtre courante | `figures/screenshots/ui_animation_parametres.png` |
 | DOC-B12 | 15 | Stocks initiaux | Capture réelle | ALP, ancienne image 14 | `VALIDE` | Cadrage propre et valeurs qualifiées | `figures/screenshots/ui_stocks_initiaux.png` |
 | DOC-B13 | 15 | Profils de test | Capture réelle | ALP | `VALIDE` | Options actuelles | `figures/screenshots/ui_profils_test.png` |
-| DOC-B14 | 15 | Perturbations | Capture réelle | ALP | `CAPTURE_A_REALISER` | Options actuelles | `figures/screenshots/ui_perturbations.png` |
+| DOC-B14 | 15 | Perturbations | Capture réelle | ALP | `VALIDE` | Options actuelles | `figures/screenshots/ui_perturbations.png` |
 | DOC-B15 | 15 | Suivi temps réel | Capture réelle | ALP, ancienne image 13 | `VALIDE` | Exécution identifiée, libellés consolidés | `figures/screenshots/ui_suivi_temps_reel.png` |
-| DOC-B16 | 16 | Vue Exécution | Capture réelle | ALP, ancienne image 10 | `CAPTURE_A_REALISER` | Run identifié | `figures/ui_execution.png` |
-| DOC-C03 | 16 | Zones de la vue Exécution | Zoom annoté | Future capture B16 | `CAPTURE_A_REALISER` | Indicateurs, analyses, exports et commandes | `figures/ui_execution_annotee.png` |
-| DOC-B17 | 16 | Vue Globale | Capture réelle | ALP, ancienne image 12 | `CAPTURE_A_REALISER` | Identités et disposition actuelles | `figures/ui_vue_globale.png` |
-| DOC-B18 | 16 | Vue Hiérarchie | Capture réelle | ALP | `CAPTURE_A_REALISER` | Hiérarchie consolidée | `figures/ui_hierarchie.png` |
-| DOC-B19 | 16 | Vue Structure animée | Capture réelle | ALP | `CAPTURE_A_REALISER` | Animation actuelle sans surinterprétation | `figures/ui_structure_animee.png` |
-| DOC-C04 | 16 | Lecture de la Vue Globale | Zoom annoté | Future capture B17 | `CAPTURE_A_REALISER` | Bandes acteurs, postes et liaisons | `figures/ui_vue_globale_annotee.png` |
-| DOC-B20 | 17 | Tables de résultats | Capture réelle | ALP et run validé | `CAPTURE_A_REALISER` | Table associée au run identifié | `figures/ui_tables_resultats.png` |
-| DOC-A31 | 17 | Pipeline d'exports | Diagramme d'activité | ALP et artefacts validés | `A_GENERER` | CSV, Excel, ABox et clôture | `figures/pipeline_exports.png` |
+| DOC-B16 | 16 | Vue Exécution | Capture réelle | ALP, ancienne image 10 | `VALIDE` | Run identifié | `figures/screenshots/ui_execution.png` |
+| DOC-C03 | 16 | Zones de la vue Exécution | Zoom annoté | Future capture B16 | `CAPTURE_A_REALISER` | Indicateurs, analyses, exports et commandes | `figures/screenshots/ui_execution_annotee.png` |
+| DOC-B17 | 16 | Vue Globale | Capture réelle | ALP, ancienne image 12 | `VALIDE` | Identités et disposition actuelles | `figures/screenshots/ui_vue_globale.png` |
+| DOC-B18 | 16 | Vue Hiérarchie | Capture réelle | ALP | `VALIDE` | Hiérarchie consolidée | `figures/screenshots/ui_hierarchie.png` |
+| DOC-B19 | 16 | Vue Structure animée | Capture réelle | ALP | `VALIDE` | Animation actuelle sans surinterprétation | `figures/screenshots/ui_structure_animee.png` |
+| DOC-C04 | 16 | Lecture de la Vue Globale | Zoom annoté | Future capture B17 | `CAPTURE_A_REALISER` | Bandes acteurs, postes et liaisons | `figures/screenshots/ui_vue_globale_annotee.png` |
+| DOC-B20 | 17 | Tables de résultats | Capture réelle | ALP et run validé | `CAPTURE_A_REALISER` | Table associée au run identifié | `figures/screenshots/ui_tables_resultats.png` |
+| DOC-A31 | 17 | Pipeline d'exports | Diagramme d'activité | ALP et artefacts validés | `VALIDE` | CSV, Excel, ABox et clôture | `figures/pipeline_exports.png` |
 | DOC-A32 | 17 | Arrêt manuel et clôture métier | Diagramme d'états | ALP et rapport | `A_GENERER` | Déclencheurs et artefacts | `figures/arret_cloture.png` |
-| DOC-A33 | 18 | Reproduction d'un scénario | Diagramme d'activité | Registre des sources et guide validé | `A_GENERER` | Fichiers, contrôles et séquence | `figures/reproduction_scenario.png` |
-| DOC-A34 | 19 | Matrice des niveaux de validation | Carte de preuve | Rapports de vérification | `A_GENERER` | Statuts exacts par fonctionnalité | `figures/niveaux_validation.png` |
-| DOC-A35 | 20 | Points d'extension et invariants | Diagramme de composants | ALP et évolution du modèle | `A_GENERER` | Frontières de maintenance | `figures/points_extension.png` |
+| DOC-A39 | 17 | Artefacts et preuves d'une exécution | Schéma relationnel | ALP et registre des sources | `VALIDE` | JSON, Excel, CSV, ABox et suivi reliés au runId | `figures/artefacts_et_preuves.png` |
+| DOC-A33 | 18 | Reproduction d'un scénario | Diagramme d'activité | Registre des sources et guide validé | `VALIDE` | Fichiers, contrôles et séquence | `figures/reproduire_scenario.png` |
+| DOC-A34 | 19 | Chaîne de preuve du modèle | Carte de preuve | Rapports de vérification | `VALIDE` | Statuts exacts par fonctionnalité | `figures/niveaux_validation.png` |
+| DOC-A35 | 20 | Cycle de maintenance recommandé | Diagramme d'activité | ALP et évolution du modèle | `VALIDE` | Sept étapes du cycle de maintenance | `figures/cycle_maintenance.png` |
+| DOC-A40 | 20 | Invariants du modèle | Schéma conceptuel | ALP et évolution du modèle | `VALIDE` | Quatre domaines d'invariants regroupés | `figures/invariants_modele.png` |
 | DOC-A36 | Annexe A | Schéma détaillé des blocs JSON | Diagramme de classes technique | ALP et JSON | `A_GENERER` | Propriétés et cardinalités réelles | `figures/json_technique.png` |
 | DOC-A37 | Annexe B | Dépendances des fonctions structurantes | Graphe d'appels | ALP validé | `A_GENERER` | Appels réels | `figures/graphe_fonctions.png` |
 | DOC-A38 | Annexe C | Classes d'agents | Diagramme de classes UML | ALP validé | `A_GENERER` | Héritage et responsabilités réels | `figures/classes_agents.png` |

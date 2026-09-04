@@ -509,3 +509,190 @@ $jsonSelectionMessages = @(
     (New-SequenceMessage 1 0 'confirmer le chargement' 'return')
 )
 Write-SequenceDiagram "S${chEAcute}lection et chargement d'une configuration JSON" $jsonSelectionParticipants $jsonSelectionMessages 'sequence_selection_json.png' 1900 1120
+
+# --- Chapitres 6 a 10 : processus, agents, VSM, SCOR/PI, ISA-95 ---
+
+$scorWorkflowNodes = @(
+    (New-Node 60 460 220 110 'Plan' 'process'),
+    (New-Node 380 460 220 110 'Source' 'process'),
+    (New-Node 700 460 220 110 'Make' 'process'),
+    (New-Node 1020 460 220 110 'Deliver' 'process'),
+    (New-Node 1340 460 220 110 'Client' 'output'),
+    (New-Node 1020 120 260 110 'Return client (DR1)' 'actor'),
+    (New-Node 380 800 280 110 'Return fournisseur (SR1)' 'actor')
+)
+$scorWorkflowEdges = @(
+    (New-Edge 0 1), (New-Edge 1 2), (New-Edge 2 3), (New-Edge 3 4),
+    (New-Edge 3 5 "branche disponible, non observ${chEAcute}e" 'dashed'),
+    (New-Edge 1 6 "branche disponible, non observ${chEAcute}e" 'dashed')
+)
+Write-Diagram "Encha${chICirc}nement Plan, Source, Make, Deliver et Return" $scorWorkflowNodes $scorWorkflowEdges 'workflow_scor.png' 1750 1000
+
+$microActNodes = @(
+    (New-Node 40 90 300 100 "Poste A`n(unique pr${chEAcute}d${chEAcute}cesseur)" 'input'),
+    (New-Node 420 90 260 100 'Poste B' 'process'),
+    (New-Node 40 380 260 100 'Poste C1' 'input'),
+    (New-Node 40 620 260 100 'Poste C2' 'input'),
+    (New-Node 420 500 320 140 "Poste D`n(jonction, attend tous`nles pr${chEAcute}d${chEAcute}cesseurs)" 'decision'),
+    (New-Node 850 280 300 110 "Poste E`n(aiguillage alternatif)" 'process'),
+    (New-Node 1250 280 260 110 'Suite de la gamme' 'output')
+)
+$microActEdges = @(
+    (New-Edge 0 1), (New-Edge 2 4), (New-Edge 3 4), (New-Edge 4 5), (New-Edge 1 5), (New-Edge 5 6)
+)
+Write-Diagram "Extrait p${chEAcute}dagogique du graphe des micro-activit${chEAcute}s" $microActNodes $microActEdges 'graphe_micro_activites.png' 1650 850
+
+$agentHierarchyNodes = @(
+    (New-Node 700 60 380 110 "Strat${chEAcute}gique (AS-sP1)" 'actor'),
+    (New-Node 660 240 460 110 "Tactique (AT-sP2 ${chAGrave} AT-sP5)" 'actor'),
+    (New-Node 660 420 460 110 'Coordination (CA-*)' 'actor'),
+    (New-Node 660 600 460 110 "Pilotage op${chEAcute}rationnel (AOp-*)" 'process'),
+    (New-Node 660 780 460 110 "Ex${chEAcute}cution (AOe-* et postes)" 'process'),
+    (New-Node 60 420 480 150 "Blackboard`nm${chEAcute}moire partag${chEAcute}e" 'decision')
+)
+$agentHierarchyEdges = @(
+    (New-Edge 0 1), (New-Edge 1 2), (New-Edge 2 3), (New-Edge 3 4),
+    (New-Edge 5 2 'partage' 'dashed'), (New-Edge 5 3 'partage' 'dashed'), (New-Edge 5 4 'partage' 'dashed')
+)
+Write-Diagram "Cinq niveaux de d${chEAcute}cision et Blackboard partag${chEAcute}" $agentHierarchyNodes $agentHierarchyEdges 'hierarchie_agents.png' 1650 970
+
+$aerParticipants = @(
+    'Fournisseur GPL',
+    "Pilotage Source`n(AOp)",
+    "Coordination Source`n(CA-sS1)",
+    "Tactique Source`n(AT-sP2)",
+    "Tactique Make`n(AT-sP3)",
+    "Tactique Deliver`n(AT-sP4)",
+    "Coordination Deliver`n(CA-sD1)"
+)
+$aerMessages = @(
+    (New-SequenceMessage 0 1 'SupplierDelayAlert'),
+    (New-SequenceMessage 1 2 'OperationalException'),
+    (New-SequenceMessage 2 3 'ProcessDeviationReport'),
+    (New-SequenceMessage 3 4 'RevisedMaterialAvailability'),
+    (New-SequenceMessage 4 5 'RevisedProductionCompletionDate'),
+    (New-SequenceMessage 5 6 'RevisedDeliveryPlan')
+)
+Write-SequenceDiagram "Propagation AER d'un retard fournisseur" $aerParticipants $aerMessages 'sequence_aer.png' 2000 900
+
+$blackboardNodes = @(
+    (New-Node 40 350 220 110 "${chEAcuteUpper}v${chEAcute}nement" 'input'),
+    (New-Node 320 350 220 110 'Observation' 'process'),
+    (New-Node 600 350 240 110 'Partage (Blackboard)' 'actor'),
+    (New-Node 900 350 260 110 "D${chEAcute}cision ${chEAcute}ventuelle" 'decision'),
+    (New-Node 1220 350 220 110 'Instruction' 'process'),
+    (New-Node 1500 350 220 110 "Ex${chEAcute}cution" 'process'),
+    (New-Node 1780 350 220 110 'Compte rendu' 'output')
+)
+$blackboardEdges = @(
+    (New-Edge 0 1), (New-Edge 1 2), (New-Edge 2 3), (New-Edge 3 4), (New-Edge 4 5), (New-Edge 5 6)
+)
+Write-Diagram "D'un ${chEAcute}v${chEAcute}nement au compte rendu, via le Blackboard" $blackboardNodes $blackboardEdges 'blackboard_tracabilite.png' 2050 800
+
+$ledgerNodes = @(
+    (New-Node 40 300 250 120 "T=156 s`nCMD_1 cr${chEAcute}${chEAcute}e" 'input'),
+    (New-Node 340 300 250 120 "T=159 s`nAttente et REAPPRO_1" 'actor'),
+    (New-Node 640 300 250 120 "T=233 s`nGPL disponible" 'process'),
+    (New-Node 940 300 250 120 "T=235 s`nMake d${chEAcute}marre" 'process'),
+    (New-Node 1240 300 250 120 "T=2314 s`nReconstitution close" 'process'),
+    (New-Node 1540 300 250 120 "T=2320 s`nDeliver d${chEAcute}marre" 'process'),
+    (New-Node 1840 300 250 120 "T=2343 s`nCl${chOCirc}ture de CMD_1" 'output')
+)
+$ledgerEdges = @(
+    (New-Edge 0 1), (New-Edge 1 2), (New-Edge 2 3), (New-Edge 3 4), (New-Edge 4 5), (New-Edge 5 6)
+)
+Write-Diagram "Ligne temporelle du run de validation" $ledgerNodes $ledgerEdges 'ledger_vsm.png' 2130 700
+
+$vaNvaNodes = @(
+    (New-Node 40 100 320 110 "ZENER Process Time`n59,39 s" 'input'),
+    (New-Node 40 340 320 110 "ZENER Waiting Time`n12,70 s" 'input'),
+    (New-Node 460 220 320 140 "Somme`n72,08 s" 'decision'),
+    (New-Node 460 500 380 130 "Valeur ajout${chEAcute}e estim${chEAcute}e`n~51,09 s (taux configur${chEAcute}s)" 'process'),
+    (New-Node 950 340 380 140 "PCE estim${chEAcute} = VA / Somme`n= 70,9 %" 'output')
+)
+$vaNvaEdges = @(
+    (New-Edge 0 2), (New-Edge 1 2), (New-Edge 2 4), (New-Edge 3 4)
+)
+Write-Diagram "Construction p${chEAcute}dagogique du PCE estim${chEAcute}" $vaNvaNodes $vaNvaEdges 'calcul_va_nva.png' 1450 800
+
+$wipNodes = @(
+    (New-Node 40 60 340 120 "WIP physique`n(hors jetons visuels)" 'input'),
+    (New-Node 40 320 340 120 "D${chEAcute}bit observ${chEAcute}`n1,536 unit${chEAcute}/h" 'process'),
+    (New-Node 40 580 340 120 "Takt time`nrythme de la demande" 'process'),
+    (New-Node 520 320 420 140 "Lecture combin${chEAcute}e du flux`nsans formule unique impos${chEAcute}e" 'decision')
+)
+$wipEdges = @((New-Edge 0 3), (New-Edge 1 3), (New-Edge 2 3))
+Write-Diagram "WIP, d${chEAcute}bit et takt time" $wipNodes $wipEdges 'wip_debit_takt.png' 1100 800
+
+$pipelineNodes = @(
+    (New-Node 30 320 260 120 "Valeur physique`nmesur${chEAcute}e" 'input'),
+    (New-Node 340 320 260 120 "Normalisation`nBottom / Perfect" 'process'),
+    (New-Node 650 320 220 120 'Score sur 10' 'process'),
+    (New-Node 920 320 220 120 'Classe floue' 'decision'),
+    (New-Node 1190 320 260 120 "Attribut`nRL, RS, AG, CO, AM" 'process'),
+    (New-Node 1500 320 220 120 "Pond${chEAcute}ration" 'process'),
+    (New-Node 1770 320 200 120 'PI' 'output')
+)
+$pipelineEdges = @(
+    (New-Edge 0 1), (New-Edge 1 2), (New-Edge 2 3), (New-Edge 3 4), (New-Edge 4 5), (New-Edge 5 6)
+)
+Write-Diagram "Pipeline de la valeur physique au Performance Index" $pipelineNodes $pipelineEdges 'pipeline_scor_pi.png' 2020 760
+
+$scaleNodes = @(
+    (New-Node 40 300 340 130 "Bottom (pire cas)`nvaleur = 1,0" 'input'),
+    (New-Node 560 300 380 130 "Valeur observ${chEAcute}e CO.1.1`n= 1,0" 'decision'),
+    (New-Node 1460 300 380 130 "Perfect (meilleur cas)`nvaleur = 0,0" 'output')
+)
+$scaleEdges = @(
+    (New-Edge 0 1 'valeur du run'),
+    (New-Edge 1 2 "score croissant de 0 ${chAGrave} 10")
+)
+Write-Diagram "Principe de l'${chEAcute}chelle Bottom / Perfect" $scaleNodes $scaleEdges 'echelle_bottom_perfect.png' 1950 700
+
+$ahpUsageNodes = @(
+    (New-Node 40 90 340 110 "Situation locale`n(ex. goulot sM1.3.1)" 'input'),
+    (New-Node 460 90 380 110 "AHP local`nmatrice de comparaison par paires" 'process'),
+    (New-Node 920 90 320 110 "D${chEAcute}cision locale`n(ex. REBALANCE)" 'output'),
+    (New-Node 40 450 340 110 "Observations VSM`net m${chEAcute}triques" 'input'),
+    (New-Node 460 450 380 110 "Normalisation, logique floue,`nattributs" 'process'),
+    (New-Node 920 450 320 110 "PI global pond${chEAcute}r${chEAcute}" 'output')
+)
+$ahpUsageEdges = @(
+    (New-Edge 0 1), (New-Edge 1 2), (New-Edge 3 4), (New-Edge 4 5)
+)
+Write-Diagram "Deux usages distincts de l'AHP" $ahpUsageNodes $ahpUsageEdges 'deux_usages_ahp.png' 1350 700
+
+$isa95TreeNodes = @(
+    (New-Node 40 320 260 110 'EnterpriseUnit' 'actor'),
+    (New-Node 350 320 220 110 'Site' 'input'),
+    (New-Node 620 320 220 110 'Area' 'input'),
+    (New-Node 890 320 220 110 'Workshop' 'process'),
+    (New-Node 1160 320 220 110 'WorkCenter' 'process'),
+    (New-Node 1430 320 220 110 'WorkCell' 'output')
+)
+$isa95TreeEdges = @(
+    (New-Edge 0 1), (New-Edge 1 2), (New-Edge 2 3), (New-Edge 3 4), (New-Edge 4 5)
+)
+Write-Diagram "Niveaux de la hi${chEAcute}rarchie ISA-95 du mod${chEGrave}le" $isa95TreeNodes $isa95TreeEdges 'hierarchie_isa95.png' 1700 700
+
+$isa95AssignNodes = @(
+    (New-Node 40 260 320 120 "Micro-activit${chEAcute}`n(poste)" 'input'),
+    (New-Node 440 260 280 120 'executedAt' 'decision'),
+    (New-Node 800 260 340 120 "${chEAcuteUpper}l${chEAcute}ment ISA-95`n(WorkCenter ou WorkCell)" 'output'),
+    (New-Node 440 60 400 110 "71 affectations dans`nl'ex${chEAcute}cution valid${chEAcute}e" 'actor')
+)
+$isa95AssignEdges = @(
+    (New-Edge 0 1), (New-Edge 1 2), (New-Edge 3 1 'annotation' 'dashed')
+)
+Write-Diagram "Principe de la relation executedAt" $isa95AssignNodes $isa95AssignEdges 'affectations_isa95.png' 1250 500
+
+$tboxAboxNodes = @(
+    (New-Node 40 260 380 130 "TBox`nvocabulaire (core:, agent:, aer:)" 'input'),
+    (New-Node 520 260 380 130 "ABox`nindividus d'une ex${chEAcute}cution (run:)" 'process'),
+    (New-Node 1000 100 340 120 "SimulationRun`n(runId, cl${chOCirc}ture)" 'actor'),
+    (New-Node 1000 420 340 120 "Export Turtle (.ttl)" 'output')
+)
+$tboxAboxEdges = @(
+    (New-Edge 0 1 'instancie'), (New-Edge 1 2 "rattach${chEAcute} ${chAGrave}"), (New-Edge 1 3 "export${chEAcute} vers")
+)
+Write-Diagram "TBox, ABox et export d'un run" $tboxAboxNodes $tboxAboxEdges 'tbox_abox_run.png' 1450 620

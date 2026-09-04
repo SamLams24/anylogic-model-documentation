@@ -51,3 +51,13 @@ Le socle permet de commencer la rédaction des chapitres 1 à 5 puis 11 à 15. L
 | 13 | `REDIGE_AVEC_CAPTURES_A_FAIRE` | Nomenclature, fiche matière, mode d'approvisionnement, postes consommateurs et ordre de contrôle documentés. Trois captures réelles à réaliser. |
 | 14 | `REDIGE_AVEC_CAPTURES_A_FAIRE` | Portée du JSON, sauvegarde, détection, chargement, reconstruction et contrôles expliqués. Trois captures réelles à réaliser. |
 | 15 | `REDIGE_AVEC_CAPTURES_A_FAIRE` | Réglages, démarrage, suivi, arrêt, clôture métier et réinitialisation distingués. Huit captures réelles à réaliser. |
+
+## État de rédaction des chapitres 6 à 10
+
+| Chapitre | Statut | Justification |
+|---:|---|---|
+| 6 | `REDIGE` | Cinq processus décrits depuis la répartition réelle des 71 micro-activités; Return qualifié `DISPONIBLE_NON_QUANTIFIE`. Deux schémas générés et inspectés. |
+| 7 | `REDIGE` | Cinq niveaux de décision, Blackboard, AER sans expansion inventée et propagation du retard fournisseur documentés depuis `RUN_VERIFICATION.md`. Trois schémas générés et inspectés. |
+| 8 | `REDIGE` | Deux périmètres VSM distingués, six indicateurs et PCE estimé repris du run de validation avec l'identité additive vérifiée. Trois schémas générés et inspectés. |
+| 9 | `REDIGE_A_REVOIR` | Pipeline complet, scores, PI et distinction AHP/PI documentés depuis le run de validation. La datation SCOR version 12,0 / APICS 2017 et le rattachement bibliographique à Chan et Qi, Theeranuphattana et Tang, et Zadeh restent à confirmer par un relecteur, malgré la correspondance trouvée dans les commentaires de l'ALP. |
+| 10 | `REDIGE` | Structure ISA-95, TBox, ABox, `executedAt` et traçabilité CMD/REAPPRO expliqués depuis l'ABox du run de validation. Trois schémas générés et inspectés. |

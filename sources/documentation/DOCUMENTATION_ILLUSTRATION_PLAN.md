@@ -21,20 +21,20 @@ Les statuts autorisés sont `A_GENERER`, `CAPTURE_EXISTANTE_A_VALIDER`, `CAPTURE
 | DOC-A09 | 5 | Décision de service depuis le stock fini | Arbre de décision | ALP validé | `VALIDE` | Conditions de stock et attente | `figures/decision_stock_fini.png` |
 | DOC-A10 | 5 | Besoin net matière | Diagramme de calcul | ALP et JSON | `VALIDE` | Nomenclature, stock et sécurité | `figures/besoin_net_matiere.png` |
 | DOC-A11 | 5 | Reconstitution du stock fini | Diagramme de séquence UML | ALP validé | `VALIDE` | Source, Make, crédit, réveil | `figures/sequence_reconstitution_stock.png` |
-| DOC-A12 | 6 | Enchaînement Plan, Source, Make, Deliver, Return | Diagramme d'activité | ALP et JSON | `A_GENERER` | Codes et séquences courants | `figures/workflow_scor.png` |
-| DOC-A13 | 6 | Micro-activités et jonctions | Graphe pédagogique | JSON courant | `A_GENERER` | Prédécesseurs et tailles de lot | `figures/graphe_micro_activites.png` |
-| DOC-A14 | 7 | Hiérarchie des agents consolidée | Diagramme de classes ou hiérarchie | ALP et ABox | `A_GENERER` | Identités sans alias historique | `figures/hierarchie_agents.png` |
-| DOC-A15 | 7 | Conversation AER | Diagramme de séquence UML | ALP, traces et ABox | `A_GENERER` | Émetteur, destinataire et ordre des messages | `figures/sequence_aer.png` |
-| DOC-A16 | 7 | Décision, blackboard et traçabilité | Diagramme d'activité | ALP validé | `A_GENERER` | Points d'écriture et de lecture | `figures/blackboard_tracabilite.png` |
-| DOC-A17 | 8 | Ledger VSM par commande | Ligne de temps | Correctif VSM et run validé | `A_GENERER` | Événements exacts du ledger | `figures/ledger_vsm.png` |
-| DOC-A18 | 8 | Construction des temps VA et NVA | Diagramme de calcul | Correctif VSM | `A_GENERER` | Formules actuelles | `figures/calcul_va_nva.png` |
-| DOC-A19 | 8 | WIP, débit et takt | Schéma relationnel | ALP et run validé | `A_GENERER` | Définitions réellement calculées | `figures/wip_debit_takt.png` |
-| DOC-A20 | 9 | Pipeline valeur VSM vers PI | Diagramme d'activité | ALP, JSON et run validé | `A_GENERER` | Valeur brute, score, classes, attribut et PI | `figures/pipeline_scor_pi.png` |
-| DOC-A21 | 9 | Profils bottom/perfect | Échelle annotée | JSON courant | `A_GENERER` | Seize profils actuels | `figures/echelle_bottom_perfect.png` |
-| DOC-A22 | 9 | AHP stratégique et AHP goulot | Comparaison de flux | ALP et JSON | `A_GENERER` | Usage diagnostique contre usage décisionnel | `figures/deux_usages_ahp.png` |
-| DOC-A23 | 10 | Hiérarchie ISA-95 | Arbre hiérarchique | JSON courant | `A_GENERER` | 190 noeuds, types et parents | `figures/hierarchie_isa95.png` |
-| DOC-A24 | 10 | Affectation poste vers équipement | Diagramme de classes | JSON courant | `A_GENERER` | 71 affectations | `figures/affectations_isa95.png` |
-| DOC-A25 | 10 | TBox, ABox et run | Schéma de traçabilité | Ontologies et ABox validée | `A_GENERER` | Namespaces et rôles établis | `figures/tbox_abox_run.png` |
+| DOC-A12 | 6 | Enchaînement Plan, Source, Make, Deliver, Return | Diagramme d'activité | ALP et JSON | `VALIDE` | Codes et séquences courants | `figures/workflow_scor.png` |
+| DOC-A13 | 6 | Micro-activités et jonctions | Graphe pédagogique | JSON courant | `VALIDE` | Extrait représentatif, pas les 71 postes | `figures/graphe_micro_activites.png` |
+| DOC-A14 | 7 | Hiérarchie des agents consolidée | Diagramme de classes ou hiérarchie | ALP et ABox | `VALIDE` | Identités sans alias historique | `figures/hierarchie_agents.png` |
+| DOC-A15 | 7 | Conversation AER | Diagramme de séquence UML | ALP, traces et ABox | `VALIDE` | Émetteur, destinataire et ordre des messages | `figures/sequence_aer.png` |
+| DOC-A16 | 7 | Décision, blackboard et traçabilité | Diagramme d'activité | ALP validé | `VALIDE` | Points d'écriture et de lecture | `figures/blackboard_tracabilite.png` |
+| DOC-A17 | 8 | Ledger VSM par commande | Ligne de temps | Correctif VSM et run validé | `VALIDE` | Événements exacts du ledger | `figures/ledger_vsm.png` |
+| DOC-A18 | 8 | Construction des temps VA et NVA | Diagramme de calcul | Correctif VSM | `VALIDE` | Formules actuelles | `figures/calcul_va_nva.png` |
+| DOC-A19 | 8 | WIP, débit et takt | Schéma relationnel | ALP et run validé | `VALIDE` | Définitions réellement calculées, sans formule imposée | `figures/wip_debit_takt.png` |
+| DOC-A20 | 9 | Pipeline valeur VSM vers PI | Diagramme d'activité | ALP, JSON et run validé | `VALIDE` | Valeur brute, score, classes, attribut et PI | `figures/pipeline_scor_pi.png` |
+| DOC-A21 | 9 | Profils bottom/perfect | Échelle annotée | JSON courant | `VALIDE` | Exemple CO.1.1 sur seize profils actuels | `figures/echelle_bottom_perfect.png` |
+| DOC-A22 | 9 | AHP stratégique et AHP goulot | Comparaison de flux | ALP et JSON | `VALIDE` | Usage diagnostique contre usage décisionnel | `figures/deux_usages_ahp.png` |
+| DOC-A23 | 10 | Hiérarchie ISA-95 | Arbre hiérarchique | JSON courant | `VALIDE` | 190 noeuds, types et parents | `figures/hierarchie_isa95.png` |
+| DOC-A24 | 10 | Affectation poste vers équipement | Diagramme de classes | JSON courant | `VALIDE` | 71 affectations | `figures/affectations_isa95.png` |
+| DOC-A25 | 10 | TBox, ABox et run | Schéma de traçabilité | Ontologies et ABox validée | `VALIDE` | Namespaces et rôles établis | `figures/tbox_abox_run.png` |
 | DOC-A26 | 11 | Parcours utilisateur conseillé | Diagramme d'activité | UI actuelle | `VALIDE` | Huit vues et fenêtres accessibles | `figures/parcours_utilisateur.png` |
 | DOC-B01 | 11 | Barre de navigation actuelle | Capture réelle | ALP, ancienne image 1 | `CAPTURE_A_REALISER` | Toutes les destinations visibles | `figures/screenshots/ui_navigation.png` |
 | DOC-B02 | 12 | Vue Configuration | Capture réelle | ALP, ancienne image 2 | `CAPTURE_A_REALISER` | Modèle validé, cadrage lisible | `figures/screenshots/ui_configuration.png` |

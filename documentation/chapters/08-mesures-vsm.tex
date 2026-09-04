@@ -1,10 +1,90 @@
 \chapter{Mesures VSM}
+\label{chap:mesures-vsm}
 
-\DocumentationNote{Partir des événements et du ledger par commande. Définir ensuite les temps VA et NVA, l'attente, le cycle, le WIP, le débit et le takt selon le correctif validé.}
+Une mesure VSM ne sort pas directement d'un affichage. Elle traverse une chaîne précise: un événement se produit dans la simulation, son instant est enregistré dans un registre temporel, un calcul le combine à d'autres événements comparables, puis le résultat est publié comme indicateur dans le tableau de bord et les exports.
 
-\section{Événements et ledger de commande}
-\section{Temps à valeur ajoutée et sans valeur ajoutée}
-\section{Cycle, attente et lead time}
-\section{WIP, débit et takt}
-\section{Limites de mesure}
+\section{Deux périmètres qu'il ne faut pas confondre}
 
+Le modèle distingue deux objets temporels qui répondent à des questions différentes.
+
+Le registre de la commande cliente mesure le délai subi par \texttt{CMD\_1}. Il additionne le traitement propre à la commande et l'attente de reconstitution imputée depuis l'ordre interne dont elle dépend, ici \texttt{REAPPRO\_1}. Ce périmètre utilise le contexte \texttt{CUSTOMER\_ORDER\_CMD\_ONLY}.
+
+Le VSM focalisé ZENER agrège les observations d'exécution rattachées au périmètre \texttt{ACT\_4}, avec le contexte \texttt{ZENER\_ACT\_4\_ONLY}. Ses temps décrivent le déroulement des postes observés, indépendamment du délai vécu par une commande particulière.
+
+\AttentionDoc{Ces deux périmètres ne se substituent pas l'un à l'autre. Un ordre interne reste nécessaire pour expliquer le service de la commande, mais il n'entre pas dans le dénombrement des commandes clientes. La relation \texttt{contributesToCustomerOrderFulfillment} et sa relation inverse rendent cette imputation vérifiable dans l'ABox du run.}
+
+\section{Mesures du registre de commande}
+
+Trois mesures caractérisent le parcours de \texttt{CMD\_1}: le temps de traitement propre à la commande, le temps d'attente lié à la reconstitution et le délai total de service.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.32\textwidth} L{0.20\textwidth} Y}
+    \toprule
+    Indicateur & Valeur observée & Nature de la preuve \\
+    \midrule
+    Order Processing Time & 18\,116,84 s & Observé dans le registre de commande. \\
+    Order Waiting / Dwell Time & 46\,924,40 s & Imputé depuis la reconstitution liée. \\
+    Order Fulfillment Lead Time & 65\,041,24 s & Somme contrôlée des deux temps précédents. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Indicateurs du registre de commande pour l'exécution validée.}
+  \label{tab:mesures-commande}
+\end{table}
+
+L'identité additive est vérifiée à la précision exportée:
+
+\begin{equation}
+18\,116{,}83756052 + 46\,924{,}40300189 = 65\,041{,}24056241\ \mathrm{s}.
+\label{eq:identite-vsm-doc}
+\end{equation}
+
+L'attente représente donc la majorité du Lead Time de commande. Cette proportion décrit la structure temporelle de l'exécution observée; elle n'établit pas à elle seule la cause du retard, car le délai fournisseur, la reconstitution, la dynamique de Make et la livraison appartiennent à une même trajectoire perturbée.
+
+\section{Mesures du périmètre ZENER}
+
+Le périmètre ZENER porte trois observations distinctes: le temps de traitement, le temps d'attente et une estimation du taux d'activités à valeur ajoutée, le PCE.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.32\textwidth} L{0.20\textwidth} Y}
+    \toprule
+    Indicateur & Valeur observée & Nature de la preuve \\
+    \midrule
+    ZENER Process Time & 59,39 s & Agrégation des observations de poste. \\
+    ZENER Waiting Time & 12,70 s & Agrégation des observations de poste. \\
+    ZENER Estimated PCE & 70,9\,\% & Estimation utilisant les taux de valeur ajoutée configurés. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Indicateurs du périmètre ZENER pour l'exécution validée.}
+  \label{tab:mesures-zener}
+\end{table}
+
+\FigureOrPlaceholder{documentation/figures/ledger_vsm.png}{Ligne temporelle des événements du run de validation, du dépôt de la commande à sa clôture.}{fig:ledger-vsm}
+
+La chronologie complète situe ces mesures dans l'exécution: la commande est créée à T=156 s, l'attente de stock s'ouvre à T=159 s avec la création de \texttt{REAPPRO\_1}, la matière devient disponible à T=233 s, Make démarre à T=235 s, la reconstitution se termine à T=2\,314 s, Deliver commence à T=2\,320 s et la commande est close à T=2\,343 s.
+
+\section{PCE estimé}
+
+Le PCE du périmètre ZENER rapporte une valeur ajoutée estimée à la somme du traitement et de l'attente de ce même périmètre:
+
+\begin{equation}
+\mathrm{PCE}_{ZENER}=\frac{\widehat{T}_{VA}}{T_{traitement,ZENER}+T_{attente,ZENER}}.
+\label{eq:pce-zener-doc}
+\end{equation}
+
+\FigureOrPlaceholder{documentation/figures/calcul_va_nva.png}{Construction pédagogique du PCE estimé à partir du traitement, de l'attente et du taux de valeur ajoutée configuré.}{fig:calcul-va-nva}
+
+La somme du traitement et de l'attente vaut 72,08 s. Le ratio exporté de 0,70870898, soit environ 70,9 pour cent, correspond à environ 51,09 s de valeur ajoutée estimée.
+
+\AttentionDoc{Le PCE ZENER est qualifié \texttt{ESTIME}. Les temps de traitement et d'attente proviennent des observations runtime du modèle, mais la part de valeur ajoutée repose sur des taux configurés par poste, non sur un chronométrage terrain. Ce résultat n'est ni une mesure empirique calibrée ni un PCE officiel fourni par une norme externe.}
+
+\section{WIP, débit et takt time}
+
+Le modèle calcule aussi le WIP physique, un débit observé et un takt time représentant le rythme de la demande. Ces trois grandeurs éclairent la même exécution sous des angles complémentaires, sans qu'une formule unique et simplifiée en rende compte pour tous les cas du modèle.
+
+\FigureOrPlaceholder{documentation/figures/wip_debit_takt.png}{Relation entre le WIP physique, le débit observé et le takt time, lus ensemble plutôt qu'isolément.}{fig:wip-debit-takt}
+
+Le WIP physique exclut les jetons réservés à l'animation: seules les entités qui représentent un flux métier réel entrent dans ce compte. Le débit observé dans cette exécution, mobilisé aussi par l'attribut Agility au \cref{chap:scor-pi}, vaut 1,536 entité par heure. Le takt time reste un repère du rythme attendu par la demande, à comparer avec le débit effectivement obtenu plutôt qu'à en déduire automatiquement une performance.
+
+\BonASavoir{Une seule exécution ne permet pas de discuter la stabilité du WIP ou du débit dans le temps. Ces grandeurs restent utiles pour lire la trajectoire observée, pas pour conclure à une capacité générale du système.}

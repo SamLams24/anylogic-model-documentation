@@ -1,9 +1,51 @@
 \chapter{ISA-95, ontologie et traçabilité}
+\label{chap:isa95-ontologie}
 
-\DocumentationNote{Relier la hiérarchie d'équipements, les affectations, les ontologies et l'ABox runtime. Ne documenter que les classes et namespaces vérifiés dans le projet.}
+Comment relier une activité simulée, l'équipement qui l'exécute et la preuve que cette exécution a bien eu lieu? Le modèle répond à cette question par une hiérarchie d'équipements de type ISA-95 et par une paire d'ontologies qui distingue le vocabulaire général des faits propres à un run.
 
-\section{Hiérarchie des équipements}
-\section{Affectation des postes}
+\section{La structure ISA-95 du modèle}
+
+La configuration courante comporte 190 noeuds d'équipement ou éléments de hiérarchie, organisés selon les niveaux \texttt{EnterpriseUnit}, \texttt{Site}, \texttt{Area}, \texttt{Workshop}, \texttt{WorkCenter} et \texttt{WorkCell}. Elle comporte aussi 71 affectations, chacune reliant une micro-activité du scénario à l'élément de cette hiérarchie où elle s'exécute.
+
+\FigureOrPlaceholder{documentation/figures/hierarchie_isa95.png}{Niveaux de la hiérarchie ISA-95 utilisée par le modèle, du niveau entreprise jusqu'à la cellule de travail.}{fig:hierarchie-isa95}
+
+\AttentionDoc{Ces 190 noeuds décrivent la structure du modèle, pas un inventaire d'équipements physiques observés chez ZENER SA Togo. Le modèle ne possède pas réellement 190 équipements constatés sur le terrain; il possède une structure ISA-95 configurée à cette taille, contrôlée par une garde explicite qui refuse toute exécution où ces deux cardinalités ne correspondent pas.}
+
+Cette garde a été vérifiée dans le modèle validé et confirmée dans l'ABox du run de validation, qui contient exactement 190 sujets d'équipement typés et 71 relations d'affectation. La structure sert avant tout à situer une micro-activité dans son contexte physique: elle permet de savoir si un événement Make appartient à l'entreprise focale, à un secteur particulier ou à un poste précis, ce qui facilite l'audit d'une mesure sans confondre l'acteur qui a produit l'événement avec un acteur voisin de la chaîne.
+
 \section{TBox et ABox}
-\section{Traçabilité du run}
 
+Le modèle distingue deux couches ontologiques. La TBox porte le vocabulaire et la structure conceptuelle: les classes, les relations et leurs contraintes générales, indépendamment de toute exécution particulière. L'ABox porte les individus et les relations propres à une exécution: les objets réellement créés pendant le run et les faits qui les relient.
+
+\FigureOrPlaceholder{documentation/figures/tbox_abox_run.png}{Articulation entre la TBox, l'ABox d'un run et son export Turtle.}{fig:tbox-abox-run}
+
+L'ABox du run de validation utilise plusieurs espaces de noms: \texttt{core} pour le vocabulaire central, \texttt{agent} pour l'extension liée aux agents, \texttt{aer} pour l'extension liée aux communications AER, et un espace \texttt{run} propre à l'identifiant du run, ici \texttt{RUN\_1773129600000\_1788264883846}. Cette séparation permet de distinguer un concept général, défini une fois dans la TBox, de son occurrence pour une exécution donnée, portée par la TBox correspondante.
+
+\BonASavoir{Un même concept, par exemple une commande cliente, existe une fois dans le vocabulaire de la TBox et autant de fois que nécessaire comme individu dans l'ABox de chaque run. Confondre les deux couches conduirait à traiter une définition générale comme un fait d'exécution, ou inversement.}
+
+\section{La relation \texttt{executedAt}}
+
+La relation \texttt{core:executedAt} relie l'individu d'une micro-activité à l'élément ISA-95 où elle s'est exécutée pendant le run. Chacune des 71 affectations de la configuration se traduit, dans l'ABox du run de validation, par une occurrence de cette relation entre un individu de micro-activité et un individu d'équipement.
+
+Ces 71 relations restent structurelles: elles décrivent où chaque micro-activité est rattachée, pas un compte rendu narratif de chaque exécution. Elles ne sont donc pas détaillées une à une dans ce chapitre; le principe suffit à comprendre comment une trace Make, Source ou Deliver peut être reliée à son contexte d'équipement.
+
+\FigureOrPlaceholder{documentation/figures/affectations_isa95.png}{Principe de la relation executedAt entre une micro-activité et son élément ISA-95.}{fig:affectations-isa95}
+
+\section{Traçabilité CMD et REAPPRO dans l'ABox}
+
+L'ABox du run de validation illustre aussi la traçabilité de la relation entre une commande cliente et sa reconstitution, déjà présentée au \cref{chap:mesures-vsm}. Les deux relations RDF suivantes sont exportées:
+
+\begin{itemize}
+  \item {\small\texttt{run:order\_REAPPRO\_1 run:contributesToCustomerOrderFulfillment run:order\_CMD\_1}};
+  \item {\small\texttt{run:order\_CMD\_1 run:dependsOnInternalReplenishmentOrder run:order\_REAPPRO\_1}}.
+\end{itemize}
+
+Ces deux triplets rendent la dépendance vérifiable dans les deux sens: on peut retrouver, depuis l'ordre interne, la commande qu'il a servie, et depuis la commande, l'ordre dont elle dépend. Cette paire de relations appartient à l'espace de noms propre au run et ne prétend pas généraliser un mécanisme applicable à toute combinaison de commandes et de reconstitutions.
+
+\EnPratique{Pour vérifier la provenance d'une mesure, retrouver d'abord l'individu concerné dans l'ABox du run, suivre ses relations \texttt{executedAt} ou de dépendance vers les objets associés, puis confirmer le contexte de mesure porté par le run correspondant. Cette démarche évite de mélanger deux exécutions distinctes.}
+
+\section{Export Turtle et limites}
+
+L'export Turtle rassemble, pour un run donné, le manifeste, les individus de commande et de reconstitution, les affectations ISA-95 et les indicateurs de performance dans un même fichier synchronisé avec les exports Excel correspondants. Cette synchronisation permet de contrôler une valeur affichée dans un tableau de bord en la retrouvant comme individu structuré dans l'ABox.
+
+La structure ISA-95 et son export ontologique établissent une traçabilité vérifiable pour l'exécution étudiée. Ils ne constituent ni un inventaire d'équipements réels de ZENER SA Togo, ni une preuve que l'ensemble des 71 affectations a été sollicité de la même manière au cours du run: certaines micro-activités appartiennent à des processus, notamment Return, qui ne sont pas exécutés dans ce scénario.

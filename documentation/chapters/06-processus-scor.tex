@@ -1,11 +1,64 @@
-\chapter{Processus Plan, Source, Make, Deliver et Return}
+\chapter{Les processus Plan, Source, Make, Deliver et Return}
+\label{chap:processus-scor}
 
-\DocumentationNote{Décrire le rôle métier de chaque processus, les enchaînements de micro-activités, les jonctions et les retours. Les codes détaillés seront reportés en annexe.}
+Le modèle organise le flux logistique de ZENER SA Togo autour de cinq processus. Chacun regroupe plusieurs micro-activités et communique avec ses voisins par des messages typés. Cette organisation n'est pas d'abord une référence normative: c'est la manière dont les 71 micro-activités du scénario courant sont réparties et enchaînées dans l'ALP validé.
+
+\FigureOrPlaceholder{documentation/figures/workflow_scor.png}{Enchaînement des cinq processus, avec Return comme branche disponible.}{fig:workflow-scor}
 
 \section{Plan}
-\section{Source}
-\section{Make}
-\section{Deliver}
-\section{Return}
-\section{Enchaînements et aiguillages}
 
+Plan porte la décision de reconstituer le stock de produit fini ou de matière. Son entrée est un signal de manque, calculé par la politique autonome à partir du stock projeté, du point de commande et des réceptions attendues. Sa sortie est un ordre \texttt{REAPPRO\_*} borné par une quantité économique de Wilson, ou une demande de disponibilité matière transmise à Source. Le scénario compte six micro-activités portant un code \texttt{P2}, \texttt{P3} ou \texttt{P4}, réparties entre Make, Deliver et Return; aucune ne porte le code \texttt{P1}, le plan Source restant implicite dans la politique de matière plutôt que matérialisé par un poste dédié.
+
+Plan ne déclenche jamais directement une commande cliente. Il répond à un état de stock insuffisant et reste, à ce titre, un mécanisme interne au sens du \cref{chap:stocks-reapprovisionnement}.
+
+\section{Source}
+
+Source rassemble 17 micro-activités portant le code \texttt{S1}, notamment la planification des livraisons, la réservation auprès du fournisseur et la réception. Son entrée est un besoin matière calculé par Plan; sa sortie est une quantité créditée au stock matière, suivie du message \texttt{MaterialAvailable} qui lève la contrainte pour Make.
+
+Dans l'exécution validée, Source traite l'approvisionnement de 250 unités de GPL pour le compte de \texttt{REAPPRO\_1}. La réception intervient à T=233 s, après un délai nominal de 6 h porté à 12 h par la perturbation fournisseur ciblée. Cette séquence est observée dans le run de validation et documentée au \cref{chap:mesures-vsm}.
+
+\section{Make}
+
+Make regroupe 13 micro-activités portant le code \texttt{M1}. Son entrée est la disponibilité matière signalée par Source; ses décisions portent sur l'affectation des postes de production et le respect de la capacité déclarée. Sa sortie est le produit fini transféré au magasin. Le transfert \texttt{M1.5} constitue le point où le stock physique de produit fini est crédité, hors jetons réservés à l'animation.
+
+Dans l'exécution validée, Make débute à T=235 s et termine la vingtième unité de \texttt{REAPPRO\_1} à T=2\,314 s. Cette production répond à l'ordre interne, pas directement à \texttt{CMD\_1}; le crédit du stock déclenche ensuite une nouvelle analyse qui réveille la commande en attente.
+
+\section{Deliver}
+
+Deliver rassemble 24 micro-activités portant le code \texttt{D1}, la famille la plus fournie du scénario. Son entrée est une commande servie par un stock disponible, qu'il provienne directement du magasin ou d'une reconstitution récente. Ses décisions couvrent la réservation, la préparation de l'expédition et le transport. Sa sortie est la livraison au client et la clôture du suivi associé.
+
+Dans l'exécution validée, Deliver réserve les 20 unités de \texttt{CMD\_1} après le réveil de la commande, débute le transport à T=2\,320 s et clôt la commande à T=2\,343 s avec un statut tardif. La commande est complète, mais la ponctualité n'est pas atteinte.
+
+\section{Return}
+
+Return couvre deux familles de micro-activités: \texttt{SR1}, le retour vers un fournisseur, avec six postes, et \texttt{DR1}, le retour depuis un client, avec cinq postes. Le catalogue interne du modèle décrit ces onze micro-activités et la chaîne temporisée qui les relie.
+
+\AttentionDoc{Return est disponible dans le modèle, mais n'est pas exécuté dans le run de validation retenu pour cette documentation. Aucune valeur chiffrée de Return ne doit donc être présentée comme un résultat observé. La métrique \texttt{RS.2.5}, qui porterait sur le cycle Return, est absente du run pour cette raison et ne doit pas être remplacée par zéro.}
+
+\section{Répartition des micro-activités et lecture du graphe}
+
+Le tableau suivant situe les cinq processus selon ce qui a été effectivement traversé par le run de validation et ce qui reste disponible sans observation quantitative.
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{L{0.12\textwidth} L{0.09\textwidth} Y L{0.29\textwidth}}
+    \toprule
+    Processus & Micro-activités & Rôle dans le scénario courant & Statut de preuve \\
+    \midrule
+    Plan & 6 (\texttt{P2}, \texttt{P3}, \texttt{P4}) & Déclenche la reconstitution matière ou produit selon la politique de stock. & IMPLEMENTE, observé indirectement par \texttt{REAPPRO\_1} \\
+    Source & 17 (\texttt{S1}) & Approvisionne le GPL nécessaire à l'ordre interne. & OBSERVE\_\hspace{0pt}RUNTIME pour le run de validation \\
+    Make & 13 (\texttt{M1}) & Produit les 20 unités et crédite le stock fini. & OBSERVE\_\hspace{0pt}RUNTIME pour le run de validation \\
+    Deliver & 24 (\texttt{D1}) & Sert la commande cliente et clôt son suivi. & OBSERVE\_\hspace{0pt}RUNTIME pour le run de validation \\
+    Return & 11 (\texttt{SR1}, \texttt{DR1}) & Retour fournisseur ou retour client. & DISPONIBLE\_\hspace{0pt}NON\_\hspace{0pt}QUANTIFIE \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Répartition des 71 micro-activités par processus et statut de preuve pour le run de validation.}
+  \label{tab:repartition-processus}
+\end{table}
+
+Les micro-activités d'un même processus s'enchaînent selon la gamme du scénario, une séquence ordonnée de postes. Un poste peut dépendre d'un seul prédécesseur ou attendre plusieurs prédécesseurs avant de démarrer; ce second cas correspond à une jonction, activée par le réglage \texttt{Attendre tous les prédécesseurs} décrit au \cref{chap:configurer}. La \cref{fig:graphe-micro-activites} illustre ce principe sur un extrait représentatif, sans chercher à représenter les 71 postes individuellement.
+
+\FigureOrPlaceholder{documentation/figures/graphe_micro_activites.png}{Extrait pédagogique du fonctionnement des postes, prédécesseurs et jonctions. Ne représente pas les 71 micro-activités du scénario.}{fig:graphe-micro-activites}
+
+\BonASavoir{Les codes SCOR identifient un poste dans le catalogue interne du modèle. Ils ne garantissent pas, à eux seuls, qu'un poste a été traversé pendant une exécution donnée; seule la trace runtime établit ce fait.}

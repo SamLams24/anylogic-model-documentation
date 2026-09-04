@@ -1,9 +1,84 @@
 \chapter{Agents, décisions et communications AER}
+\label{chap:agents-aer}
 
-\DocumentationNote{Présenter la hiérarchie consolidée, les responsabilités, les conversations AER, le blackboard et la traçabilité. Réserver les classes et fonctions à l'annexe technique.}
+Une décision ne descend jamais directement du niveau stratégique vers un poste d'exécution. Le modèle distribue la décision sur cinq niveaux, chacun transformant l'information qu'il reçoit avant de la transmettre au niveau suivant.
 
-\section{Hiérarchie des agents}
-\section{Responsabilités de décision}
-\section{Conversation AER}
-\section{État partagé et traces}
+\FigureOrPlaceholder{documentation/figures/hierarchie_agents.png}{Cinq niveaux de décision et position du Blackboard comme mémoire partagée.}{fig:hierarchie-agents}
 
+\section{Cinq niveaux de responsabilité}
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{L{0.16\textwidth} L{0.20\textwidth} Y Y}
+    \toprule
+    Niveau & Rôle & Information reçue & Information produite \\
+    \midrule
+    Stratégique & Porte l'orientation du réseau focal. & Synthèse macro consolidée. & Orientation générale, sans détail opérationnel. \\
+    Tactique & Planifie Source, Make, Deliver et Return; coordonne les dépendances entre domaines. & Objectifs de domaine et rapports consolidés. & Plan ou révision de plan. \\
+    Coordination & Contextualise le plan tactique pour un processus et consolide les retours opérationnels. & Plan tactique du domaine. & Ordre de domaine et rapport consolidé. \\
+    Pilotage opérationnel & Décompose l'ordre, affecte les tâches et surveille l'exécution. & Ordre de domaine. & Affectation, instruction ou exception. \\
+    Exécution & Réalise l'opération physique ou informationnelle. & Instruction ou affectation. & Fait runtime: début, fin, quantité ou accusé. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Niveaux de décision, rôle et transformation de l'information.}
+  \label{tab:niveaux-agents}
+\end{table}
+
+Une décision change donc de forme à chaque niveau descendant, et un fait change de granularité à chaque niveau remontant. Le stratégique reçoit une synthèse, pas le détail de chaque micro-activité; l'exécutant produit un fait précis, pas une interprétation globale. Cette organisation évite qu'une intention générale soit transmise telle quelle à un poste, et qu'un événement isolé soit présenté comme une conclusion de portée stratégique.
+
+\section{Le Blackboard, mémoire partagée}
+
+Le Blackboard est un espace où les agents déposent des observations et des décisions qui doivent rester accessibles à plusieurs d'entre eux. Il ne prend pas de décision par lui-même. Sa fonction se limite à conserver un état partagé et à le rendre consultable, ce qui distingue nettement quatre opérations:
+
+\begin{itemize}
+  \item écrire une observation, réalisée par l'agent qui constate un fait;
+  \item lire une information, réalisée par l'agent qui en a besoin pour agir;
+  \item prendre une décision, réalisée par le niveau de responsabilité compétent, à partir des informations disponibles;
+  \item exécuter une décision, réalisée par l'agent d'exécution ou le poste concerné.
+\end{itemize}
+
+Le run de validation contient des traces de publication sur le Blackboard, notamment lors de la détection d'un goulot. Ces traces montrent que l'information a circulé; elles ne montrent pas que le Blackboard a lui-même choisi une action.
+
+\section{AER: classification des communications}
+
+AER classe les communications du modèle selon les phases AMENDMENT, EXECUTION et REPORT. AMENDMENT porte la descente d'une décision, d'un plan ou d'un ordre. EXECUTION porte un fait d'exécution ou un accusé direct. REPORT porte la remontée d'un état ou d'un résultat vers le niveau qui en a besoin.
+
+Cette classification structure la circulation de l'information sans dépendre du contenu métier précis du message: un même échange Source ou Deliver peut être lu à la fois par son objet, par exemple une alerte fournisseur, et par sa phase AER, par exemple AMENDMENT lorsqu'il porte une instruction.
+
+\section{AHP local et Performance Index}
+
+L'AHP intervient dans le modèle comme outil d'arbitrage local, en particulier pour qualifier un goulot ou choisir une action de rééquilibrage. Il compare des options selon une matrice de comparaison par paires et produit un score propre à la situation traitée.
+
+\AttentionDoc{L'AHP local et le Performance Index répondent à deux questions différentes. L'AHP classe des options dans une situation locale ou tactique; le PI évalue l'exécution entière après transformation des observations VSM en métriques, scores et attributs. Aucune relation causale entre un score AHP et une variation du PI n'est démontrée par le modèle. Le \cref{chap:scor-pi} détaille le second mécanisme.}
+
+\section{Exemple: propagation d'un retard fournisseur}
+
+Le retard fournisseur observé sur le GPL illustre le fonctionnement générique de l'AER dans une exécution réelle. Le délai nominal de 6 h est porté à 12 h pour la première réception ciblée; l'écart devient un événement métier explicite, sans attendre un indicateur global pour être détecté.
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{L{0.27\textwidth} L{0.19\textwidth} Y}
+    \toprule
+    Message & Passage principal & Transformation métier \\
+    \midrule
+    \texttt{Supplier\-Delay\-Alert} & Fournisseur vers pilotage Source & Rend visible l'écart entre réception nominale et réception effective. \\
+    \texttt{Operational\-Exception} & Pilotage vers coordination Source & Qualifie l'alerte comme incident opérationnel du processus Source. \\
+    \texttt{Process\-Deviation\-Report} & Coordination vers tactique Source & Consolide l'impact de l'incident au niveau du plan Source. \\
+    \texttt{Revised\-Material\-Availability} & Tactique Source vers tactique Make & Transmet à Make une disponibilité prévisionnelle révisée. \\
+    \texttt{Revised\-Production\-Completion\-Date} & Tactique Make vers tactique Deliver & Traduit l'information matière en révision potentielle de la fin de production. \\
+    \texttt{Revised\-Delivery\-Plan} & Tactique Deliver vers coordination Deliver & Demande la réévaluation du plan Deliver dans le nouveau contexte. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Propagation observée du retard fournisseur, du signal local jusqu'à la révision du plan Deliver.}
+  \label{tab:propagation-retard-doc}
+\end{table}
+
+\FigureOrPlaceholder{documentation/figures/sequence_aer.png}{Séquence des six messages observés lors de la propagation du retard fournisseur.}{fig:sequence-aer}
+
+Les six messages sont présents une fois chacun dans les exports Excel et ABox du run de validation, avec la même charge utile: la matière \texttt{GPL\_VRAC}, le fournisseur \texttt{ACT\_1}, les délais de 6 h et 12 h et l'identifiant \texttt{REAPPRO\_1}. Cette concordance établit que la propagation a eu lieu pour cette exécution; elle n'établit ni l'ampleur causale du retard sur le statut tardif final, ni un comportement optimal de révision.
+
+\FigureOrPlaceholder{documentation/figures/blackboard_tracabilite.png}{Chaîne générique entre un événement et le compte rendu, avec le partage sur le Blackboard.}{fig:blackboard-tracabilite}
+
+\EnPratique{Pour relire une adaptation dans le modèle, identifier d'abord l'événement déclencheur, puis suivre les messages AER dans l'ordre de leurs phases: AMENDMENT pour la décision descendante, EXECUTION pour le fait produit, REPORT pour la remontée. Le Blackboard sert de point de passage pour les informations que plusieurs agents doivent consulter.}

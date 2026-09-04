@@ -1,4 +1,233 @@
-\chapter{Structure JSON détaillée}
+\chapter{Structure détaillée de la configuration JSON}
+\label{ann:structure-json}
 
-\DocumentationNote{Documenter les blocs, propriétés, types, valeurs de repli, cardinalités et asymétries établis dans l'audit JSON.}
+\section{Rôle du fichier}
 
+Le fichier JSON conserve une configuration persistante: acteurs, postes, scénarios, matières, pondérations, réglages de traçabilité et hiérarchie ISA-95. Il ne conserve pas l'état d'exécution runtime, c'est-à-dire les commandes actives, les files, les messages AER en transit ou les indicateurs courants. Le \cref{chap:json} explique cette distinction du point de vue de l'utilisateur; cette annexe la détaille du point de vue du format.
+
+Le fichier de référence audité, \texttt{scenario\_ZENER\_RETARD\_FOURNISSEUR.json}, comporte 13 blocs à sa racine. La fonction de sauvegarde en produit systématiquement 14, en ajoutant le bloc \texttt{responsabilites}. Cette asymétrie est acceptée par le chargeur et reste visible tout au long de cette annexe plutôt que présentée comme une anomalie à corriger.
+
+\section{Blocs racine}
+
+Le tableau suivant recense les 13 blocs du fichier de référence, dans l'ordre où ils apparaissent, ainsi que le quatorzième bloc produit par la sauvegarde. Chaque ligne indique le rôle du bloc, son type JSON, si son absence est tolérée au chargement, la valeur de repli appliquée dans ce cas, et les fonctions de conversion qui le portent.
+
+\begin{landscape}
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{L{0.11\linewidth} L{0.20\linewidth} L{0.07\linewidth} L{0.09\linewidth} L{0.17\linewidth} L{0.13\linewidth} L{0.13\linewidth} L{0.10\linewidth}}
+\caption{Blocs racine de la configuration JSON.}\label{tab:blocs-json-annexe}\\
+\toprule
+Bloc & Rôle & Type & Absence tolérée & Valeur de repli & Fonction de chargement & Fonction de sauvegarde & Remarque \\
+\midrule
+\endfirsthead
+\toprule
+Bloc & Rôle & Type & Absence tolérée & Valeur de repli & Fonction de chargement & Fonction de sauvegarde & Remarque \\
+\midrule
+\endhead
+\midrule
+\multicolumn{8}{r}{Suite à la page suivante}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\texttt{meta} & Métadonnées de version, de schéma et de traçabilité de la sauvegarde. & objet & Oui & Champs lus individuellement, sans échec global. & \texttt{chargerScenarioJSON} & \texttt{sauverScenarioJSON} & Porte \texttt{schemaVersion}, contrôlé mais non bloquant. \\
+\texttt{parametres\allowbreak Globaux} & Réglages partagés: débit, coûts, poids du PI, stocks globaux de repli, compteurs. & objet & Oui & Valeur courante conservée comme repli, hors compteurs remis à zéro. & \texttt{chargerScenarioJSON} & \texttt{sauverScenarioJSON} & Alimente aussi les poids initiaux du PI. \\
+\texttt{acteurs} & Organisations de la chaîne: fournisseurs, entreprise focale, client, acteurs annexes. & liste & Oui & Liste vide si absent. & \texttt{acteurFromJson} & \texttt{acteurToJson} & 5 entrées dans le fichier de référence. \\
+\texttt{postes} & Micro-activités: identité, code SCOR, temps, capacité, prédécesseurs, matière. & liste & Oui & Liste vide si absent; un scénario vide ne peut pas démarrer. & Restaurés directement dans \texttt{chargerScenarioJSON}, sans fonction dédiée & \texttt{posteToJson} & 71 entrées; agents opérationnels recréés en première passe. \\
+\texttt{scenarios} & Gammes de produit: séquence de postes et nomenclature associée. & liste & Oui & Liste vide si absent. & \texttt{scenarioFromJson} & \texttt{scenarioToJson} & 5 entrées; le scénario nominal est resélectionné après chargement. \\
+\texttt{machines} & Ressources machine associées à un poste: capacité, cycle, MTBF, MTTR. & liste & Oui & Liste vide si absent. & \texttt{machineFromJson} & \texttt{machineToJson} & 1 entrée dans le fichier de référence. \\
+\texttt{fichesMatiere} & Fiches de matière: stock, sécurité, délai, fournisseur. & liste & Oui & Liste vide si absent. & Lue directement dans \texttt{chargerScenarioJSON} & Écrite directement dans \texttt{sauverScenarioJSON} & 3 entrées; alimente le besoin net du \cref{chap:stocks-reapprovisionnement}. \\
+\texttt{normalization\allowbreak Profiles} & Profils Bottom/Perfect utilisés par la normalisation des métriques. & liste & Oui & Profils par défaut complétés pour les codes manquants. & Lue directement, puis \texttt{initialiser\allowbreak Profils\allowbreak Normalisation\allowbreak Defaut} complète & Écrite directement & 16 profils dans le fichier de référence. \\
+\texttt{ahpConfiguration} & Seuil de cohérence et deux matrices de comparaison par paires, stratégique et goulot. & objet & Oui & Matrice stratégique reconstruite depuis les poids du PI si absente. & \texttt{matriceAHPFromJson} & \texttt{matriceAHPToJson} & L'AHP stratégique reste sans effet sur le PI, voir \cref{chap:agents-aer}. \\
+\texttt{aboxExport} & Réglages de l'export ABox: activation, déclencheurs, limite d'événements, espaces de noms. & objet & Oui & Valeurs de repli documentées ci-dessous. & Lue directement & Écrite directement & Pilote l'export décrit au \cref{chap:resultats-exports}. \\
+\texttt{performance\allowbreak Measurement} & Déclaration de la méthode de mesure, de l'échelle et des poids par défaut. & objet & Oui & Non lu pour reconstituer l'état; les poids actifs viennent de \texttt{parametres\allowbreak Globaux}. & Non consommé au chargement & Écrite directement & Champ \texttt{method} vaut \texttt{THEERANUPHATTANA\_\allowbreak CHAN\_QI\_\allowbreak ADAPTED} dans le fichier de référence. \\
+\texttt{isa95Hierarchy} & Hiérarchie d'équipements: identité, type ISA-95, parent, acteur, source. & liste & Oui, mais requise pour la garde de démarrage & Liste vide si absent; une hiérarchie incohérente déclenche un avertissement. & \texttt{isa95NodeFromJson} & \texttt{isa95NodeToJson} & 190 noeuds; voir \cref{chap:isa95-ontologie}. \\
+\texttt{isa95Assignments} & Affectation d'une micro-activité à un élément de la hiérarchie ISA-95. & liste & Oui, mais requise pour la garde de démarrage & Liste vide si absent. & \texttt{isa95Assignment\allowbreak FromJson} & \texttt{isa95Assignment\allowbreak ToJson} & 71 affectations; contrôlées avec \texttt{isa95Hierarchy}. \\
+\texttt{responsabilites} & Affectation d'une micro-activité à un acteur, avec niveau hiérarchique et quantité. & liste & Absent du fichier de référence & Chargement poursuivi sans erreur si absent. & \texttt{responsabiliteFromJson} & \texttt{responsabiliteToJson} & Produit systématiquement par la sauvegarde; absent du fichier de référence audité. \\
+\end{longtable}
+}
+\end{landscape}
+
+\section{Acteurs}
+
+Chaque acteur porte un identifiant stable, un nom, une catégorie parmi fournisseur, entreprise focale, client ou type annexe, un indicateur d'activité, un délai de paiement en jours, une politique d'approvisionnement, un intervalle ou taux d'arrivée selon cette politique, une quantité par approvisionnement, la liste des micro-activités qui le concernent et un indicateur de pilotage par besoin net.
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{L{0.20\textwidth} L{0.10\textwidth} Y}
+    \toprule
+    Propriété JSON & Type & Signification et précaution \\
+    \midrule
+    \texttt{idActeur} & chaîne & Identifiant stable, par exemple \texttt{ACT\_1}; réutilisé par les fiches matière et les postes. \\
+    \texttt{categorie} & chaîne & Situe l'acteur dans la chaîne; oriente certains traitements et exports. \\
+    \texttt{actif} & booléen & Replie à vrai si absent ou non convertible. \\
+    \texttt{delaiPaiementJours} & nombre & Replie à 30 jours si absent; donnée économique, pas un délai matière. \\
+    \texttt{politiqueAppro}, \texttt{intervalleAppro}, \texttt{tauxArriveePoisson}, \texttt{quantiteParAppro} & chaîne, nombres & Paramètrent l'approvisionnement autonome de l'acteur; \texttt{quantiteParAppro} replie à 1. \\
+    \texttt{dernierAppro} & nombre & Replie à $-1$; reflète l'instant de sauvegarde, pas une constante de conception. \\
+    \texttt{idsMicroActivites} & liste de chaînes & Postes rattachés à cet acteur. \\
+    \texttt{modeApproMRP} & booléen & Active le pilotage par besoin net décrit au \cref{chap:nomenclature-stocks}. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Propriétés principales d'un acteur.}
+  \label{tab:json-acteurs}
+\end{table}
+
+\section{Postes}
+
+Un poste porte plus de trente propriétés. Les plus structurantes pour la reconstruction sont regroupées ci-dessous; les propriétés purement visuelles, telles que \texttt{xManuel} et \texttt{yManuel}, ne sont pas détaillées davantage que leur rôle d'affichage.
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{L{0.24\textwidth} L{0.10\textwidth} Y}
+    \toprule
+    Propriété JSON & Type & Signification et précaution \\
+    \midrule
+    \texttt{idPoste}, \texttt{codeSCOR}, \texttt{typePoste} & chaînes & Identité et rattachement au catalogue SCOR interne. Le type illisible replie à \texttt{DELAI}. \\
+    \texttt{loiTemps} & objet & Famille de distribution et ses paramètres; replie à une loi uniforme de paramètres 1 et 1. \\
+    \texttt{capaciteSimultanee} & nombre & Replie à 1. \\
+    \texttt{chainesPrecedents} & liste & Postes précédents; contrôlés puis reconnectés en seconde passe du chargement, par identifiant ou par nom. \\
+    \texttt{genereAutonome}, \texttt{politiqueApproPoste}, \texttt{intervalleApproPoste}, \texttt{tauxArriveePoissonPoste}, \texttt{quantiteParApproPoste} & booléen, chaîne, nombres & Paramètrent la génération autonome; \texttt{genereAutonome} replie à faux. \\
+    \texttt{tailleLot}, \texttt{attendTousLesPredecesseurs} & nombre, booléen & Règlent le regroupement et la synchronisation multi-amont; \texttt{tailleLot} borné à au moins 1 au chargement. \\
+    \texttt{consommeMatiere}, \texttt{nbProduitsParLot} & booléen, nombre & Activent la consommation de matière décrite au \cref{chap:nomenclature-stocks}; \texttt{consommeMatiere} replie à faux. \\
+    \texttt{niveauStock} & nombre & Peut refléter l'instant de sauvegarde plutôt qu'une constante de conception. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Propriétés principales d'un poste.}
+  \label{tab:json-postes}
+\end{table}
+
+\section{Scénarios}
+
+Un scénario porte un type de produit, un débit par heure courant et de base, une séquence ordonnée d'identifiants de postes, et une nomenclature associant des matières à des quantités par unité. Le fichier de référence compte 5 scénarios, dont \texttt{SCENARIO DISTRIBUTION}, qui porte la séquence effectivement traversée par le run de validation, avec 37 postes dans sa gamme.
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{L{0.20\textwidth} L{0.10\textwidth} Y}
+    \toprule
+    Propriété JSON & Type & Signification et précaution \\
+    \midrule
+    \texttt{typeProduit} & chaîne & Nom du scénario, identique au champ Nom du produit dans la vue Nomenclature. \\
+    \texttt{sequence} & liste de chaînes & Ordre des postes traversés; distincte des prédécesseurs de chaque poste. \\
+    \texttt{debitParHeure}, \texttt{debitParHeureBase} & nombres & Débit courant et débit de référence du scénario. \\
+    \texttt{nomenclature} & liste & Couples matière et quantité par unité, exploités pour le besoin net. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Propriétés principales d'un scénario.}
+  \label{tab:json-scenarios}
+\end{table}
+
+\section{Fiches matière}
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{L{0.24\textwidth} L{0.10\textwidth} Y}
+    \toprule
+    Propriété JSON & Type & Signification et précaution \\
+    \midrule
+    \texttt{idMatiere} & chaîne & Identifiant partagé avec la nomenclature; garder cohérent entre les deux zones. \\
+    \texttt{stockDisponible} & nombre & Replie à 100 si absent, valeur de repli du chargeur documentée au \cref{chap:nomenclature-stocks}. \\
+    \texttt{stockSecurite} & nombre & Réplie à 100 si absent; entre dans le calcul du besoin net. \\
+    \texttt{delaiObtentionHeures} & nombre & Délai nominal, distinct d'un retard de perturbation ajouté au \cref{chap:lancer-suivre}. \\
+    \texttt{idFournisseur} & chaîne & Doit référencer un acteur existant de catégorie fournisseur. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Propriétés d'une fiche matière.}
+  \label{tab:json-fiches-matiere}
+\end{table}
+
+\section{Machines}
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{L{0.24\textwidth} L{0.10\textwidth} Y}
+    \toprule
+    Propriété JSON & Type & Signification et précaution \\
+    \midrule
+    \texttt{idMachine}, \texttt{idMicroActivite} & chaînes & Identité de la machine et poste auquel elle est rattachée. \\
+    \texttt{capacite} & nombre & Replie à 1; complète, sans la remplacer, la capacité du poste. \\
+    \texttt{cycleTime}, \texttt{mtbf}, \texttt{mttr} & nombres & Cycle nominal, intervalle théorique entre pannes, durée théorique de réparation. \\
+    \texttt{active} & booléen & Replie à vrai si absent. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Propriétés d'une machine.}
+  \label{tab:json-machines}
+\end{table}
+
+\section{Responsabilités}
+
+Le bloc \texttt{responsabilites} associe une micro-activité, un acteur, un niveau hiérarchique et une quantité, avec les identifiants dérivés nécessaires à la reconstruction des agents correspondants. Il est produit systématiquement par \texttt{sauverScenarioJSON}, mais absent du fichier de référence audité, qui n'a jamais été resauvegardé depuis sa dernière modification manuelle. Le chargeur le lit lorsqu'il existe, via \texttt{responsabiliteFromJson}, et poursuit sans erreur lorsqu'il manque.
+
+\section{Profils de normalisation}
+
+Chaque profil associe un code de métrique à un sens d'amélioration, des bornes minimale et maximale, une source, une version et les repères Bottom et Perfect utilisés par la normalisation présentée au \cref{chap:scor-pi}. Le fichier de référence en compte 16, couvrant notamment \texttt{RL.2.1}, \texttt{RS.1.1}, \texttt{AG.1.1}, \texttt{CO.1.1}, \texttt{AM.3.9} et le proxy \path{PROXY.AG.SYSTEM_UTILIZATION}.
+
+\section{Mesure de performance}
+
+Le bloc \texttt{performance\allowbreak Measurement} déclare la méthode retenue, \texttt{THEERANUPHATTANA\_\allowbreak CHAN\_QI\_\allowbreak ADAPTED} dans le fichier de référence, l'échelle des scores, les grades flous, les poids par défaut des attributs et leur source. Ce bloc reste documentaire au chargement: le chargeur ne l'utilise pas pour reconstituer l'état de mesure. Les poids effectivement actifs proviennent de \texttt{parametres\allowbreak Globaux}, et les profils de la normalisation de \texttt{normalization\allowbreak Profiles}.
+
+\section{Hiérarchie et affectations ISA-95}
+
+Chaque noeud de \texttt{isa95Hierarchy} porte un identifiant, un nom, un type ISA-95 parmi \texttt{EnterpriseUnit}, \texttt{Site}, \texttt{Area}, \texttt{Workshop}, \texttt{WorkCenter} et \texttt{WorkCell}, un identifiant de parent, un acteur associé lorsque pertinent et une source. Chaque entrée de \texttt{isa95Assignments} relie un acteur, un poste et un élément d'équipement. Le \cref{chap:isa95-ontologie} explique l'usage de cette structure; cette annexe en documente seulement le format.
+
+\section{Exemples}
+
+Les extraits suivants sont dérivés directement du fichier de référence, sans reconstitution.
+
+\begin{verbatim}
+"fichesMatiere": [
+  {
+    "idMatiere": "GPL_VRAC",
+    "stockDisponible": 0,
+    "stockSecurite": 0,
+    "delaiObtentionHeures": 6,
+    "idFournisseur": "ACT_1"
+  }
+]
+\end{verbatim}
+
+\begin{verbatim}
+"machines": [
+  {
+    "idMachine": "MAC_1",
+    "idMicroActivite": "sM1.3.2",
+    "type": "CARROUSEL_GPL",
+    "capacite": 8,
+    "cycleTime": 88,
+    "mtbf": 28800,
+    "mttr": 1800,
+    "active": true
+  }
+]
+\end{verbatim}
+
+\begin{verbatim}
+"isa95Assignments": [
+  {
+    "idActeur": "ACT_4",
+    "idPoste": "sS1.1.1",
+    "idEquipment": "ISA_WS_ACT_4_SS1_1_1",
+    "source": "DERIVED_FROM_MODEL"
+  }
+]
+\end{verbatim}
+
+\begin{verbatim}
+"performanceMeasurement": {
+  "method": "THEERANUPHATTANA_CHAN_QI_ADAPTED",
+  "attributeWeightMethod":
+    "NORMALIZED_INPUT; AHP_STRATEGIC_NOT_USED_FOR_PI"
+}
+\end{verbatim}
+
+\section{Chargement tolérant}
+
+\AttentionDoc{Cette section décrit le comportement actuel du chargeur, observé dans le modèle validé. Les recommandations qui suivent sont des propositions de maintenance, pas des politiques déjà implémentées.}
+
+\textbf{Comportement actuel.} Le champ \texttt{meta.schemaVersion} est comparé aux versions reconnues, de 1.0 à 2.1; une version inconnue déclenche un avertissement sans arrêter le chargement. Chaque bloc racine est toléré absent, avec une valeur de repli propre à son usage: liste vide pour les blocs de type liste, valeurs numériques ou booléennes documentées au \cref{chap:json} pour les champs isolés. Les lecteurs numériques et booléens de bas niveau retournent leur repli lorsque la valeur est absente ou non convertible; une liste de chaînes absente devient une liste vide. Les relations entre postes, notamment les prédécesseurs, sont reconstruites en seconde passe, par identifiant ou par nom, après que tous les postes ont été créés en première passe.
+
+\textbf{Recommandation de maintenance.} Toute évolution qui ajouterait un bloc obligatoire, retirerait un bloc existant ou changerait le sens d'un champ déjà consommé devrait être accompagnée d'une mise à jour de cette annexe et, si la compatibilité avec les fichiers déjà archivés est recherchée, d'un repli explicite plutôt que d'une hypothèse silencieuse sur la présence du champ. Le \cref{chap:maintenance-extension} détaille ce principe pour l'ensemble du modèle.

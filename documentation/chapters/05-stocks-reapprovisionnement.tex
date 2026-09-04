@@ -9,7 +9,7 @@ Deux décisions proches en apparence répondent donc à des questions différent
 
 \FigureOrPlaceholder{documentation/figures/decision_stock_fini.png}{Arbre de décision distinguant le service d'une commande et la reconstitution du stock fini.}{fig:decision-stock-fini}
 
-Lorsque le seuil est franchi, la politique propose une quantité économique de commande, ou EOQ, fondée sur la demande annuelle, le coût de lancement et le coût annuel de possession. L'implémentation borne ensuite cette proposition. Lorsqu'un carnet de commandes clientes est ouvert, la quantité ne dépasse pas son besoin net. Une autre borne limite la proposition par rapport à la taille moyenne des commandes.
+Lorsque le seuil est franchi, la politique propose une quantité économique de commande, ou EOQ~\cite{harris1913,erlenkotter1990}, fondée sur la demande annuelle, le coût de lancement et le coût annuel de possession. L'implémentation borne ensuite cette proposition. Lorsqu'un carnet de commandes clientes est ouvert, la quantité ne dépasse pas son besoin net. Une autre borne limite la proposition par rapport à la taille moyenne des commandes.
 
 Un garde empêche le lancement de plusieurs productions autonomes concurrentes pour un même produit. Cette protection est nécessaire car le stock peut être réévalué pendant qu'un ordre déjà créé poursuit Source ou Make.
 

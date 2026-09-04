@@ -1,4 +1,112 @@
 \chapter{Catalogue des métriques}
+\label{ann:metriques}
 
-\DocumentationNote{Présenter code, définition dans le modèle, unité, source, transformation, statut SCOR ou proxy et niveau de preuve.}
+Cette annexe rassemble, pour chaque métrique mobilisée dans le document, son code, son libellé, l'attribut de performance auquel elle appartient, sa valeur ou son unité, sa source, le sens d'amélioration attendu, ses repères Bottom et Perfect lorsqu'ils sont documentés, son statut de preuve et une remarque de lecture. Le \cref{chap:scor-pi} explique le pipeline complet; cette annexe sert de fiche de référence pour retrouver une métrique précise sans reparcourir le chapitre.
 
+\AttentionDoc{Le statut de chaque métrique distingue cinq cas et ne doit jamais être confondu: une \emph{association SCOR du modèle} relie une mesure interne à un code proche du référentiel SCOR sans certification de conformité stricte; une \emph{métrique interne} n'emprunte aucun code SCOR; un \emph{proxy explicite} est nommé comme approximation assumée; une \emph{mesure VSM} provient directement du registre temporel de l'exécution; aucune métrique de ce catalogue n'est qualifiée \og métrique SCOR officielle\fg{} au sens d'une certification externe.}
+
+\section{Métriques par attribut SCOR}
+
+Lorsque les colonnes Bottom et Perfect portent la mention \og cf.~profil\fg{}, la valeur exacte est celle du profil de normalisation correspondant, décrit dans le bloc \texttt{normalizationProfiles} de la configuration JSON, cf.~\cref{ann:structure-json}, et n'est pas reproduite ici sous forme de nombre isolé.
+
+\begin{landscape}
+{\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{longtable}{L{0.07\linewidth} L{0.15\linewidth} L{0.035\linewidth} L{0.10\linewidth} L{0.13\linewidth} L{0.035\linewidth} L{0.05\linewidth} L{0.05\linewidth} L{0.12\linewidth} L{0.18\linewidth}}
+\caption{Métriques organisées par attribut de performance SCOR.}\label{tab:metriques-attributs}\\
+\toprule
+Code & Libellé & Attr. & Valeur / unité & Source & Sens & Bottom & Perfect & Statut & Remarque \\
+\midrule
+\endfirsthead
+\toprule
+Code & Libellé & Attr. & Valeur / unité & Source & Sens & Bottom & Perfect & Statut & Remarque \\
+\midrule
+\endhead
+\midrule
+\multicolumn{10}{r}{Suite à la page suivante}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\texttt{RL.2.1} & Commandes livrées complètes & RL & 1 (100\,\%) & Observation runtime, commande \texttt{CMD\_1} & \% $\uparrow$ & 0 & 1 & Association SCOR du modèle & Résultat mono-produit; ne généralise pas un portefeuille diversifié. \\
+\texttt{RL.2.2} & Performance de livraison à la date promise & RL & 0 & Observation runtime & \% $\uparrow$ & 0 & 1 & Association SCOR du modèle & \texttt{CMD\_1} livrée en retard dans le run de validation. \\
+\texttt{RL.3.33} & Exactitude des articles livrés & RL & 1 & Observation runtime & \% $\uparrow$ & 0 & 1 & Association SCOR du modèle & Scénario mono-produit. \\
+\texttt{RL.3.35} & Exactitude des quantités livrées & RL & 1 & Observation runtime & \% $\uparrow$ & 0 & 1 & Association SCOR du modèle & Scénario mono-produit. \\
+
+\texttt{RS.1.1} & Order Fulfillment Lead Time & RS & 65\,041,24 s & Registre de temps de commande (VSM) & s $\downarrow$ & cf.~profil & cf.~profil & Mesure VSM, association SCOR & Somme contrôlée de \texttt{RS.3.94} et du traitement propre; cf.~\cref{chap:mesures-vsm}. \\
+\texttt{RS.3.94} & Order Waiting / Dwell Time & RS & 46\,924,40 s & Registre de temps de commande (VSM) & s $\downarrow$ & cf.~profil & cf.~profil & Mesure VSM, association SCOR & Imputé depuis l'ordre interne \texttt{REAPPRO\_1}. \\
+\texttt{RS.2.1} & Temps macro Source & RS & 1,60 s & Agrégation observations de poste (VSM) & s $\downarrow$ & -- & -- & Mesure VSM & Périmètre ZENER, cf.~\cref{chap:mesures-vsm}. \\
+\texttt{RS.2.2} & Temps macro Make & RS & 26,07 s & Agrégation observations de poste (VSM) & s $\downarrow$ & -- & -- & Mesure VSM & Périmètre ZENER. \\
+\texttt{RS.2.3} & Temps macro Deliver & RS & 67,12 s & Agrégation observations de poste (VSM) & s $\downarrow$ & -- & -- & Mesure VSM & Périmètre ZENER. \\
+\texttt{RS.2.5} & Temps macro Return & RS & Absente & -- & s $\downarrow$ & -- & -- & Non observée & Return non exécuté dans ce run; l'absence n'est pas remplacée par une valeur nulle. \\
+
+\texttt{AG.1.1} & Score d'agilité, pipeline interne & AG & 0,5 & Pipeline interne \texttt{calculerPIGlobal} & score $\uparrow$ & cf.~profil & cf.~profil & Métrique interne & Alimente le score d'attribut AG. \\
+Débit observé & Débit observé du système & AG & 1,536 entité/h & Mesure VSM (WIP, débit, takt) & entité/h $\uparrow$ & -- & -- & Mesure VSM & Mobilisé aussi par l'attribut Agility, cf.~\cref{chap:mesures-vsm}. \\
+\texttt{PROXY.AG.\allowbreak SYSTEM\_\allowbreak UTILIZATION} & Utilisation système (proxy) & AG & 0,134 & Pipeline interne & score $\uparrow$ & cf.~profil & cf.~profil & Proxy explicite & Nommé explicitement comme approximation, pas un code SCOR officiel. \\
+
+\texttt{CO.1.1} & Coût total de management SC / chiffre d'affaires estimé & CO & 1,0 (brut) & Pipeline interne & ratio $\downarrow$ & 1,0 & 0,0 & Association SCOR du modèle & Score 0 car la valeur brute coïncide exactement avec Bottom pour cette exécution. \\
+
+\texttt{AM.3.9} & Indicateur Asset Management (association SCOR du modèle) & AM & 0,941 & Pipeline interne & score $\uparrow$ & cf.~profil & cf.~profil & Association SCOR du modèle & -- \\
+\texttt{AM.2.2} & Jours de couverture de stock & AM & 0 jour & Pipeline interne & j $\downarrow$ & cf.~profil & cf.~profil & Association SCOR du modèle & Valeur propre à l'exécution étudiée, pas un niveau cible. \\
+
+\end{longtable}
+}
+\end{landscape}
+
+\section{Mesures VSM transversales}
+
+Ces mesures traversent plusieurs attributs et servent aussi de base à certaines lignes du tableau précédent. Elles sont documentées séparément avec leur périmètre exact, déjà présenté au \cref{chap:mesures-vsm}.
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{L{0.28\textwidth} L{0.16\textwidth} L{0.14\textwidth} Y}
+    \toprule
+    Indicateur & Valeur & Périmètre & Statut \\
+    \midrule
+    Order Processing Time & 18\,116,84 s & \texttt{CUSTOMER\_\allowbreak ORDER\_\allowbreak CMD\_\allowbreak ONLY} & Mesure VSM \\
+    Order Waiting / Dwell Time & 46\,924,40 s & \texttt{CUSTOMER\_\allowbreak ORDER\_\allowbreak CMD\_\allowbreak ONLY} & Mesure VSM \\
+    Order Fulfillment Lead Time & 65\,041,24 s & \texttt{CUSTOMER\_\allowbreak ORDER\_\allowbreak CMD\_\allowbreak ONLY} & Mesure VSM \\
+    ZENER Process Time & 59,39 s & \texttt{ZENER\_\allowbreak ACT\_4\_\allowbreak ONLY} & Mesure VSM \\
+    ZENER Waiting Time & 12,70 s & \texttt{ZENER\_\allowbreak ACT\_4\_\allowbreak ONLY} & Mesure VSM \\
+    ZENER Estimated PCE & 70,9\,\% & \texttt{ZENER\_\allowbreak ACT\_4\_\allowbreak ONLY} & PCE ESTIME \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Mesures VSM transversales, avec leur périmètre exact.}
+  \label{tab:vsm-transverses-annexe}
+\end{table}
+
+\AttentionDoc{Le PCE ZENER reste qualifié ESTIME dans tout le document: les temps de traitement et d'attente sont des observations runtime, mais la part de valeur ajoutée repose sur des taux configurés par poste, pas sur un chronométrage terrain.}
+
+\section{Indicateurs internes}
+
+Le WIP physique, le débit observé et le takt time complètent la lecture de l'exécution sans appartenir à un attribut SCOR précis. Le WIP physique exclut les jetons réservés à l'animation. Le débit observé, 1,536 entité par heure dans le run de validation, est repris dans le tableau précédent car il alimente aussi l'attribut Agility. Le takt time reste un repère du rythme attendu par la demande, à comparer au débit obtenu plutôt qu'à interpréter isolément.
+
+\section{Performance Index}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{@{}lrrr@{}}
+    \toprule
+    Attribut & Score sur 10 & Poids & Contribution \\
+    \midrule
+    RL & 7,50000000 & 0,40 & 3,00000000 \\
+    RS & 5,94733671 & 0,20 & 1,18946734 \\
+    AG & 4,73462025 & 0,10 & 0,47346203 \\
+    CO & 0,00000000 & 0,15 & 0,00000000 \\
+    AM & 9,70588235 & 0,15 & 1,45588235 \\
+    \midrule
+    PI & \multicolumn{3}{r}{6,11881172} \\
+    \bottomrule
+  \end{tabular}
+  \caption{Scores d'attribut, poids et contributions au PI pour l'exécution validée.}
+  \label{tab:pi-annexe}
+\end{table}
+
+\AttentionDoc{PI = synthèse interne pour l'exécution et les profils retenus. Cette formulation doit être conservée telle quelle: le PI n'est jamais la performance absolue de ZENER, seulement une synthèse multicritère valide pour l'exécution étudiée selon les profils de normalisation du modèle.}
+
+\BonASavoir{AHP local $\neq$ pipeline PI. L'exécution validée contient un score AHP local de 0,730, obtenu lors de l'arbitrage d'un goulot sur \texttt{sM1.3.1}. Ce score n'entre à aucun moment dans le tableau ci-dessus ni dans le calcul du PI; il répond à une question locale, le PI répond à une question sur l'exécution entière. Voir \cref{chap:scor-pi}.}
+
+\section{Lecture des valeurs de ce catalogue}
+
+Toutes les valeurs numériques de cette annexe proviennent du run de validation et constituent un exemple du run validé, pas des valeurs nominales attendues du modèle. Une autre exécution, avec un autre scénario ou d'autres perturbations, produirait des valeurs différentes pour chacune des mesures runtime de ce catalogue.

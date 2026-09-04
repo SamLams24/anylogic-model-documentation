@@ -1,4 +1,104 @@
 \chapter{Catalogue des agents}
+\label{ann:agents}
 
-\DocumentationNote{Donner les classes, identités, rôles, messages et relations de la hiérarchie consolidée.}
+Cette annexe rassemble en un seul endroit les niveaux de décision présentés au \cref{chap:agents-aer}: leur rôle, les messages qu'ils échangent, leur relation au Blackboard et les objets qu'ils pilotent. Elle sert de fiche de référence à consulter pendant la lecture d'une trace, pas de nouvelle explication du fonctionnement des agents.
 
+\FigureOrPlaceholder{documentation/figures/hierarchie_agents.png}{Cinq niveaux de décision et position du Blackboard comme mémoire partagée.}{fig:hierarchie-agents-annexe}
+
+\section{Acteur, agent, poste et machine: quatre notions à ne pas confondre}
+
+Le modèle utilise quatre notions qui se recoupent dans le vocabulaire courant mais désignent des objets distincts.
+
+Un \textbf{acteur Supply Chain} est une entité économique du réseau, par exemple un fournisseur ou un client, décrite dans le bloc JSON \texttt{acteurs} de l'\cref{ann:structure-json}. Il ne prend pas de décision au sens agent; il porte des paramètres, comme un délai de paiement ou une politique de réapprovisionnement.
+
+Un \textbf{agent décisionnel} appartient à l'un des cinq niveaux du \cref{tab:niveaux-agents-annexe} ci-dessous. Il transforme l'information qu'il reçoit et produit une décision ou un compte rendu.
+
+Un \textbf{poste ou micro-activité} représente une étape du scénario, décrite dans le bloc JSON \texttt{postes}. Il est piloté par le niveau Exécution mais n'est pas lui-même un agent décisionnel: il exécute l'instruction reçue et rapporte un fait.
+
+Une \textbf{machine} représente une ressource physique associée à un poste, avec sa capacité et ses paramètres de fiabilité. Elle est mobilisée par le niveau Exécution au même titre qu'un poste, sans porter elle-même de logique de décision.
+
+\section{Niveaux de décision}
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{L{0.16\textwidth} L{0.20\textwidth} Y Y}
+    \toprule
+    Niveau & Rôle & Information reçue & Information produite \\
+    \midrule
+    Stratégique & Porte l'orientation du réseau focal. & Synthèse macro consolidée. & Orientation générale, sans détail opérationnel. \\
+    Tactique & Planifie Source, Make, Deliver et Return; coordonne les dépendances entre domaines. & Objectifs de domaine et rapports consolidés. & Plan ou révision de plan. \\
+    Coordination & Contextualise le plan tactique pour un processus et consolide les retours opérationnels. & Plan tactique du domaine. & Ordre de domaine et rapport consolidé. \\
+    Pilotage opérationnel & Décompose l'ordre, affecte les tâches et surveille l'exécution. & Ordre de domaine. & Affectation, instruction ou exception. \\
+    Exécution & Réalise l'opération physique ou informationnelle. & Instruction ou affectation. & Fait runtime: début, fin, quantité ou accusé. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Niveaux de décision, rôle et transformation de l'information.}
+  \label{tab:niveaux-agents-annexe}
+\end{table}
+
+\section{Catalogue par niveau}
+
+\begin{landscape}
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{L{0.11\linewidth} L{0.09\linewidth} L{0.17\linewidth} L{0.20\linewidth} L{0.20\linewidth} L{0.11\linewidth} L{0.10\linewidth}}
+\caption{Agents et objets pilotés, par niveau de décision.}\label{tab:agents-annexe}\\
+\toprule
+Agent ou classe & Niveau & Responsabilité & Messages reçus (exemples) & Messages émis (exemples) & Blackboard & Objets pilotés \\
+\midrule
+\endfirsthead
+\toprule
+Agent ou classe & Niveau & Responsabilité & Messages reçus (exemples) & Messages émis (exemples) & Blackboard & Objets pilotés \\
+\midrule
+\endhead
+\midrule
+\multicolumn{7}{r}{Suite à la page suivante}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+Stratégique & Stratégique & Porte l'orientation du réseau focal à partir d'une synthèse macro consolidée. & Rapport stratégique consolidé & Orientation générale, sans instruction opérationnelle & Lit une synthèse déjà agrégée & Aucun objet direct; agit par l'intermédiaire du niveau Tactique \\
+
+Tactique (Source, Make, Deliver, Return) & Tactique & Planifie chaque domaine SCOR et coordonne les dépendances entre eux, par exemple une disponibilité matière révisée qui affecte Make. & \texttt{Process\-Deviation\-Report}, objectifs de domaine & \texttt{Revised\-Material\-Availability}, \texttt{Revised\-Production\-Completion\-Date}, \texttt{Revised\-Delivery\-Plan} & Écrit et lit les plans et révisions de domaine & Plan de domaine, pas d'objet physique direct \\
+
+Coordination (par processus) & Coordination & Contextualise le plan tactique pour un processus et consolide les retours opérationnels en un compte rendu de domaine. & Plan tactique du domaine & \texttt{Operational\-Exception} vers le tactique, ordre de domaine vers le pilotage & Écrit les comptes rendus consolidés & Ordre de domaine transmis au pilotage opérationnel \\
+
+OperationalPilot & Pilotage opérationnel & Décompose l'ordre de domaine, affecte les tâches aux postes et surveille l'exécution; qualifie un goulot avec l'AHP local le cas échéant. & Ordre de domaine, \texttt{Supplier\-Delay\-Alert} & \texttt{Operational\-Exception}, affectation ou instruction vers l'exécution & Écrit les décisions locales, notamment un rééquilibrage & Postes et machines affectés à une instruction \\
+
+OperationalExecution & Exécution & Réalise l'opération physique ou informationnelle et rapporte le fait obtenu. & Instruction ou affectation & \texttt{MaterialReceived}, accusé de fin de tâche, quantité produite & Écrit l'observation brute lue ensuite par les niveaux supérieurs & Poste ou machine concerné par l'opération \\
+
+Machine (instance) & Exécution & Porte la capacité, le temps de cycle et la fiabilité d'une ressource physique associée à un poste. & Instruction d'exécution transmise au poste & Fait runtime relatif au poste piloté & Ne publie pas directement; le poste rapporte l'observation & Elle-même, en tant que ressource du poste \\
+
+BlackboardAgent & Transversal & Porte la mémoire partagée entre agents; ne prend aucune décision par lui-même. & Toute observation ou décision publiée & Aucun message métier propre & Structure du Blackboard elle-même & -- \\
+
+AERMessage & Transversal & Structure tout message échangé entre agents selon sa phase AMENDMENT, EXECUTION ou REPORT. & -- & -- & Non applicable, structure de message & -- \\
+
+\end{longtable}
+}
+\end{landscape}
+
+\section{Exemple de trace: propagation d'un retard fournisseur}
+
+La séquence suivante, déjà présentée au \cref{chap:agents-aer}, illustre comment un même incident traverse les cinq niveaux et s'appuie sur le Blackboard pour rester consultable par plusieurs agents.
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{L{0.27\textwidth} L{0.19\textwidth} Y}
+    \toprule
+    Message & Passage principal & Phase AER \\
+    \midrule
+    \texttt{Supplier\-Delay\-Alert} & Fournisseur vers pilotage Source & EXECUTION \\
+    \texttt{Operational\-Exception} & Pilotage vers coordination Source & REPORT \\
+    \texttt{Process\-Deviation\-Report} & Coordination vers tactique Source & REPORT \\
+    \texttt{Revised\-Material\-Availability} & Tactique Source vers tactique Make & AMENDMENT \\
+    \texttt{Revised\-Production\-Completion\-Date} & Tactique Make vers tactique Deliver & AMENDMENT \\
+    \texttt{Revised\-Delivery\-Plan} & Tactique Deliver vers coordination Deliver & AMENDMENT \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Exemple de trace observée dans le run de validation, avec la phase AER de chaque message.}
+  \label{tab:exemple-trace-annexe}
+\end{table}
+
+\BonASavoir{AER désigne ici uniquement la classification des communications selon les phases AMENDMENT, EXECUTION et REPORT. Cette classification est indépendante du contenu métier du message: un même échange peut être lu à la fois par son objet et par sa phase.}

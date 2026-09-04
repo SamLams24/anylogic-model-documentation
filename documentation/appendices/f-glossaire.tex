@@ -1,4 +1,92 @@
 \chapter{Glossaire}
+\label{ann:glossaire}
 
-\DocumentationNote{Définir les termes métier et techniques effectivement employés, sans conserver le vocabulaire de processus de correction.}
+Ce glossaire réunit, par ordre alphabétique, les termes techniques employés dans le document. Chaque entrée reste volontairement courte; pour une explication complète, suivre le renvoi vers le chapitre correspondant.
 
+\begin{description}
+
+\item[ABox] Couche ontologique portant les individus et les faits propres à une exécution donnée, dans l'espace de noms \texttt{run}. Voir \cref{chap:isa95-ontologie}.
+
+\item[Acteur] Entité économique du réseau Supply Chain, par exemple un fournisseur ou un client, décrite dans le bloc JSON \texttt{acteurs}. Un acteur porte des paramètres; il ne prend pas de décision au sens agent. Voir \cref{ann:agents,ann:structure-json}.
+
+\item[AER] Classification des communications du modèle selon les phases AMENDMENT, EXECUTION et REPORT. Voir \cref{chap:agents-aer}.
+
+\item[Agent] Élément décisionnel appartenant à l'un des cinq niveaux de responsabilité du modèle: Stratégique, Tactique, Coordination, Pilotage opérationnel, Exécution. Voir \cref{chap:agents-aer,ann:agents}.
+
+\item[AHP] Méthode de comparaison par paires utilisée dans le modèle comme outil d'arbitrage local, notamment pour qualifier un goulot. Distincte du Performance Index. Voir \cref{chap:agents-aer,chap:scor-pi}.
+
+\item[AM] Attribut de performance SCOR Asset Management, portant sur l'utilisation des actifs. Voir \cref{chap:scor-pi,ann:metriques}.
+
+\item[Blackboard] Espace de mémoire partagée où les agents déposent des observations et des décisions consultables par plusieurs niveaux. Ne prend pas de décision par lui-même. Voir \cref{chap:agents-aer}.
+
+\item[Bottom] Repère de normalisation représentant la valeur la plus défavorable de l'échelle d'une métrique. Voir \cref{chap:scor-pi}.
+
+\item[CMD] Préfixe identifiant une commande cliente, distincte d'un ordre interne de reconstitution \texttt{REAPPRO}. Voir \cref{chap:stocks-reapprovisionnement}.
+
+\item[CO] Attribut de performance SCOR Cost, portant sur le coût de management de la supply chain. Voir \cref{chap:scor-pi,ann:metriques}.
+
+\item[Deliver] Processus SCOR couvrant la livraison au client, incluant réservation et transport jusqu'à la clôture de la commande. Voir \cref{chap:processus-scor}.
+
+\item[EOQ] Quantité économique de commande, calculée à partir de la demande et des coûts de lancement et de possession. Voir \cref{chap:stocks-reapprovisionnement}.
+
+\item[\texttt{executedAt}] Relation ontologique reliant l'individu d'une micro-activité à l'élément ISA-95 où elle s'est exécutée pendant un run. Voir \cref{chap:isa95-ontologie}.
+
+\item[ISA-95] Norme de hiérarchie d'équipements utilisée par le modèle pour situer une micro-activité dans son contexte physique. Voir \cref{chap:isa95-ontologie}.
+
+\item[Lead Time] Délai total entre le déclenchement et la clôture d'une commande. Dans ce document, l'Order Fulfillment Lead Time additionne le traitement propre à la commande et l'attente imputée depuis l'ordre interne qui la sert. Voir \cref{chap:mesures-vsm}.
+
+\item[Make] Processus SCOR couvrant la transformation ou la production réalisée sur les postes du modèle. Voir \cref{chap:processus-scor}.
+
+\item[Make-to-Stock] Politique de production sur stock, opposée à une production déclenchée directement par la commande cliente; elle justifie la distinction entre \texttt{CMD} et \texttt{REAPPRO}. Voir \cref{chap:stocks-reapprovisionnement}.
+
+\item[Matière] Ressource consommée par un poste de production, décrite dans une fiche matière du bloc JSON \texttt{fichesMatiere}. Voir \cref{ann:structure-json}.
+
+\item[Micro-activité] Étape élémentaire d'un scénario, représentée par un poste dans le bloc JSON \texttt{postes} et rattachée à un code SCOR de niveau 3. Voir \cref{ann:agents,ann:structure-json}.
+
+\item[N3] Niveau 3 de la hiérarchie SCOR, celui des métriques et micro-activités détaillées mobilisées par le modèle. Voir \cref{chap:processus-scor,chap:scor-pi}.
+
+\item[N4] Niveau 4 de la hiérarchie SCOR, en dessous du niveau 3; le modèle ne descend pas systématiquement à ce niveau de détail.
+
+\item[Nomenclature] Liste des matières et quantités nécessaires à la fabrication d'un produit, définie dans un scénario. Voir \cref{chap:nomenclature-stocks}.
+
+\item[OperationalExecution] Niveau de décision réalisant l'opération physique ou informationnelle et rapportant le fait obtenu. Voir \cref{ann:agents}.
+
+\item[OperationalPilot] Niveau de décision qui décompose l'ordre de domaine, affecte les tâches aux postes et surveille l'exécution. Voir \cref{ann:agents}.
+
+\item[Perfect] Repère de normalisation représentant la valeur la plus favorable de l'échelle d'une métrique. Voir \cref{chap:scor-pi}.
+
+\item[PCE] Process Cycle Efficiency, ratio entre le temps à valeur ajoutée estimé et le temps total de traitement et d'attente. Toujours qualifié ESTIME dans ce document. Voir \cref{chap:mesures-vsm}.
+
+\item[PI] Performance Index, synthèse pondérée des cinq attributs RL, RS, AG, CO et AM pour une exécution donnée selon les profils de normalisation retenus. Voir \cref{chap:scor-pi}.
+
+\item[Plan] Processus SCOR transversal de planification, présent dans la lecture par colonne de la vue Logistique. Voir \cref{chap:processus-scor}.
+
+\item[Poste] Représentation d'une micro-activité du scénario, avec ses paramètres de temps, de capacité et de routage. Voir \cref{chap:configurer}.
+
+\item[Proxy] Métrique explicitement nommée comme approximation, n'empruntant aucun code SCOR officiel, par exemple \path{PROXY.AG.SYSTEM_UTILIZATION}. Voir \cref{chap:scor-pi,ann:metriques}.
+
+\item[REAPPRO] Préfixe identifiant un ordre interne de reconstitution de stock, distinct d'une commande cliente \texttt{CMD}. Voir \cref{chap:stocks-reapprovisionnement}.
+
+\item[RL] Attribut de performance SCOR Reliability, portant sur la fiabilité de livraison. Voir \cref{chap:scor-pi,ann:metriques}.
+
+\item[ROP] Point de commande (reorder point), seuil de stock déclenchant une reconstitution. Voir \cref{chap:stocks-reapprovisionnement}.
+
+\item[RS] Attribut de performance SCOR Responsiveness, portant sur la réactivité et les temps de traitement. Voir \cref{chap:scor-pi,ann:metriques}.
+
+\item[SCOR] Référentiel de processus Supply Chain Operations Reference, source de la numérotation des processus et métriques mobilisée par le modèle. Voir \cref{chap:processus-scor,chap:scor-pi}.
+
+\item[Scénario] Gamme ordonnée de postes que traverse un produit, définie dans le bloc JSON \texttt{scenarios}. Voir \cref{ann:structure-json}.
+
+\item[Source] Processus SCOR couvrant l'approvisionnement en matière auprès des fournisseurs. Voir \cref{chap:processus-scor}.
+
+\item[Stock de sécurité] Niveau de stock minimal visant à absorber la variabilité de la demande ou du délai d'approvisionnement. Voir \cref{chap:stocks-reapprovisionnement}.
+
+\item[Stock projeté] Estimation du stock disponible en tenant compte des réceptions attendues, utilisée pour anticiper un besoin de reconstitution. Voir \cref{chap:stocks-reapprovisionnement}.
+
+\item[TBox] Couche ontologique portant le vocabulaire et la structure conceptuelle générale, indépendamment d'une exécution particulière. Voir \cref{chap:isa95-ontologie}.
+
+\item[VSM] Value Stream Mapping, démarche de mesure des temps de traitement et d'attente le long d'un flux, mobilisée par le modèle pour ses mesures temporelles. Voir \cref{chap:mesures-vsm}.
+
+\item[WIP] Work In Progress, nombre d'entités physiquement engagées dans le flux à un instant donné, hors jetons réservés à l'animation. Voir \cref{chap:mesures-vsm}.
+
+\end{description}

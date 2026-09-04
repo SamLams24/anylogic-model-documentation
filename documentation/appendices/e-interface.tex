@@ -1,13 +1,13 @@
 \chapter{Référence des champs et commandes de l'interface}
 \label{ann:interface}
 
-Cette annexe recense les contrôles mobilisés dans les \cref{chap:prise-en-main,chap:configurer,chap:nomenclature-stocks,chap:json,chap:lancer-suivre}. Les libellés reproduisent l'interface auditée. Les identifiants servent à retrouver sans ambiguïté le contrôle dans le modèle.
+Cette annexe recense les contrôles mobilisés dans les \cref{chap:prise-en-main,chap:configurer,chap:nomenclature-stocks,chap:json,chap:lancer-suivre,chap:vues-tableaux}. Les libellés reproduisent l'interface auditée. Les identifiants servent à retrouver sans ambiguïté le contrôle dans le modèle.
 
 \begin{landscape}
 {\footnotesize
 \setlength{\tabcolsep}{2pt}
 \begin{longtable}{L{0.10\linewidth} L{0.14\linewidth} L{0.07\linewidth} L{0.24\linewidth} L{0.09\linewidth} L{0.09\linewidth} L{0.10\linewidth} L{0.10\linewidth}}
-\caption{Contrôles d'interface utilisés dans les chapitres 11 à 15.}\label{tab:reference-interface}\\
+\caption{Contrôles d'interface utilisés dans les chapitres 11 à 16.}\label{tab:reference-interface}\\
 \toprule
 Vue ou fenêtre & Libellé visible exact & Type & Identifiant technique & Rôle & Valeur attendue & Effet & Précaution \\
 \midrule
@@ -102,6 +102,10 @@ Suivi temps réel & Rafraîchir maintenant; Fermer & commandes & actualisation e
 Suivi temps réel & Tableau des événements & tableau & fenêtre \texttt{Suivi temps reel de la simulation} & Lire la chronologie & Lignes générées & Relie événements, flux, décisions et statuts & Interpréter dans une exécution identifiée. \\
 Exécution & Arreter et voir resultats & commande & \texttt{arreterSimulation} & Arrêter l'exécution & Un clic & Calcule les indicateurs et ouvre l'analyse & Différent d'une clôture métier. \\
 Exécution & Reinitialiser & commande & \texttt{button5} & Remettre à zéro l'observation courante & Un clic & Réinitialise arrivée, tableau, compteurs et entités affichées & Exporter auparavant les sorties utiles. \\
+Exécution & Voir Rapport VSM/SCOR; Voir Détail N3; Rapport efficacité globale & commandes & \texttt{btnDashRapport}; \texttt{btnDashN3}; \texttt{btnPCEGlobal} & Consulter les synthèses de mesure & Un clic & Ouvre le rapport ou tableau correspondant & Interpréter seulement pour un run identifié. \\
+Exécution & Voir KPI par micro-activité; Voir Goulots & commandes & \texttt{showKpiParPosteTable}; \texttt{supervisor.getGoulotsText} & Détailler par poste et repérer les goulots & Un clic & Ouvre le tableau ou le texte des goulots & Les deux commandes de KPI par poste mènent au même tableau. \\
+Exécution & Décisions agents; Traçabilité; Journal événements & commandes & \texttt{showDecisionsHoloniquesTable}; \texttt{showTracesAgregeesTable} & Consulter décisions et traces & Un clic & Ouvre le tableau ou le journal correspondant & Un journal d'interface n'est pas une preuve complète sans export. \\
+Structure animée & Voir tout & commande & \texttt{afficherHistorique\allowbreak FluxInformationnels} & Ouvrir l'historique des flux informationnels & Un clic & Affiche l'historique des échanges enregistrés & La cadence visuelle affichée ne représente pas nécessairement la cadence métier. \\
 \end{longtable}
 }
 \end{landscape}

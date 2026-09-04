@@ -1,4 +1,91 @@
 \chapter{Catalogue des fonctions importantes}
+\label{ann:fonctions}
 
-\DocumentationNote{Recenser les fonctions par responsabilité : configuration, exécution, mesure, agents, interface, sauvegarde, chargement et exports.}
+Cette annexe recense les fonctions structurantes du modèle validé, organisées par domaine. Elle ne recense pas l'ensemble des méthodes Java du projet: l'objectif est de répondre à la question où se trouve la logique, pas de reproduire le code source. Une signature complète n'est donnée que lorsqu'elle aide à retrouver la fonction; le rôle et l'effet comptent davantage que la syntaxe exacte. Lorsqu'une fonctionnalité est répartie entre plusieurs fonctions coopérantes, la ligne documente le groupe plutôt qu'une seule fonction isolée.
 
+Chaque ligne indique le domaine, le rôle, les entrées principales, la sortie ou l'effet produit, le contexte d'appel principal, la structure modifiée et le chapitre du corps utilisateur ou conceptuel où la fonctionnalité est expliquée. Les noms proviennent directement de \texttt{sources/model/SCONTO\_\allowbreak SVU\_\allowbreak FINAL\_\allowbreak VALIDATED.alp} ou des audits qui en dérivent, notamment \texttt{MODEL\_\allowbreak VERIFICATION.md}, \texttt{VSM\_\allowbreak FIX\_\allowbreak IMPLEMENTATION.md} et \texttt{JSON\_\allowbreak WORKFLOW\_\allowbreak AUDIT.md}.
+
+\begin{landscape}
+{\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{L{0.13\linewidth} L{0.09\linewidth} L{0.19\linewidth} L{0.14\linewidth} L{0.14\linewidth} L{0.12\linewidth} L{0.06\linewidth}}
+\caption{Fonctions structurantes du modèle, par domaine.}\label{tab:fonctions-annexe}\\
+\toprule
+Nom & Domaine & Rôle & Entrées principales & Sortie ou effet & Appelée par & Ch. \\
+\midrule
+\endfirsthead
+\toprule
+Nom & Domaine & Rôle & Entrées principales & Sortie ou effet & Appelée par & Ch. \\
+\midrule
+\endhead
+\midrule
+\multicolumn{7}{r}{Suite à la page suivante}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\texttt{initialiser\allowbreak Stocks\allowbreak Produits} & Initialisation & Applique les stocks initiaux de produit fini au chargement. & JSON chargé, profil actif & Stock produit fini initialisé & Chargement JSON, démarrage & 4 \\
+\texttt{stock\allowbreak Initial\allowbreak Configure} & Initialisation & Détermine la valeur de repli du stock initial. & Configuration courante & Valeur de repli appliquée & \texttt{initialiser\allowbreak Stocks\allowbreak Produits} & 14 \\
+
+\texttt{analyser\allowbreak Stock\allowbreak Commande\allowbreak Orchestree} & Commandes clientes & Vérifie la disponibilité pour une commande, ouvre l'attente ou déclenche Deliver. & Commande \texttt{CMD\_*}, stock courant & Décision de service ou d'attente & Réception de commande, réveil après crédit stock & 4 \\
+\texttt{ouvrir\allowbreak Attente\allowbreak Stock\allowbreak Commande} & Commandes clientes & Ouvre le segment d'attente d'une commande. & Commande en stock insuffisant & \texttt{t\allowbreak Debut\allowbreak Attente\allowbreak Stock} fixé & \texttt{analyser\allowbreak Stock\allowbreak Commande\allowbreak Orchestree} & 8 \\
+\texttt{lier\allowbreak Commande\allowbreak Et\allowbreak Reappro}, \texttt{lier\allowbreak Commande\allowbreak Au\allowbreak Reappro\allowbreak Actif}, \texttt{lier\allowbreak Reappro\allowbreak Aux\allowbreak Commandes\allowbreak Clientes\allowbreak En\allowbreak Attente} & Commandes clientes & Établissent la dépendance entre une commande en attente et l'ordre interne qui la sert. & Commande, ordre \texttt{REAPPRO\_*} & Relation bidirectionnelle enregistrée & Création ou activation d'un ordre interne & 4 \\
+\texttt{finaliser\allowbreak Dependance\allowbreak Reappro} & Commandes clientes & Ferme l'attente lorsque l'ordre imputé se termine. & Ordre interne clos & \texttt{t\allowbreak Fin\allowbreak Attente\allowbreak Stock} fixé, imputation unique & Clôture de \texttt{REAPPRO\_*} & 8 \\
+\texttt{finaliser\allowbreak Reception\allowbreak Client\allowbreak Directe}, \texttt{enregistrer\allowbreak Fin\allowbreak Commande\allowbreak Globale} & Commandes clientes & Clôturent une commande servie et consomment le stock livré. & Commande servie & Statut clos, stock décrémenté & Réservation puis livraison Deliver & 4 \\
+\texttt{consommer\allowbreak Stock\allowbreak Fini\allowbreak Produit} & Commandes clientes & Décrémente le stock fini à la satisfaction effective d'une commande. & Quantité livrée & Stock fini réduit & \texttt{enregistrer\allowbreak Fin\allowbreak Commande\allowbreak Globale} & 4 \\
+\texttt{nombre\allowbreak Commandes\allowbreak Clientes}, \texttt{nombre\allowbreak Ordres\allowbreak Stock\allowbreak Autonomes} & Commandes clientes & Comptent séparément commandes et ordres internes. & Collections d'objets & Deux comptages distincts & KPI clients, exports & 6 \\
+
+\texttt{verifier\allowbreak Politique\allowbreak Stock\allowbreak Produit} & Stocks et réappro. & Évalue périodiquement si une reconstitution produit fini est nécessaire. & Stock projeté, point de commande & Déclenchement éventuel de \texttt{REAPPRO\_*} & Boucle périodique du modèle & 5 \\
+\texttt{point\allowbreak Commande\allowbreak Produit} & Stocks et réappro. & Calcule le point de commande du produit fini. & Stock de sécurité, demande, délai & Seuil de déclenchement & \texttt{verifier\allowbreak Politique\allowbreak Stock\allowbreak Produit} & 5 \\
+\texttt{calculer\allowbreak Quantite\allowbreak Economique}, \texttt{borner\allowbreak Quantite\allowbreak Lot} & Stocks et réappro. & Calculent puis bornent la quantité économique de commande. & Demande, coûts de lancement et possession & Quantité proposée puis bornée & Déclenchement d'une reconstitution & 5 \\
+\texttt{calculer\allowbreak Besoins\allowbreak Nets} & Stocks et réappro. & Calcule le besoin net matière pour un ordre interne. & Nomenclature, stock disponible & Quantité manquante par matière & \texttt{declencher\allowbreak Production\allowbreak Autonome} & 5 \\
+\texttt{declencher\allowbreak Production\allowbreak Autonome} & Stocks et réappro. & Crée un ordre \texttt{REAPPRO\_*} borné, distinct d'une commande cliente. & Signal de manque & Ordre interne créé & \texttt{verifier\allowbreak Politique\allowbreak Stock\allowbreak Produit} & 5 \\
+\texttt{total\allowbreak Receptions\allowbreak Attendues}, \texttt{stock\allowbreak Projete}, \texttt{receptions\allowbreak Attendues} & Stocks et réappro. & Calculent le stock matière projeté à partir du disponible et des réceptions en transit. & Fiches matière, commandes fournisseur en cours & Stock projeté par matière & Politique autonome matière & 5 \\
+
+\texttt{tracer\allowbreak Flux\allowbreak Hierarchique} & Source & Émet et route les messages AER, notamment \texttt{Supplier\allowbreak Delay\allowbreak Alert} et \texttt{Material\allowbreak Received}. & Événement Source, contexte hiérarchique & Message AER structuré, historique & Réception matière, retard fournisseur & 7 \\
+\texttt{retard\allowbreak Fournisseur\allowbreak Test\allowbreak Actif}, \texttt{facteur\allowbreak Retard\allowbreak Fournisseur}, \texttt{enregistrer\allowbreak Retard\allowbreak Fournisseur\allowbreak Force} & Source & Portent la configuration et l'enregistrement d'un retard fournisseur déterministe. & Réglages de la fenêtre Perturbations & Délai effectif appliqué, message émis & Réception ciblée par la perturbation & 15 \\
+
+\texttt{planifier\allowbreak Avec\allowbreak Echelle} & Make & Convertit une durée réelle en durée simulée selon \texttt{sim\allowbreak To\allowbreak Real\allowbreak Seconds}. & Durée réelle, échelle courante & Durée simulée planifiée & Source, Deliver, Plan, Return & 2 \\
+\texttt{niveau\allowbreak Stock}, \texttt{est\allowbreak Flux\allowbreak Visuel\allowbreak Seulement} & Make & Portent le crédit du stock fini hors jetons réservés à l'animation. & Sortie du poste de stockage & Stock physique crédité & Transfert M1.5 & 6 \\
+
+\texttt{declencher\allowbreak Retour\allowbreak Client} & Return & Ouvre la chaîne temporisée de retour, disponible mais non exécutée dans le run de validation. & Déclencheur de retour & Chaîne Return amorcée & Catalogue SCOR interne & 6 \\
+\texttt{CATALOGUE\_\allowbreak SCOR\_\allowbreak N3} & Return & Structure interne de référence des codes SCOR de niveau 3, dont les codes Return. & -- & Table de référence des micro-activités & Configuration et affichage & 6 \\
+
+\texttt{AERMessage} & Agents et AER & Structure un message typé selon sa phase, son émetteur, son destinataire et son objet. & Événement métier & Message AER structuré & \texttt{tracer\allowbreak Flux\allowbreak Hierarchique} & 7 \\
+\texttt{scorer\allowbreak Goulot\allowbreak AHP}, \texttt{prendre\allowbreak Decision\allowbreak AHP} & Agents et AER & Construisent la matrice AHP locale et en déduisent une décision, par exemple \texttt{REBALANCE}. & Situation opérationnelle observée & Score de cohérence, décision locale & Détection de goulot & 7 \\
+
+\texttt{Blackboard\allowbreak Agent} & Blackboard & Classe portant la mémoire partagée entre agents. & Observations et décisions publiées & État partagé consultable & Tous les niveaux de décision & 7 \\
+\texttt{log\allowbreak Event} & Blackboard & Écrit une observation ou un compte rendu sur le Blackboard. & Message texte structuré & Entrée ajoutée au journal partagé & Toute fonction produisant un événement notable & 7 \\
+
+\texttt{actualiser\allowbreak Registre\allowbreak Temps\allowbreak Commande} & VSM & Met à jour le registre temporel d'une commande cliente. & Événements de traitement et d'attente & Registre de temps à jour & Cycle de vie de la commande & 8 \\
+\texttt{order\allowbreak Processing\allowbreak Time\allowbreak Global}, \texttt{order\allowbreak Waiting\allowbreak Time\allowbreak Global}, \texttt{order\allowbreak Fulfillment\allowbreak Lead\allowbreak Time\allowbreak Global} & VSM & Exposent les trois temps globaux du périmètre commande cliente. & Registre de temps de commande & Valeurs publiées au dashboard et à l'ABox & \texttt{RS.1.1}, \texttt{RS.3.94}, exports & 8 \\
+\texttt{temps\allowbreak Attente\allowbreak Global\allowbreak Coherent} & VSM & Vérifie la cohérence de l'attente globale exposée. & Registre de temps & Confirmation ou correction & Export et affichage & 8 \\
+\texttt{source\allowbreak Valeur\allowbreak Ajoutee}, \texttt{resume\allowbreak Source\allowbreak VAZener} & VSM & Qualifient la source du taux de valeur ajoutée utilisé pour le PCE. & Taux VA par poste & Statut \texttt{CONFIGUREE} ou \texttt{FALLBACK} & Calcul du PCE ZENER & 8 \\
+\texttt{calculer\allowbreak Takt\allowbreak Time\allowbreak Sec}, \texttt{wip\allowbreak Reel\allowbreak Sans\allowbreak Jetons\allowbreak Visuels} & VSM & Calculent le takt time et le WIP physique hors jetons visuels. & Demande, entités physiques & Takt time, WIP physique & Dashboard, exports & 8 \\
+
+\texttt{calculer\allowbreak PIGlobal} & SCOR / PI & Pipeline complet: normalisation, logique floue, attributs, pondération, PI. & Métriques calculées, poids configurés & Scores d'attribut et PI & Clôture ou affichage du dashboard & 9 \\
+\texttt{valeur\allowbreak Runtime\allowbreak Metrique\allowbreak SCOR}, \texttt{source\allowbreak Formule\allowbreak Metrique\allowbreak SCOR} & SCOR / PI & Associent une métrique à sa valeur runtime et à sa formule ou source déclarée. & Code métrique & Valeur et statut de preuve & \texttt{calculer\allowbreak PIGlobal}, annexe D & 9 \\
+\texttt{Metrique\allowbreak N3}, \texttt{Fuzzy\allowbreak Grade\allowbreak Set}, \texttt{KPIBundle} & SCOR / PI & Structures portant respectivement une métrique de niveau 3, un ensemble de grades flous et un paquet de KPI. & -- & Objets manipulés par le pipeline & \texttt{calculer\allowbreak PIGlobal} & 9 \\
+
+\texttt{sauver\allowbreak Scenario\allowbreak JSON}, \texttt{charger\allowbreak Scenario\allowbreak JSON} & JSON & Écrivent ou lisent le fichier JSON associé au nom d'entreprise. & Configuration en mémoire ou fichier disque & Fichier JSON ou configuration reconstruite & Commandes Sauver et Charger config JSON & 14 \\
+\texttt{lister\allowbreak Scenarios\allowbreak Json\allowbreak Disponibles}, \texttt{charger\allowbreak Scenario\allowbreak JSONDepuis\allowbreak Selection} & JSON & Détectent les fichiers \texttt{scenario\_*.json} puis délèguent le chargement du fichier choisi. & Répertoire courant, sélection utilisateur & Liste triée, configuration chargée & Commandes Rafraîchir et Charger le scénario sélectionné & 14 \\
+\texttt{scenario\allowbreak Json\allowbreak File\allowbreak Name} & JSON & Dérive le nom de fichier à partir du nom d'entreprise. & \texttt{nom\allowbreak Entreprise} & Nom de fichier normalisé & \texttt{sauver\allowbreak Scenario\allowbreak JSON}, \texttt{charger\allowbreak Scenario\allowbreak JSON} & 14 \\
+\texttt{acteur\allowbreak To\allowbreak Json/From\allowbreak Json}, \texttt{scenario\allowbreak To\allowbreak Json/From\allowbreak Json}, \texttt{machine\allowbreak To\allowbreak Json/From\allowbreak Json}, \texttt{responsabilite\allowbreak To\allowbreak Json/From\allowbreak Json}, \texttt{isa95\allowbreak Node\allowbreak To\allowbreak Json/From\allowbreak Json}, \texttt{isa95\allowbreak Assignment\allowbreak To\allowbreak Json/From\allowbreak Json}, \texttt{matrice\allowbreak AHPTo\allowbreak Json/From\allowbreak Json} & JSON & Convertissent chaque sous-structure entre l'objet métier et sa représentation JSON. & Objet métier ou noeud JSON & Bloc JSON ou objet reconstruit & \texttt{sauver\allowbreak Scenario\allowbreak JSON}, \texttt{charger\allowbreak Scenario\allowbreak JSON} & Annexe A \\
+\texttt{clear\allowbreak Scenario\allowbreak Before\allowbreak Json\allowbreak Load} & JSON & Nettoie l'état courant avant reconstruction: arrêt du mode d'exécution, remise à zéro des compteurs. & Configuration à remplacer & État vidé, prêt pour reconstruction & \texttt{charger\allowbreak Scenario\allowbreak JSON} & 14 \\
+
+\texttt{isa95\allowbreak Hierarchy.size()==190 \&\& isa95\allowbreak Assignments.size()==71} & ISA-95 & Garde de non-régression contrôlant les deux cardinalités avant de valider une configuration. & Hiérarchie et affectations chargées & Blocage ou confirmation de cohérence & Démarrage de simulation & 10 \\
+
+\texttt{exporter\allowbreak ABox\allowbreak Runtime\allowbreak TTL} & ABox & Exporte l'ABox runtime au format Turtle. & État courant, réglages \texttt{abox\allowbreak Export} & Fichier \texttt{.ttl} & Clôture de commande ou arrêt, selon réglages & 17 \\
+\texttt{abox\allowbreak Direct\allowbreak VSMIndicator\allowbreak For\allowbreak Metric} & ABox & Relie un indicateur VSM exporté à l'individu ABox correspondant. & Code métrique VSM & Lien vers l'individu ABox & \texttt{exporter\allowbreak ABox\allowbreak Runtime\allowbreak TTL} & 10 \\
+
+\texttt{exporter\allowbreak CSV}, \texttt{exporter\allowbreak Toutes\allowbreak Les\allowbreak Tables\allowbreak Excel} & Exports & Produisent respectivement un extrait CSV et le classeur Excel complet. & Tables et mesures courantes & Fichiers exportés & Commandes Exporter CSV et clôture d'exécution & 17 \\
+\texttt{manifeste\allowbreak Run\allowbreak Columns}, \texttt{manifeste\allowbreak Run\allowbreak Rows} & Exports & Construisent la feuille Manifeste Run. & Identité et paramètres du run & Feuille manifeste & \texttt{exporter\allowbreak Toutes\allowbreak Les\allowbreak Tables\allowbreak Excel} & 18 \\
+\texttt{dashboard\allowbreak Global\allowbreak Columns/Rows}, \texttt{dashboard\allowbreak Micro\allowbreak Columns/Rows}, \texttt{kpi\allowbreak Par\allowbreak Poste\allowbreak Columns/Rows} & Exports & Construisent les feuilles de dashboard global, micro et KPI par poste. & Mesures agrégées & Feuilles Excel correspondantes & \texttt{exporter\allowbreak Toutes\allowbreak Les\allowbreak Tables\allowbreak Excel} & 16, 17 \\
+\texttt{get\allowbreak Rapport\allowbreak VSM}, \texttt{pce\allowbreak Global\allowbreak Text}, \texttt{kpi\allowbreak Logistics\allowbreak Text} & Exports & Produisent les rapports textuels affichés dans l'interface. & Mesures courantes & Texte de rapport affiché & Commandes Voir Rapport VSM/SCOR, EFFICACITÉ GLOBALE & 16 \\
+
+\texttt{demarrer\allowbreak Simulation} & Interface utilisateur & Valide la configuration et lance l'exécution. & Configuration en mémoire & État d'exécution initialisé & Commande Démarrer simulation & 15 \\
+\texttt{arreter\allowbreak Simulation} & Interface utilisateur & Arrête l'exécution active et calcule les indicateurs finaux. & Exécution en cours & Résultats calculés, exports éventuels & Commande Arreter et voir resultats & 15, 17 \\
+\texttt{ouvrir\allowbreak Suivi\allowbreak Temps\allowbreak Reel} & Interface utilisateur & Ouvre la fenêtre complémentaire de suivi en temps réel. & Exécution en cours ou terminée & Fenêtre de suivi affichée & Commande présente dans les huit vues & 16 \\
+\end{longtable}
+}
+\end{landscape}

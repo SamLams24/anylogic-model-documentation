@@ -99,9 +99,10 @@ def main() -> int:
                 if term.casefold() in lowered:
                     add_match(errors, path, text, re.escape(term), f"jargon graphique dans un chapitre utilisateur: {term}")
 
+        add_match(errors, path, text, r"\\DocumentationNote\s*\{", "note interne encore active")
+
         if args.final:
             for pattern, label in (
-                (r"\\DocumentationNote\s*\{", "note interne encore active"),
                 (r"\\FigureOrPlaceholder\s*(?:\[[^]]*\])?\s*\{", "placeholder de figure encore autorisé"),
                 (r"\\TablePlaceholder\s*\{", "placeholder de tableau encore autorisé"),
                 (r"Illustration planifiée", "texte de placeholder"),

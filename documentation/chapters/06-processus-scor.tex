@@ -7,7 +7,7 @@ Le modèle organise le flux logistique de ZENER SA Togo autour de cinq processus
 
 \section{Plan}
 
-Plan porte la décision de reconstituer le stock de produit fini ou de matière. Son entrée est un signal de manque, calculé par la politique autonome à partir du stock projeté, du point de commande et des réceptions attendues. Sa sortie est un ordre \texttt{REAPPRO\_*} borné par une quantité économique de Wilson, ou une demande de disponibilité matière transmise à Source. Le scénario compte six micro-activités portant un code \texttt{P2}, \texttt{P3} ou \texttt{P4}, réparties entre Make, Deliver et Return; aucune ne porte le code \texttt{P1}, le plan Source restant implicite dans la politique de matière plutôt que matérialisé par un poste dédié.
+Plan porte la décision de reconstituer le stock de produit fini ou de matière. Son entrée est un signal de manque, calculé par la politique autonome à partir du stock projeté, du point de commande et des réceptions attendues. Sa sortie est un ordre \texttt{REAPPRO\_*} borné par une quantité économique de commande selon le modèle EOQ classique, ou une demande de disponibilité matière transmise à Source. Le scénario compte six micro-activités portant un code \texttt{P2}, \texttt{P3} ou \texttt{P4}, réparties entre Make, Deliver et Return; aucune ne porte le code \texttt{P1}, le plan Source restant implicite dans la politique de matière plutôt que matérialisé par un poste dédié.
 
 Plan ne déclenche jamais directement une commande cliente. Il répond à un état de stock insuffisant et reste, à ce titre, un mécanisme interne au sens du \cref{chap:stocks-reapprovisionnement}.
 

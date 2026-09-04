@@ -31,36 +31,36 @@ Les statuts autorisés sont `A_GENERER`, `CAPTURE_EXISTANTE_A_VALIDER`, `CAPTURE
 | DOC-A19 | 8 | WIP, débit et takt | Schéma relationnel | ALP et run validé | `VALIDE` | Définitions réellement calculées, sans formule imposée | `figures/wip_debit_takt.png` |
 | DOC-A20 | 9 | Pipeline valeur VSM vers PI | Diagramme d'activité | ALP, JSON et run validé | `VALIDE` | Valeur brute, score, classes, attribut et PI | `figures/pipeline_scor_pi.png` |
 | DOC-A21 | 9 | Profils bottom/perfect | Échelle annotée | JSON courant | `VALIDE` | Exemple CO.1.1 sur seize profils actuels | `figures/echelle_bottom_perfect.png` |
-| DOC-A22 | 9 | AHP stratégique et AHP goulot | Comparaison de flux | ALP et JSON | `VALIDE` | Usage diagnostique contre usage décisionnel | `figures/deux_usages_ahp.png` |
+| DOC-A22 | 9 | AHP local et pipeline du PI | Comparaison de flux disjoints | ALP et JSON | `VALIDE` | AHP local et PI sans lien de calcul démontré | `figures/ahp_vs_pi.png` |
 | DOC-A23 | 10 | Hiérarchie ISA-95 | Arbre hiérarchique | JSON courant | `VALIDE` | 190 noeuds, types et parents | `figures/hierarchie_isa95.png` |
 | DOC-A24 | 10 | Affectation poste vers équipement | Diagramme de classes | JSON courant | `VALIDE` | 71 affectations | `figures/affectations_isa95.png` |
 | DOC-A25 | 10 | TBox, ABox et run | Schéma de traçabilité | Ontologies et ABox validée | `VALIDE` | Namespaces et rôles établis | `figures/tbox_abox_run.png` |
 | DOC-A26 | 11 | Parcours utilisateur conseillé | Diagramme d'activité | UI actuelle | `VALIDE` | Huit vues et fenêtres accessibles | `figures/parcours_utilisateur.png` |
-| DOC-B01 | 11 | Barre de navigation actuelle | Capture réelle | ALP, ancienne image 1 | `CAPTURE_A_REALISER` | Toutes les destinations visibles | `figures/screenshots/ui_navigation.png` |
-| DOC-B02 | 12 | Vue Configuration | Capture réelle | ALP, ancienne image 2 | `CAPTURE_A_REALISER` | Modèle validé, cadrage lisible | `figures/screenshots/ui_configuration.png` |
-| DOC-C01 | 12 | Zones de la vue Configuration | Zoom annoté | Future capture B02 | `CAPTURE_A_REALISER` | Repères conformes aux contrôles actuels | `figures/screenshots/ui_configuration_annotee.png` |
-| DOC-B03 | 12 | Pondération des attributs | Capture réelle | Ancienne image 6 | `CAPTURE_A_REALISER` | Nouvelle capture du modèle courant | `figures/screenshots/ui_poids_attributs.png` |
-| DOC-B04 | 12 | Pondération des métriques N3 | Capture réelle | Ancienne image 7 | `CAPTURE_A_REALISER` | Nouvelle capture du modèle courant | `figures/screenshots/ui_poids_n3.png` |
-| DOC-B05 | 12 | Vue Logistique | Capture réelle | ALP | `CAPTURE_A_REALISER` | Acteurs et commandes visibles | `figures/screenshots/ui_logistique.png` |
+| DOC-B01 | 11 | Barre de navigation actuelle | Capture réelle | ALP, ancienne image 1 | `VALIDE` | Toutes les destinations visibles | `figures/screenshots/ui_navigation.png` |
+| DOC-B02 | 12 | Vue Configuration | Capture réelle | ALP, ancienne image 2 | `VALIDE` | Modèle validé, cadrage lisible | `figures/screenshots/ui_configuration.png` |
+| DOC-C01 | 12 | Zones de la vue Configuration | Zoom annoté | Future capture B02 | `VALIDE` | Repères conformes aux contrôles actuels | `figures/screenshots/ui_configuration_annotee.png` |
+| DOC-B03 | 12 | Pondération des attributs | Capture réelle | Ancienne image 6 | `VALIDE` | Nouvelle capture du modèle courant | `figures/screenshots/ui_poids_attributs.png` |
+| DOC-B04 | 12 | Pondération des métriques N3 | Capture réelle | Ancienne image 7 | `VALIDE` | Nouvelle capture du modèle courant | `figures/screenshots/ui_poids_n3.png` |
+| DOC-B05 | 12 | Vue Logistique | Capture réelle | ALP | `VALIDE` | Acteurs et commandes visibles | `figures/screenshots/ui_logistique.png` |
 | DOC-B06 | 12 | Vue Responsabilités et Machines | Capture réelle | ALP | `CAPTURE_A_REALISER` | Neuf champs et sept boutons | `figures/screenshots/ui_responsabilites_machines.png` |
-| DOC-B07 | 13 | Vue Nomenclature et matières | Capture réelle | ALP, anciennes images 8 et 9 | `CAPTURE_A_REALISER` | Sans icône de développement | `figures/screenshots/ui_nomenclature.png` |
-| DOC-C02 | 13 | Les quatre zones de la Nomenclature | Zoom annoté | Future capture B07 | `CAPTURE_A_REALISER` | Nomenclature, fiche, fournisseur, consommateur | `figures/screenshots/ui_nomenclature_annotee.png` |
-| DOC-B21 | 13 | Fiche matière lisible | Capture réelle | ALP | `CAPTURE_A_REALISER` | Identifiant, stocks, délai et fournisseur visibles | `figures/screenshots/ui_fiche_matiere.png` |
+| DOC-B07 | 13 | Vue Nomenclature et matières | Capture réelle | ALP, anciennes images 8 et 9 | `VALIDE` | Sans icône de développement | `figures/screenshots/ui_nomenclature.png` |
+| DOC-C02 | 13 | Les quatre zones de la Nomenclature | Zoom annoté | Future capture B07 | `VALIDE` | Nomenclature, fiche, fournisseur, consommateur | `figures/screenshots/ui_nomenclature_annotee.png` |
+| DOC-B21 | 13 | Fiche matière lisible | Capture réelle | ALP | `VALIDE` | Identifiant, stocks, délai et fournisseur visibles | `figures/screenshots/ui_fiche_matiere.png` |
 | DOC-A27 | 14 | Structure pédagogique du JSON | Diagramme en blocs | JSON courant | `VALIDE` | Treize blocs actuels et rôle | `figures/blocs_json.png` |
 | DOC-A28 | 14 | Sauvegarde JSON | Diagramme d'activité | ALP validé | `VALIDE` | `sauverScenarioJSON` et conversions | `figures/workflow_sauvegarde_json.png` |
 | DOC-A29 | 14 | Chargement JSON | Diagramme d'activité | ALP validé | `VALIDE` | Nettoyage, reconstruction et contrôles | `figures/workflow_chargement_json.png` |
 | DOC-A30 | 14 | Détection et sélection d'un fichier | Diagramme de séquence | ALP validé | `VALIDE` | Liste, sélection et délégation | `figures/sequence_selection_json.png` |
-| DOC-B22 | 14 | Zone de sauvegarde et chargement JSON | Capture réelle | ALP | `CAPTURE_A_REALISER` | Nom d'entreprise et commandes visibles | `figures/screenshots/ui_json_zone.png` |
-| DOC-B23 | 14 | Liste des configurations JSON | Capture réelle | ALP | `CAPTURE_A_REALISER` | Liste rafraîchie et fichier sélectionné | `figures/screenshots/ui_json_liste.png` |
+| DOC-B22 | 14 | Zone de sauvegarde et chargement JSON | Capture réelle | ALP | `VALIDE` | Nom d'entreprise et commandes visibles | `figures/screenshots/ui_json_zone.png` |
+| DOC-B23 | 14 | Liste des configurations JSON | Capture réelle | ALP | `VALIDE` | Liste rafraîchie et fichier sélectionné | `figures/screenshots/ui_json_liste.png` |
 | DOC-B24 | 14 | Confirmation de chargement JSON | Capture réelle | ALP | `CAPTURE_A_REALISER` | Message lisible sans donnée sensible | `figures/screenshots/ui_json_charge.png` |
 | DOC-B08 | 15 | Contrôle des commandes | Capture réelle | Ancienne image 15 | `CAPTURE_A_REALISER` | Nouvelle capture de la fenêtre courante | `figures/screenshots/ui_controle_commandes.png` |
 | DOC-B09 | 15 | Temps et budgets | Capture réelle | Ancienne image 16 | `CAPTURE_A_REALISER` | Nouvelle capture de la fenêtre courante | `figures/screenshots/ui_temps_budgets.png` |
-| DOC-B10 | 15 | Retours et qualité | Capture réelle | Ancienne image 17 | `CAPTURE_A_REALISER` | Nouvelle capture de la fenêtre courante | `figures/screenshots/ui_retours_qualite.png` |
-| DOC-B11 | 15 | Paramètres d'animation | Capture réelle | Ancienne image 18 | `CAPTURE_A_REALISER` | Nouvelle capture de la fenêtre courante | `figures/screenshots/ui_animation_parametres.png` |
-| DOC-B12 | 15 | Stocks initiaux | Capture réelle | ALP, ancienne image 14 | `CAPTURE_A_REALISER` | Cadrage propre et valeurs qualifiées | `figures/screenshots/ui_stocks_initiaux.png` |
-| DOC-B13 | 15 | Profils de test | Capture réelle | ALP | `CAPTURE_A_REALISER` | Options actuelles | `figures/screenshots/ui_profils_test.png` |
+| DOC-B10 | 15 | Retours et qualité | Capture réelle | Ancienne image 17 | `VALIDE` | Nouvelle capture de la fenêtre courante | `figures/screenshots/ui_retours_qualite.png` |
+| DOC-B11 | 15 | Paramètres d'animation | Capture réelle | Ancienne image 18 | `VALIDE` | Nouvelle capture de la fenêtre courante | `figures/screenshots/ui_animation_parametres.png` |
+| DOC-B12 | 15 | Stocks initiaux | Capture réelle | ALP, ancienne image 14 | `VALIDE` | Cadrage propre et valeurs qualifiées | `figures/screenshots/ui_stocks_initiaux.png` |
+| DOC-B13 | 15 | Profils de test | Capture réelle | ALP | `VALIDE` | Options actuelles | `figures/screenshots/ui_profils_test.png` |
 | DOC-B14 | 15 | Perturbations | Capture réelle | ALP | `CAPTURE_A_REALISER` | Options actuelles | `figures/screenshots/ui_perturbations.png` |
-| DOC-B15 | 15 | Suivi temps réel | Capture réelle | ALP, ancienne image 13 | `CAPTURE_A_REALISER` | Exécution identifiée, libellés consolidés | `figures/screenshots/ui_suivi_temps_reel.png` |
+| DOC-B15 | 15 | Suivi temps réel | Capture réelle | ALP, ancienne image 13 | `VALIDE` | Exécution identifiée, libellés consolidés | `figures/screenshots/ui_suivi_temps_reel.png` |
 | DOC-B16 | 16 | Vue Exécution | Capture réelle | ALP, ancienne image 10 | `CAPTURE_A_REALISER` | Run identifié | `figures/ui_execution.png` |
 | DOC-C03 | 16 | Zones de la vue Exécution | Zoom annoté | Future capture B16 | `CAPTURE_A_REALISER` | Indicateurs, analyses, exports et commandes | `figures/ui_execution_annotee.png` |
 | DOC-B17 | 16 | Vue Globale | Capture réelle | ALP, ancienne image 12 | `CAPTURE_A_REALISER` | Identités et disposition actuelles | `figures/ui_vue_globale.png` |

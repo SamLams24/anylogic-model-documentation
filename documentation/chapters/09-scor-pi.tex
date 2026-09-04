@@ -9,7 +9,7 @@ Une observation VSM ne devient pas directement un score. Elle traverse une succe
 
 Le modèle organise son catalogue de métriques selon la numérotation SCOR version 12,0, telle que publiée par APICS en 2017. Cette numérotation fournit les codes \texttt{RL}, \texttt{RS}, \texttt{AG}, \texttt{CO} et \texttt{AM} utilisés dans tout ce chapitre. Le modèle ne prétend pas implémenter le SCOR Digital Standard actuel; les correspondances internes doivent être lues comme des associations à ce référentiel, pas comme une certification de conformité.
 
-Le modèle distingue trois statuts pour ses métriques. Une métrique SCOR officielle porte un code du catalogue et une définition alignée sur ce catalogue, par exemple \texttt{CO.1.1}. Une association du modèle relie une mesure interne à un code SCOR proche sans revendiquer une conformité stricte. Un proxy, tel que \path{PROXY.AG.SYSTEM_UTILIZATION}, est explicitement nommé comme approximation et n'emprunte pas de code SCOR officiel.
+Le modèle utilise des identifiants associés à SCOR, des métriques internes et des proxys explicites. Le code seul ne suffit pas à établir qu'une métrique correspond exactement à la définition officielle: une association du modèle, telle que \texttt{CO.1.1}, relie une mesure interne à un code SCOR proche sans qu'une conformité stricte au catalogue soit démontrée dans les artefacts du projet. Un proxy, tel que \path{PROXY.AG.SYSTEM_UTILIZATION}, est explicitement nommé comme approximation et n'emprunte pas de code SCOR officiel.
 
 \AttentionDoc{Un code proche de la numérotation SCOR ne suffit pas à faire d'une mesure interne un indicateur officiel. La qualification de chaque métrique doit accompagner sa valeur, en particulier lorsque le scénario ne contient qu'un seul produit livré.}
 
@@ -29,7 +29,7 @@ Cost utilise \texttt{CO.1.1}, le rapport entre le coût total simulé et le chif
 
 \AttentionDoc{\texttt{CO.1.1} désigne le coût total de management de la supply chain rapporté au chiffre d'affaires estimé, pas un taux de livraison. Une valeur de 1 signifie que le coût simulé égale le chiffre d'affaires estimé pour ce scénario; ce n'est pas un pourcentage de commandes servies. Le score CO égal à 0 résulte du profil de normalisation retenu, pas d'une absence de performance économique de l'entreprise.}
 
-Asset Management utilise notamment \texttt{AM.3.9}, à 0,941, et \texttt{AM.2.2}, jours de couverture de stock, à 0 jour dans cette exécution. La valeur de l'actif fixe Make, \texttt{AM.3.18}, s'élève à 192\,800\,000 dans l'unité monétaire du scénario configuré, cohérente avec les autres coûts exprimés en FCFA dans ce modèle; cette donnée reste informative pour la traçabilité économique et n'entre pas dans le score de cet attribut.
+Asset Management utilise notamment \texttt{AM.3.9}, à 0,941, et \texttt{AM.2.2}, jours de couverture de stock, à 0 jour dans cette exécution. D'autres paramètres économiques du modèle, dont la valeur d'actif fixe déclarée par poste, restent informatifs et hors score; ils sont documentés en annexe plutôt que mobilisés dans ce chapitre.
 
 \section{Normalisation Bottom et Perfect}
 
@@ -77,11 +77,29 @@ Avec les profils de normalisation retenus par le modèle, cette exécution condu
 
 \AttentionDoc{Cette formulation doit être conservée telle quelle. Il ne faut jamais écrire que la performance réelle de ZENER SA Togo est 6,119/10: le PI est une synthèse multicritère interne, valide pour l'exécution étudiée selon les profils du modèle, pas une notation absolue de l'entreprise.}
 
-\section{AHP et PI: deux mécanismes distincts}
+\section{AHP local et pipeline du PI: deux mécanismes distincts}
 
-\FigureOrPlaceholder{documentation/figures/deux_usages_ahp.png}{Deux usages distincts de l'AHP: arbitrage local d'une décision, et pipeline global du PI.}{fig:deux-usages-ahp}
+\FigureOrPlaceholder{documentation/figures/ahp_vs_pi.png}{Distinction entre l'arbitrage AHP local et le pipeline global du Performance Index.}{fig:ahp-vs-pi}
 
-L'exécution validée contient un score AHP local de 0,730, obtenu lors de l'arbitrage d'un goulot détecté sur \texttt{sM1.3.1}, comme décrit au \cref{chap:agents-aer}. Ce score n'entre à aucun moment dans le calcul du Performance Index. Les deux mécanismes partagent la même famille mathématique de comparaison par paires, mais répondent à des questions différentes: l'AHP local choisit une action dans une situation opérationnelle précise, tandis que le PI synthétise cinq attributs après transformation complète des observations VSM.
+L'AHP local et le PI ne sont pas deux usages d'un même mécanisme: le PI n'est à aucun moment calculé par une procédure AHP. L'exécution validée contient un score AHP local de 0,730, obtenu lors de l'arbitrage d'un goulot détecté sur \texttt{sM1.3.1}, comme décrit au \cref{chap:agents-aer}. Ce score reste propre à cette décision opérationnelle et n'entre à aucun moment dans le calcul du Performance Index.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{L{0.20\textwidth} Y Y}
+    \toprule
+    & AHP local & Pipeline du PI \\
+    \midrule
+    Entrée & Options comparées deux à deux dans une situation donnée. & Observations VSM transformées en métriques. \\
+    Mécanisme & Matrice de comparaison par paires et score de cohérence. & Normalisation, logique floue, construction des attributs. \\
+    Sortie & Décision locale, par exemple \texttt{REBALANCE}. & Cinq scores d'attribut pondérés, agrégés en PI. \\
+    Portée & Une situation opérationnelle précise. & L'exécution entière. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Deux mécanismes qui partagent une famille mathématique de comparaison par paires sans être reliés par un calcul commun.}
+  \label{tab:ahp-vs-pi}
+\end{table}
+
+Aucune relation de calcul ni causalité n'est démontrée entre le score AHP local et le PI. L'exécution simultanée d'une décision \texttt{REBALANCE} et du pipeline de performance ne prouve pas que l'une améliore l'autre; une telle relation demanderait des exécutions comparables avec et sans la décision étudiée.
 
 \section{Portée méthodologique}
 

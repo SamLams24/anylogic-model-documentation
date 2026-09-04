@@ -3,9 +3,9 @@
 
 Une configuration cohérente relie quatre ensembles: les acteurs, les micro-activités, les scénarios et les ressources. L'ordre de saisie compte, car une responsabilité exige un acteur et un poste déjà créés, tandis qu'une gamme exige un scénario et des postes disponibles.
 
-\FigureOrPlaceholder{documentation/figures/screenshots/ui_configuration.png}{Emplacement prévu pour une capture réelle de la vue Configuration.}{fig:ui-configuration}
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_configuration.png}{Capture de la vue Configuration.}{fig:ui-configuration}
 
-\FigureOrPlaceholder{documentation/figures/screenshots/ui_configuration_annotee.png}{Emplacement prévu pour un agrandissement annoté de la création des postes et des scénarios.}{fig:ui-configuration-annotee}
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_configuration_annotee.png}{Agrandissement annoté de la création des postes et des scénarios.}{fig:ui-configuration-annotee}
 
 \section{Préparer les acteurs}
 
@@ -13,7 +13,7 @@ Depuis la vue Configuration, la commande \texttt{Configurer acteurs} ouvre la vu
 
 La catégorie situe l'acteur dans la chaîne, par exemple fournisseur, entreprise focale ou client. Le type annexe apporte une qualification complémentaire, notamment pour un prestataire. Il peut rester vide lorsqu'il n'a pas de sens pour l'acteur considéré.
 
-\FigureOrPlaceholder{documentation/figures/screenshots/ui_logistique.png}{Emplacement prévu pour une capture réelle de la création d'un acteur dans la vue Logistique.}{fig:ui-logistique}
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_logistique.png}{Création d'un acteur dans la vue Logistique.}{fig:ui-logistique}
 
 \AttentionDoc{La commande \texttt{Vider tous les acteurs} retire la liste en mémoire. Les responsabilités ou postes qui s'appuient sur ces acteurs peuvent alors devenir incohérents. Sauvegarder la configuration avant un vidage volontaire.}
 
@@ -72,11 +72,11 @@ Ces valeurs alimentent les calculs disponibles, mais restent des paramètres d'e
 
 La première pondération porte sur les cinq attributs RL, RS, AG, CO et AM. Les valeurs saisies sont appliquées par \texttt{Appliquer la pondération}. Elles expriment une priorité relative entre attributs et ne constituent pas, à elles seules, un résultat de performance. Contrôler la somme et la cohérence des priorités avant application; le chargement JSON normalise les poids enregistrés. Le pipeline scientifique du PI est détaillé au chapitre 9.
 
-\FigureOrPlaceholder{documentation/figures/screenshots/ui_poids_attributs.png}{Emplacement prévu pour une capture réelle de la pondération des attributs.}{fig:ui-poids-attributs}
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_poids_attributs.png}{Pondération des attributs dans la vue Configuration.}{fig:ui-poids-attributs}
 
 La seconde pondération agit sur les métriques N3. Utiliser \texttt{Rafraîchir liste}, choisir une métrique, saisir son poids, puis appliquer \texttt{Appliquer ce poids}. \texttt{Voir le détail des poids} permet un contrôle global, tandis que \texttt{Réinitialiser tous} revient aux valeurs prévues par le modèle.
 
-\FigureOrPlaceholder{documentation/figures/screenshots/ui_poids_n3.png}{Emplacement prévu pour une capture réelle de la pondération des métriques N3.}{fig:ui-poids-n3}
+\FigureOrPlaceholder{documentation/figures/screenshots/ui_poids_n3.png}{Pondération des métriques N3 dans la vue Configuration.}{fig:ui-poids-n3}
 
 \BonASavoir{Les poids des attributs et les poids N3 interviennent à deux niveaux différents. Une même valeur numérique saisie dans les deux zones n'a donc pas le même sens.}
 

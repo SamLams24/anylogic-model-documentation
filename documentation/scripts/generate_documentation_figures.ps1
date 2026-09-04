@@ -649,18 +649,21 @@ $scaleEdges = @(
 )
 Write-Diagram "Principe de l'${chEAcute}chelle Bottom / Perfect" $scaleNodes $scaleEdges 'echelle_bottom_perfect.png' 1950 700
 
-$ahpUsageNodes = @(
-    (New-Node 40 90 340 110 "Situation locale`n(ex. goulot sM1.3.1)" 'input'),
-    (New-Node 460 90 380 110 "AHP local`nmatrice de comparaison par paires" 'process'),
-    (New-Node 920 90 320 110 "D${chEAcute}cision locale`n(ex. REBALANCE)" 'output'),
-    (New-Node 40 450 340 110 "Observations VSM`net m${chEAcute}triques" 'input'),
-    (New-Node 460 450 380 110 "Normalisation, logique floue,`nattributs" 'process'),
-    (New-Node 920 450 320 110 "PI global pond${chEAcute}r${chEAcute}" 'output')
+$ahpVsPiNodes = @(
+    (New-Node 40 60 340 110 "AHP LOCAL" 'actor'),
+    (New-Node 40 190 340 110 "Situation locale`n(ex. goulot sM1.3.1)" 'input'),
+    (New-Node 460 190 380 110 "Matrice de comparaison`npar paires" 'process'),
+    (New-Node 920 190 320 110 "D${chEAcute}cision locale`n(ex. REBALANCE)" 'output'),
+    (New-Node 640 380 400 90 "Aucun lien de calcul d${chEAcute}montr${chEAcute}" 'decision'),
+    (New-Node 40 550 340 110 "PI" 'actor'),
+    (New-Node 40 680 340 110 "Observations VSM`net m${chEAcute}triques" 'input'),
+    (New-Node 460 680 380 110 "Normalisation, logique floue,`nattributs pond${chEAcute}r${chEAcute}s" 'process'),
+    (New-Node 920 680 320 110 "PI global`n(RL, RS, AG, CO, AM)" 'output')
 )
-$ahpUsageEdges = @(
-    (New-Edge 0 1), (New-Edge 1 2), (New-Edge 3 4), (New-Edge 4 5)
+$ahpVsPiEdges = @(
+    (New-Edge 1 2), (New-Edge 2 3), (New-Edge 6 7), (New-Edge 7 8)
 )
-Write-Diagram "Deux usages distincts de l'AHP" $ahpUsageNodes $ahpUsageEdges 'deux_usages_ahp.png' 1350 700
+Write-Diagram "AHP local et pipeline du PI: deux m${chEAcute}canismes distincts" $ahpVsPiNodes $ahpVsPiEdges 'ahp_vs_pi.png' 1350 900
 
 $isa95TreeNodes = @(
     (New-Node 40 320 260 110 'EnterpriseUnit' 'actor'),

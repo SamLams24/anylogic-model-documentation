@@ -8,7 +8,7 @@
   - le champ `modeleCandidate = SCONTO_SVU_FINAL_VSM_FIX_CANDIDATE.alp` du manifeste s'est avéré être une étiquette codée en dur dans le générateur de manifeste, identique dans plusieurs variantes du dépôt, et non le nom réel du fichier chargé ;
   - le fichier `sources/model/SCONTO_SVU_FINAL_VSM_FIX_CANDIDATE.alp` ne contient aucune des fonctions DataCo/Prophet/Recalibrator utilisées par ce run ;
   - ces fonctions sont en revanche présentes dans `SCONTO_SVU_DATACO_FINAL.alp`, le fichier co-localisé avec les exports RUN 1 et RUN 2 ;
-  - son inventaire fonctionnel correspond à celui de la lignée `SCONTO_SVU_FINAL_VALIDATED_FORECAST_DATACO_MULTIPRODUCT_CONCURRENT_FIX` référencée en introduction du document principal ;
+  - son inventaire fonctionnel correspond à celui de la lignée de référence du module DataCo (`SCONTO_SVU_FINAL_VALIDATED_FORECAST_DATACO_MULTIPRODUCT_CONCURRENT_FIX`) ;
   - aucune preuve d'identité octet pour octet n'a pu être établie entre `SCONTO_SVU_DATACO_FINAL.alp` et les copies de ce nom présentes dans le dépôt, qui diffèrent elles-mêmes entre elles par leur taille.
 - Date simulée de départ : 2017-01-01 00:00:00
 - Date simulée de l'export de clôture : 2018-03-14T10:06:00 (`timestampCloture`, feuille Manifeste Run)

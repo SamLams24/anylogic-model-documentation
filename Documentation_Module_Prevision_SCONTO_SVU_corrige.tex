@@ -201,7 +201,7 @@ Le dataset DataCo Supply Chain \cite{dataco2019} est un jeu de données réel re
 Champ source & Signification & Utilisation dans SCONTO-SVU \\
 \midrule
 Order Id & Identifiant de la commande & Regroupement des lignes d'une même commande \\
-Product Name & Désignation du produit & Rattachement à une famille de produits simulée \\
+Product Name & Désignation du produit & Non utilisé pour l'affectation aux familles simulées dans la version actuelle (voir section~\ref{sec:optimisation-familles}) \\
 Order Item Quantity & Quantité commandée sur la ligne & Base de l'agrégation journalière de la demande \\
 Order Status & Statut de traitement de la commande & Filtrage des lignes représentant un flux physique réel \\
 Order Date & Date de la commande & Construction de la série temporelle journalière \\
@@ -214,7 +214,7 @@ Product Price & Prix unitaire du produit & Contexte économique, non utilisé da
 
 \subsection{Segmentation temporelle et choix de l'année 2017}
 
-Le dataset couvre quatre années dont la qualité est inégale. 2015 et 2016 offrent chacune une couverture complète de douze mois et servent à l'entraînement de Prophet. 2017 réunit une couverture complète des douze mois, un volume statistiquement représentatif d'environ 53\,000 lignes valides et un catalogue élargi à 118 produits, le double des années précédentes : elle reflète l'expansion réelle du catalogue de l'entreprise et constitue l'année cible retenue pour la simulation. 2018 ne compte que 2\,123 lignes et 10 produits sur l'année : cette couverture insuffisante l'écarte de l'expérimentation.
+Le dataset couvre quatre années dont la qualité est inégale. 2015 et 2016 offrent chacune une couverture complète de douze mois et servent à l'entraînement de Prophet. 2017 contient des observations sur les douze mois, un volume statistiquement représentatif d'environ 53\,000 lignes valides et un catalogue élargi à 118 produits, le double des années précédentes : elle reflète l'expansion réelle du catalogue de l'entreprise et constitue l'année cible retenue pour la simulation, bien que le dernier trimestre y présente une contraction marquée du volume de commandes (détaillée ci-dessous). 2018 ne compte que 2\,123 lignes et 10 produits sur l'année : cette couverture insuffisante l'écarte de l'expérimentation.
 
 \begin{table}[htbp]
 \centering
@@ -319,13 +319,13 @@ Parmi ces cinq fichiers, la version DataCo actuellement chargée par AnyLogic co
 
 La politique de stock Make-to-Stock de SCONTO-SVU distingue deux rôles complémentaires : \textbf{DataCo} fournit les statistiques permettant de calibrer une politique de stock, tandis que \textbf{Prophet et le Recalibrator} prévoient la demande. Prophet ne modifie pas directement les niveaux de stock ; il alimente la prévision consommée par le Recalibrator, indépendamment de la politique de reconstitution.
 
-Les paramètres de stock (stock de sécurité, point de commande, quantité économique) peuvent être dérivés des statistiques réelles de demande et de délai du dataset DataCo au moyen des formules de Hadley et Whitin (1963), avec un niveau de service cible de 95\,\% (\(z=1{,}65\)). Pour une demande moyenne journalière \(d\), un écart-type de la demande \(\sigma_d\), un délai moyen \(L\) et un écart-type du délai \(\sigma_L\) :
+Les paramètres de stock (stock de sécurité, point de commande, quantité de reconstitution hebdomadaire de référence) peuvent être dérivés des statistiques réelles de demande et de délai du dataset DataCo au moyen des formules de Hadley et Whitin \cite{hadleywhitin1963}, avec un niveau de service cible de 95\,\% (\(z=1{,}65\)). Pour une demande moyenne journalière \(d\), un écart-type de la demande \(\sigma_d\), un délai moyen \(L\) et un écart-type du délai \(\sigma_L\) :
 \[
 SS = z\times\sqrt{L\,\sigma_d^2 + d^2\,\sigma_L^2}, \qquad
 R = d\times L + SS, \qquad
-QE = d \times 7
+Q_{7j} = 7\,d
 \]
-où \(SS\) est le stock de sécurité, \(R\) le point de commande et \(QE\) la quantité économique de reconstitution sur un horizon de sept jours de demande. La forme de \(SS\) est plus robuste que la formule simplifiée \(SS=z\,\sigma_d\sqrt{L}\), car elle tient compte de la variabilité du délai comme source de rupture indépendante de la variabilité de la demande.
+où \(SS\) est le stock de sécurité, \(R\) le point de commande et \(Q_{7j}\) la quantité de reconstitution correspondant à sept jours de demande. La forme de \(SS\) est plus robuste que la formule simplifiée \(SS=z\,\sigma_d\sqrt{L}\), car elle tient compte de la variabilité du délai comme source de rupture indépendante de la variabilité de la demande. \(Q_{7j}\) n'est pas une quantité économique de commande (EOQ) au sens analytique : aucun compromis entre coût de commande et coût de possession n'est calculé dans cette équation, qui fixe une couverture fixe de sept jours. Le champ historique du modèle nommé \code{QEC} est ici paramétré selon cette couverture de sept jours ; il ne correspond pas à une EOQ analytique classique. Cette distinction importe pour l'expérimentation E5 (section~\ref{sec:optimisation}), où la quantité de réapprovisionnement \(Q_p\) devient une variable de décision à optimiser plutôt qu'une couverture fixe.
 
 \textbf{Exemple numérique.} Pour \(d=336{,}84\), \(\sigma_d=96{,}7\), \(L=3{,}5\), \(\sigma_L=1{,}6\) et \(z=1{,}65\) :
 \[
@@ -334,6 +334,30 @@ R = 336{,}84\times3{,}5 + 938 \approx 2\,117 \text{ unités}
 \]
 
 \textit{Calibration actuellement chargée.} Le scénario multi-produit exécuté configure la référence matière de chaque famille avec un stock de sécurité de 5\,000 unités, une valeur de configuration commune aux trois familles plutôt qu'une valeur dérivée individuellement des formules ci-dessus. Les formules de Hadley-Whitin restent la méthode de calibration documentée pour dériver ces paramètres depuis DataCo ; leur application au calcul des seuils par famille de produit reste un travail de calibration à mener sur le scénario multi-produit actuel.
+
+\subsection{Du dataset source aux familles simulées}
+\label{sec:optimisation-familles}
+
+Trois granularités de produit coexistent dans la chaîne documentée et ne doivent pas être confondues. Le dataset DataCo 2017 recense 118 références de produit distinctes (champ \code{Product Name}, table~\ref{tab:dataco-couverture}). Certains artefacts Prophet historiques produits par le pipeline de préparation (section~\ref{sec:dataco-dataset}) sont calculés à une granularité intermédiaire de neuf produits. Le scénario multi-produit exécuté dans AnyLogic simplifie cette granularité à trois familles expérimentales, \code{DATACO\_SPORTS}, \code{DATACO\_CLOTHING} et \code{DATACO\_ELECTRONICS}, chacune avec son propre stock et sa propre référence matière.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Latex,node distance=8mm]
+\tikzset{
+ n/.style={draw=cpdark,rounded corners,fill=cpgray,minimum width=10.5cm,minimum height=8.5mm,align=center},
+ a/.style={->,thick}
+}
+\node[n] (q1) {DataCo source -- 118 références observées (\code{Product Name})};
+\node[n,below=of q1] (q2) {Artefacts Prophet historiques -- granularités intermédiaires (jusqu'à neuf produits)};
+\node[n,below=of q2] (q3) {Scénario AnyLogic courant -- trois familles expérimentales\\\code{DATACO\_SPORTS} / \code{DATACO\_CLOTHING} / \code{DATACO\_ELECTRONICS}};
+\draw[a] (q1)--(q2);
+\draw[a] (q2)--(q3);
+\end{tikzpicture}
+\caption{Des références du dataset source aux trois familles expérimentales du scénario multi-produit.}
+\label{fig:familles-granularite}
+\end{figure}
+
+L'affectation d'une commande à une famille ne repose pas sur le champ \code{Product Name} du dataset : la fonction \code{choisirScenarioProduit(numeroCommande)} applique une rotation cyclique sur la liste des familles enregistrées, \(\text{index} = (\text{numeroCommande} - 1) \bmod \text{nombreDeFamilles}\), lorsque \code{rotationProduitsActive} est activé. Sur 365 commandes et trois familles, cette rotation produit exactement la répartition observée sur le run de référence : 122 commandes pour la première famille enregistrée, 122 pour la deuxième, 121 pour la troisième (365 = 3 $\times$ 121 + 2). Les trois familles constituent ainsi une abstraction expérimentale multi-produit du scénario courant ; elles ne doivent pas être présentées comme un mapping direct et exhaustif des 118 références source, dont le nom de produit n'intervient pas dans cette répartition.
 
 \section{Prévision Prophet}
 \label{sec:prophet}
@@ -353,6 +377,8 @@ Le modèle Prophet utilisé pour la campagne DataCo active les saisonnalités an
 La prévision Prophet est produite à partir du jeu de données DataCo Supply Chain, dont la composition, la segmentation temporelle et le filtrage des statuts sont détaillés section~\ref{sec:dataco-dataset}. Les enregistrements retenus sont regroupés par jour calendaire pour former une série temporelle unique de la demande globale.
 
 Prophet est entraîné sur les années 2015 et 2016, qui offrent chacune une couverture complète de douze mois, puis produit sa prévision pour 2017. Entraîner Prophet sur les deux années qui précèdent l'année cible, plutôt que d'utiliser la demande réelle 2017 elle-même comme prévision initiale, place le Recalibrator devant un écart réel à corriger et permet ainsi d'observer concrètement l'apport de la recalibration progressive.
+
+Le protocole expérimental de campagne retient 2015--2016 pour l'apprentissage et 2017 comme année cible. La fenêtre de backtest présente dans le notebook de validation constitue une procédure distincte d'évaluation, indépendante de la campagne DataCo exécutée dans AnyLogic.
 
 \subsection{Chargement dans AnyLogic}
 
@@ -734,171 +760,156 @@ tick\allowbreak Horloge\allowbreak Previsions & Événement périodique de rafra
 
 \subsection{Exécution de la campagne}
 
-Le run présenté dans cette section a été exécuté avec une échelle temporelle de 3\,600 secondes calendaires pour une seconde de simulation. Au terme de la campagne de génération de la demande, 365 commandes clientes ont été générées, une par journée de 2017, réparties sans perte ni duplication entre les trois familles de produits.
+Les résultats quantitatifs présentés dans cette section proviennent du run de référence (RUN 1), exécuté avec une échelle temporelle de 3\,600 secondes calendaires pour une seconde de simulation, identifiant runtime \code{RUN\_1483228800000\_1790184225857}. Une campagne d'illustration distincte (RUN 2, \code{simToRealSeconds = 7200}) a été exécutée séparément pour produire des captures de l'interface ; ses valeurs numériques divergent de celles du RUN 1 et ne sont jamais mélangées avec les tableaux ci-dessous. Au terme de la campagne de génération de la demande, 365 commandes clientes ont été générées, une par journée de 2017, réparties sans perte ni duplication entre les trois familles de produits.
 
 \begin{table}[htbp]
 \centering
-\caption{Répartition des commandes et quantités par famille de produit.}
+\small
+\caption{Répartition des commandes et quantités par famille de produit (RUN 1).}
 \label{tab:dataco-produits}
-\begin{tabular}{@{}lrrr@{}}
+\begin{tabularx}{\textwidth}{@{}Xrrrr@{}}
 \toprule
-\textbf{Famille} & \textbf{Commandes} & \textbf{Quantité demandée} & \textbf{Quantité livrée au snapshot} \\
+\textbf{Famille} & \textbf{Commandes} & \textbf{Demande} & \textbf{Livrée (snapshot)} & \textbf{Closes en retard} \\
 \midrule
-DATACO\_SPORTS & 122 & 33\,447 & 10\,018 \\
-DATACO\_CLOTHING & 122 & 33\,497 & 6\,032 \\
-DATACO\_ELECTRONICS & 121 & 33\,584 & 5\,895 \\
+DATACO\_SPORTS & 122 & 33\,539 & 10\,575 & 20 \\
+DATACO\_CLOTHING & 122 & 33\,294 & 5\,986 & 0 \\
+DATACO\_ELECTRONICS & 121 & 33\,063 & 5\,908 & 0 \\
 \midrule
-\textbf{Total} & \textbf{365} & \textbf{100\,528} & \textbf{21\,945} \\
+\textbf{Total} & \textbf{365} & \textbf{99\,896} & \textbf{22\,469} & \textbf{20} \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
-Les réapprovisionnements autonomes restent actifs lorsque le stock d'une référence devient insuffisant : la production et le traitement physique se poursuivent après la fin de la campagne de génération de la demande, ce qui explique que la quantité livrée au moment du relevé reste inférieure à la quantité totale demandée.
+La quantité livrée au snapshot représente 22,49\,\% de la demande totale. Les réapprovisionnements autonomes restent actifs lorsque le stock d'une référence devient insuffisant : quatre ordres ont été déclenchés sur la campagne (49, 261 et 2\,212 unités servies, plus un quatrième ordre de 19\,770 unités encore au statut EN\_COURS au moment du relevé, portant sur DATACO\_SPORTS). Le traitement physique se poursuit après la fin de la campagne de génération de la demande, ce qui explique que la quantité livrée au moment du relevé reste inférieure à la quantité totale demandée, et concentre l'intégralité des retards et du stock encore en attente sur la famille DATACO\_SPORTS.
+
+L'exécution suit une trajectoire en quatre temps sur l'année. En début de campagne (janvier à mars), la demande réelle suit étroitement Prophet : 10\,338, 9\,381 et 9\,988 unités mensuelles contre une prévision de 11\,050, 9\,982 et 10\,889 unités, un écart toujours inférieur à 1\,000 unités par mois. En milieu de campagne (avril à septembre), la demande réelle oscille entre 8\,841 et 10\,020 unités, toujours proche de Prophet malgré une variabilité mensuelle plus marquée, avec un écart maximal de 1\,873,73 unités en juin. À partir d'octobre survient la rupture la plus marquée de la campagne : la demande réelle chute de 9\,086 unités en septembre à 4\,471 unités en octobre, 4\,526 en novembre puis 4\,390 en décembre, alors que Prophet maintient une anticipation proche de 11\,000 unités. En fin de campagne, au terme des 365 jours simulés, la demande totale atteint 99\,896 unités sur les trois familles, sans que l'état terminal opérationnel du système ne soit atteint (voir plus loin).
 
 \subsection{Prévision Prophet et demande réelle}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
-    \fbox{
-        \parbox[c][4.5cm][c]{0.88\textwidth}{
-            \centering
-            \textit{Capture de la version actuelle à insérer après l'exécution DataCo dédiée.}
-        }
-    }
-    \caption{Interface générale de la campagne DataCo sur la version actuelle de SCONTO-SVU.}
+    \includegraphics[width=\textwidth]{documentation/assets/dataco_final_run/screenshots/05_reference_dashboard_3600.png}
+    \caption{Campagne DataCo de référence, \code{simToRealSeconds = 3600} : prévisions Prophet et Recalibrator mensuelles, demande réelle mensuelle et courbe comparative sur les douze mois (RUN 1).}
     \label{fig:interface-generale}
 \end{figure}
 
-Prophet constitue la référence stratégique initiale du modèle et reste stable tout au long de l'année, entre environ 9\,982 et 11\,207 unités mensuelles. La demande réelle observée pendant la campagne suit un comportement en deux phases : de janvier à septembre, elle oscille entre 8\,700 et 10\,300 unités par mois, proche de la prévision Prophet ; à partir d'octobre, elle se contracte fortement autour de 4\,500 unités mensuelles.
+Prophet constitue la référence stratégique initiale du modèle et reste stable tout au long de l'année, entre environ 9\,982 et 11\,207 unités mensuelles. La demande réelle observée pendant la campagne suit un comportement en deux phases : de janvier à septembre, elle oscille entre 8\,841 et 10\,338 unités par mois, proche de la prévision Prophet ; à partir d'octobre, elle se contracte fortement autour de 4\,400 unités mensuelles.
 
 \begin{table}[htbp]
 \centering
-\caption{Prévisions Prophet et demande réelle mensuelle.}
+\caption{Prévisions Prophet et demande réelle mensuelle (RUN 1).}
 \label{tab:prophet-reel}
 \begin{tabular}{@{}lrr@{}}
 \toprule
 \textbf{Mois} & \textbf{Prophet} & \textbf{Demande réelle} \\
 \midrule
 Janvier & 11\,050 & 10\,338 \\
-Février & 9\,982 & 9\,444 \\
-Mars & 10\,889 & 10\,166 \\
-Avril & 10\,624 & 9\,564 \\
-Mai & 10\,913 & 10\,131 \\
-Juin & 10\,715 & 8\,757 \\
+Février & 9\,982 & 9\,381 \\
+Mars & 10\,889 & 9\,988 \\
+Avril & 10\,624 & 9\,461 \\
+Mai & 10\,913 & 10\,020 \\
+Juin & 10\,715 & 8\,841 \\
 Juillet & 10\,993 & 9\,849 \\
-Août & 10\,772 & 9\,521 \\
-Septembre & 10\,813 & 9\,076 \\
-Octobre & 10\,910 & 4\,547 \\
-Novembre & 10\,932 & 4\,551 \\
-Décembre & 11\,207 & 4\,584 \\
+Août & 10\,772 & 9\,545 \\
+Septembre & 10\,813 & 9\,086 \\
+Octobre & 10\,910 & 4\,471 \\
+Novembre & 10\,932 & 4\,526 \\
+Décembre & 11\,207 & 4\,390 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Le dernier trimestre porte la rupture la plus marquée de la campagne : en octobre, la demande réelle s'établit à environ 4\,547 unités alors que Prophet maintient une anticipation de 10\,910 unités. Le même écart se prolonge en novembre et en décembre. Prophet demeure une référence stratégique utile sur l'ensemble de l'année, et cette rupture de fin d'année illustre précisément la situation pour laquelle la recalibration adaptative apporte sa contribution la plus nette : elle ne doit pas être lue comme une saisonnalité structurelle reproductible d'une année sur l'autre, mais comme le test le plus exigeant du mécanisme de recalibration sur cette campagne.
+Le dernier trimestre porte la rupture la plus marquée de la campagne : en octobre, la demande réelle s'établit à 4\,471 unités alors que Prophet maintient une anticipation de 10\,910 unités. Le même écart se prolonge en novembre et en décembre. Prophet demeure une référence stratégique utile sur l'ensemble de l'année, et cette rupture de fin d'année illustre précisément la situation pour laquelle la recalibration adaptative apporte sa contribution la plus nette : elle ne doit pas être lue comme une saisonnalité structurelle reproductible d'une année sur l'autre, mais comme le test le plus exigeant du mécanisme de recalibration sur cette campagne.
 
 \subsection{Prévision recalibrée}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
-    \fbox{
-        \parbox[c][4.5cm][c]{0.88\textwidth}{
-            \centering
-            \textit{Capture de la version actuelle à insérer après l'exécution DataCo dédiée.}
-        }
-    }
-    \caption{Vue Prévisions / Recalibrator pendant l'exécution de la campagne DataCo 2017.}
-    \label{fig:dashboard-7mois}
+    \includegraphics[width=\textwidth]{documentation/assets/dataco_final_run/screenshots/04_october_break.png}
+    \caption{Contraction de la demande d'octobre-novembre et réaction du Recalibrator. Capture issue du run d'illustration accéléré (\code{simToRealSeconds = 7200,} RUN 2) : elle sert d'illustration de l'interface et de la dynamique du mécanisme, et non de source des valeurs numériques, qui restent celles du RUN 1 présentées dans cette section.}
+    \label{fig:dashboard-rupture}
 \end{figure}
 
-Les valeurs recalibrées restent proches du réel sans s'y confondre systématiquement : l'écart final atteint environ 204 unités en juin, 222 unités en septembre, 211 unités en octobre et 498 unités en novembre. En mai, l'écart devient négatif, ce qui montre que le mécanisme peut également corriger la prévision vers le bas lorsque la demande observée est inférieure à Prophet.
+Les valeurs recalibrées restent proches du réel sans s'y confondre systématiquement, avec des écarts mensuels alternativement positifs et négatifs : +0,57 en janvier, -18,53 en février, +195,93 en mars, 0 en avril, -55,38 en mai, +212 en juin, +68,11 en juillet, +35,43 en août, +265,28 en septembre, +183,71 en octobre, +441,74 en novembre et 0 en décembre. Les valeurs négatives de février et mai montrent que le mécanisme peut également corriger la prévision vers le bas lorsque la demande observée est inférieure à Prophet.
 
 Jusqu'en septembre, Prophet reste généralement au-dessus du réel tandis que le Recalibrator suit plus étroitement les fluctuations mensuelles ; la différence devient particulièrement nette au dernier trimestre. En octobre :
 \begin{align*}
 F_{Prophet} &\approx 10\,910, \\
-R_{\text{réel}} &= 4\,547, \\
-F_{Recal} &\approx 4\,758.
+R_{\text{réel}} &= 4\,471, \\
+F_{Recal} &\approx 4\,655.
 \end{align*}
-L'erreur Prophet atteint alors environ 6\,363 unités, contre environ 211 unités pour le Recalibrator. Le même phénomène se reproduit en novembre et en décembre : la recalibration corrige progressivement une prévision stratégique devenue obsolète dès que les observations signalent un changement de régime.
+L'erreur Prophet atteint alors environ 6\,438,6 unités, contre environ 183,71 unités pour le Recalibrator. Le même phénomène se reproduit en novembre et en décembre : la recalibration corrige progressivement une prévision stratégique devenue obsolète dès que les observations signalent un changement de régime.
 
 \subsection{Analyse quantitative des erreurs}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
-    \fbox{
-        \parbox[c][4.5cm][c]{0.88\textwidth}{
-            \centering
-            \textit{Capture de la version actuelle à insérer après l'exécution DataCo dédiée.}
-        }
-    }
-    \caption{Bilan final Prophet / Recalibrator / demande réelle et erreurs sur la campagne DataCo 2017.}
+    \includegraphics[width=\textwidth]{documentation/assets/dataco_final_run/screenshots/06_reference_errors_3600.png}
+    \caption{Bilan Prophet / Recalibrator / demande réelle : courbe dynamique des écarts et histogrammes d'erreur mensuelle Prophet/Réel et Recalibrator/Réel, campagne de référence RUN 1 (\code{simToRealSeconds = 3600}).}
     \label{fig:dashboard-bilan}
 \end{figure}
 
 \begin{table}[htbp]
 \centering
-\caption{Erreurs mensuelles observées sur la campagne 2017.}
+\caption{Erreurs mensuelles observées sur la campagne 2017 (RUN 1).}
 \label{tab:erreurs-mensuelles}
 \begin{tabular}{@{}lrr@{}}
 \toprule
 \textbf{Mois} & \textbf{Erreur Prophet / Réel} & \textbf{Erreur Recalibrator / Réel} \\
 \midrule
 Janvier & +711,99 & +0,57 \\
-Février & +538,11 & +23,28 \\
-Mars & +723,01 & +102,01 \\
-Avril & +1\,059,54 & 0,00 \\
-Mai & +781,90 & -47,02 \\
-Juin & +1\,957,73 & +203,99 \\
+Février & +601,11 & -18,53 \\
+Mars & +901,01 & +195,93 \\
+Avril & +1\,162,54 & 0,00 \\
+Mai & +892,90 & -55,38 \\
+Juin & +1\,873,73 & +212,00 \\
 Juillet & +1\,143,65 & +68,11 \\
-Août & +1\,251,42 & +118,38 \\
-Septembre & +1\,736,94 & +221,61 \\
-Octobre & +6\,362,60 & +211,10 \\
-Novembre & +6\,380,69 & +498,38 \\
-Décembre & +6\,623,11 & 0,00 \\
+Août & +1\,227,42 & +35,43 \\
+Septembre & +1\,726,94 & +265,28 \\
+Octobre & +6\,438,60 & +183,71 \\
+Novembre & +6\,405,69 & +441,74 \\
+Décembre & +6\,817,11 & 0,00 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Prophet présente une erreur positive sur les douze mois de la campagne, ce qui traduit un biais de surestimation sur ce run. Le Recalibrator réduit fortement cette erreur et corrige également vers le bas en mai. Les valeurs nulles d'avril et décembre résultent de la coïncidence entre une échéance de recalibration et la clôture du mois.
+Prophet présente une erreur positive sur les douze mois de la campagne, ce qui traduit un biais de surestimation sur ce run. Le Recalibrator réduit fortement cette erreur et corrige également vers le bas en février et en mai. Les valeurs nulles d'avril et décembre résultent de la coïncidence entre une échéance de recalibration et la clôture du mois.
 
 \begin{table}[htbp]
 \centering
-\caption{Synthèse des performances de prévision sur la campagne DataCo 2017.}
+\caption{Synthèse des performances de prévision sur la campagne DataCo 2017 (RUN 1).}
 \label{tab:metriques-prevision}
 \begin{tabular}{@{}lrrl@{}}
 \toprule
 \textbf{Indicateur} & \textbf{Prophet} & \textbf{Recalibrator} & \textbf{Réduction} \\
 \midrule
-Erreur absolue totale & 29\,270,69 & 1\,494,45 & -94,9\,\% \\
-MAE mensuelle & 2\,439,22 & 124,54 & -94,9\,\% \\
-MAPE & 44,11\,\% & 2,00\,\% & -42,1 points \\
-RMSE & 3\,389,18 & 186,07 & -94,5\,\% \\
-Biais moyen signé & +2\,439,22 & +116,70 & -95,2\,\% \\
+Erreur absolue totale & 29\,902,69 & 1\,476,68 & -95,1\,\% \\
+MAE mensuelle & 2\,491,89 & 123,06 & -95,1\,\% \\
+MAPE & 45,75\,\% & 1,91\,\% & -43,8 points \\
+RMSE & 3\,441,15 & 180,71 & -94,7\,\% \\
+Biais moyen signé & +2\,491,89 & +110,74 & -95,6\,\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Pour chaque indicateur, la lecture est directe : la MAE mensuelle passe de 2\,439,22 à 124,54 unités, soit une réduction de 94,9\,\% de l'erreur moyenne absolue ; le MAPE passe de 44,11\,\% à 2,00\,\%, ce qui signifie que la prévision s'écarte désormais en moyenne de 2\,\% de la demande réelle contre 44\,\% initialement ; le RMSE passe de 3\,389,18 à 186,07, confirmant que les écarts ponctuels de grande amplitude du dernier trimestre sont ramenés à un niveau proche de ceux des autres mois. La réduction relative de l'erreur absolue totale s'établit à :
+Pour chaque indicateur, la lecture est directe : la MAE mensuelle passe de 2\,491,89 à 123,06 unités, soit une réduction de 95,1\,\% de l'erreur moyenne absolue ; le MAPE passe de 45,75\,\% à 1,91\,\%, ce qui signifie que la prévision s'écarte désormais en moyenne de 1,9\,\% de la demande réelle contre 45,8\,\% initialement ; le RMSE passe de 3\,441,15 à 180,71, confirmant que les écarts ponctuels de grande amplitude du dernier trimestre sont ramenés à un niveau proche de ceux des autres mois. La réduction relative de l'erreur absolue totale s'établit à :
 \[
-\mathcal{R} = 1 - \frac{1\,494{,}45}{29\,270{,}69} \approx 94{,}89\,\%, \qquad
-\frac{29\,270{,}69}{1\,494{,}45} \approx 19{,}6
+\mathcal{R} = 1 - \frac{1\,476{,}68}{29\,902{,}69} \approx 95{,}06\,\%, \qquad
+\frac{29\,902{,}69}{1\,476{,}68} \approx 20{,}25
 \]
-soit environ 19,6 fois moins d'erreur absolue cumulée pour le Recalibrator que pour Prophet sur cette campagne.
+soit environ 20,25 fois moins d'erreur absolue cumulée pour le Recalibrator que pour Prophet sur cette campagne.
 
 \subsection{Interprétation opérationnelle}
 
-Cette amélioration se traduit directement en termes opérationnels. Dans un contexte de production sur stock, une surestimation de plusieurs milliers d'unités conduit à augmenter inutilement le niveau de stock, à déclencher des réapprovisionnements excessifs, à mobiliser la capacité de production et à accroître le risque d'invendus ; une sous-estimation trop marquée augmente à l'inverse le risque de rupture et de retard de service. Le mois d'octobre illustre cet enjeu : Prophet projette environ 10\,910 unités pour une demande réelle de 4\,547 unités, une surestimation supérieure à 6\,300 unités, que le Recalibrator ramène à un écart d'environ 211 unités. La contribution du Recalibrator ne réside donc pas dans une prévision parfaitement exacte, mais dans sa capacité à corriger rapidement une décision stratégique lorsque la demande observée s'écarte durablement du régime anticipé.
+Cette amélioration se traduit directement en termes opérationnels. Dans un contexte de production sur stock, une surestimation de plusieurs milliers d'unités conduit à augmenter inutilement le niveau de stock, à déclencher des réapprovisionnements excessifs, à mobiliser la capacité de production et à accroître le risque d'invendus ; une sous-estimation trop marquée augmente à l'inverse le risque de rupture et de retard de service. Le mois d'octobre illustre cet enjeu : Prophet projette environ 10\,910 unités pour une demande réelle de 4\,471 unités, une surestimation supérieure à 6\,400 unités, que le Recalibrator ramène à un écart d'environ 183,71 unités. La contribution du Recalibrator ne réside donc pas dans une prévision parfaitement exacte, mais dans sa capacité à corriger rapidement une décision stratégique lorsque la demande observée s'écarte durablement du régime anticipé.
 
 \subsection{Résultats opérationnels complémentaires}
 
-% TODO RUN DATACO FINAL:
-% vérifier les valeurs de snapshot (PI, commandes closes,
-% quantités livrées et échelle temporelle) après exécution
-% de la version mergée actuelle.
+Le snapshot synchronisé avec l'export ontologique du RUN 1 indique un Performance Index global de \(8{,}871/10\) et recense 79 commandes clientes closes au moment du relevé, dont 20 closes en retard, sur les 365 commandes générées par la campagne de demande ; 286 commandes restent EN\_ATTENTE. La date simulée de cet export de clôture est le 14 mars 2018. Cet écart est cohérent avec la poursuite du traitement physique au-delà de la fin de la campagne de génération de la demande : les résultats Prophet et Recalibrator sont d'ores et déjà évaluables sur les douze mois, car ils portent sur la demande client reçue, tandis que les indicateurs de service, de délai et de livraison se consolident au rythme de l'extinction complète des flux résiduels.
 
-Le snapshot synchronisé avec l'export ontologique du run indique un Performance Index global de \(8{,}895/10\) et recense 75 commandes clientes closes au moment du relevé, sur les 365 commandes générées par la campagne de demande. Cet écart est cohérent avec la poursuite du traitement physique au-delà de la fin de la campagne de génération de la demande : les résultats Prophet et Recalibrator sont d'ores et déjà évaluables sur les douze mois, car ils portent sur la demande client reçue, tandis que les indicateurs de service, de délai et de livraison se consolident au rythme de l'extinction complète des flux résiduels.
+\textbf{Condition terminale.} La fin de la campagne de demande -- 365 jours, 365 commandes générées -- ne correspond pas à l'état terminal opérationnel du système : ce dernier suppose que toutes les commandes clientes sont closes, que tous les ordres internes de réapprovisionnement sont terminés, et qu'aucun encours pertinent ne subsiste. Un Performance Index ou des KPI relevés avant cet état, comme le snapshot à 79 commandes closes sur 365 ci-dessus, constituent donc un \emph{snapshot intermédiaire} et non un bilan terminal. Cette distinction est essentielle pour l'expérimentation E5 (section~\ref{sec:optimisation}), dont les résultats terminaux doivent être mesurés après extinction complète des flux résiduels.
 
-\textbf{Condition terminale.} La fin de la campagne de demande -- 365 jours, 365 commandes générées -- ne correspond pas à l'état terminal opérationnel du système : ce dernier suppose que toutes les commandes clientes sont closes, que tous les ordres internes de réapprovisionnement sont terminés, et qu'aucun encours pertinent ne subsiste. Un Performance Index ou des KPI relevés avant cet état, comme le snapshot à 75 commandes closes sur 365 ci-dessus, constituent donc un \emph{snapshot intermédiaire} et non un bilan terminal. Cette distinction est essentielle pour l'expérimentation E5 (section~\ref{sec:optimisation}), dont les résultats terminaux doivent être mesurés après extinction complète des flux résiduels.
+\textbf{Backlog et réapprovisionnement.} Le réapprovisionnement autonome REAPPRO\_4 (19\,770 unités, statut EN\_COURS sur DATACO\_SPORTS au moment du relevé) explique la majeure partie de l'écart entre commandes générées et commandes closes sur cette famille. Dans cette configuration et au snapshot observé, le flux physique n'est pas encore éteint et un backlog important subsiste sur DATACO\_SPORTS : la demande générée excède momentanément la capacité de reconstitution et de traitement du scénario courant, ce qui prolonge l'extinction des flux au-delà de la fin de la campagne calendaire. Le run d'illustration (RUN 2) présente un constat de même nature, avec un ordre de réapprovisionnement EN\_COURS de 16\,013 unités sur la même famille. E5 permettra d'étudier les politiques de planification et de stock qui influent sur cette situation.
 
 La campagne DataCo 2017 valide conjointement la génération automatique de la demande, le fonctionnement multi-produit, la séparation des stocks par référence, le déclenchement autonome des réapprovisionnements et la recalibration adaptative des prévisions. Prophet apporte une base stratégique stable ; le Recalibrator transfère progressivement la confiance vers les observations au fur et à mesure du déroulement du mois, ce qui maintient la cohérence entre planification et exécution lorsque le comportement de la demande diverge de la trajectoire anticipée.
 
@@ -943,38 +954,40 @@ La phase d'optimisation exploite les capacités de simulation et de mesure de SC
 Cette extension compare quatre politiques de pilotage :
 
 \begin{center}
-\begin{tabular}{ll}
+\begin{tabularx}{0.92\textwidth}{lX}
 \toprule
 Politique & Description \\
 \midrule
 P0 & Réactive, sans prévision (référence) \\
 P1 & Pilotée par Prophet seul \\
 P2 & Pilotée par Prophet et Recalibrator \\
-P3 & Pilotée par Prophet, Recalibrator et paramètres de stock optimisés selon la méthode E4 \\
+P3 & Pilotée par Prophet, Recalibrator et paramètres de planification et de stock optimisés selon le protocole E5 \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{center}
 
-\textbf{Variables de décision.} Pour chaque produit \(p\), le vecteur de décision est
+E4 fournit une démarche générale de simulation-optimisation ; E5 possède son propre espace de décision, propre à la planification multi-produit fondée sur la prévision.
+
+\textbf{Variables de décision.} Pour chaque famille simulée \(p\) (section~\ref{sec:dataco-dataset}), le vecteur de décision est
 \[
 x_p = (SS_p,\; s_p,\; Q_p,\; f_p)
 \]
-où \(SS_p\) est le stock de sécurité du produit, \(s_p\) le point de commande, \(Q_p\) la quantité de réapprovisionnement et \(f_p\) la fréquence de révision de la politique de stock. L'espace de décision complet est l'ensemble des vecteurs \((x_p)_{p \in P}\) pour les produits de la scène multi-produit (section~\ref{sec:dataco-dataset}).
+où \(SS_p\) est le stock de sécurité de la famille, \(s_p\) le point de commande, \(Q_p\) la quantité de réapprovisionnement et \(f_p\) la fréquence de révision du plan. L'espace de décision complet est l'ensemble des vecteurs \((x_p)_{p \in P}\) pour les familles simulées.
 
 \textbf{Fonction objective.} L'optimisation recherche la configuration minimisant le coût total cumulé sur l'horizon de simulation :
 \[
 \min\; C_{\text{total}} = \sum_{p,t} \Big[ h_p\, I_{p,t} + b_p\, B_{p,t} + K_p\, y_{p,t} + c_p\, Q_{p,t} \Big]
 \]
-où \(I_{p,t}\) est le niveau de stock du produit \(p\) en fin de période \(t\), \(B_{p,t}\) la rupture ou le retard cumulé, \(y_{p,t}\) une variable indicatrice de déclenchement d'un ordre de réapprovisionnement, et \(h_p\), \(b_p\), \(K_p\), \(c_p\) respectivement le coût de possession, le coût de rupture, le coût fixe de commande et le coût unitaire du produit \(p\).
+où \(I_{p,t}\) est le niveau de stock de la famille \(p\) en fin de période \(t\), \(B_{p,t}\) la rupture ou le retard cumulé, \(y_{p,t}\) une variable indicatrice de déclenchement d'un ordre de réapprovisionnement, et \(h_p\), \(b_p\), \(K_p\), \(c_p\) respectivement le coût de possession, le coût de rupture, le coût fixe de commande et le coût unitaire de la famille \(p\).
 
 \textbf{Contraintes.} La recherche est contrainte par :
 \begin{itemize}[leftmargin=1.5em]
-  \item un niveau de service minimal par produit, \(\text{NiveauDeService}_p \geq SL_p^{\min}\) ;
+  \item un niveau de service minimal par famille, \(\text{NiveauDeService}_p \geq SL_p^{\min}\) ;
   \item une capacité de réapprovisionnement bornée par période, \(Q_{p,t} \leq \text{Capacite}_{p,t}\) ;
-  \item une équation de bilan de stock, \(I_{p,t} = I_{p,t-1} + Q_{p,t} - D_{p,t}\), où \(D_{p,t}\) est la demande du produit \(p\) sur la période \(t\), issue de la chaîne de prévision et de recalibration décrite aux sections~\ref{sec:prophet} et~\ref{sec:recalibrator}.
+  \item une équation de bilan de stock, \(I_{p,t} = I_{p,t-1} + Q_{p,t} - D_{p,t}\), où \(D_{p,t}\) est la demande de la famille \(p\) sur la période \(t\), issue de la chaîne de prévision et de recalibration décrite aux sections~\ref{sec:prophet} et~\ref{sec:recalibrator}.
 \end{itemize}
 
-\textbf{Chaîne prévision-plan-exécution-performance.} Chaque politique P1 à P3 s'inscrit dans une chaîne où la prévision (Prophet, éventuellement recalibrée) alimente un plan de réapprovisionnement par produit, ce plan est exécuté par la simulation multi-produit selon les mécanismes DataCo et AutoCommande déjà décrits (section~\ref{sec:autocommande}), et la performance résultante n'est mesurable qu'à la condition terminale du run, telle que définie plus haut. Comparer des politiques sur un état intermédiaire biaiserait l'évaluation du coût total \(C_{\text{total}}\), notamment sa composante rupture \(B_{p,t}\), qui dépend de l'historique complet du run.
+\textbf{Chaîne prévision-plan-exécution-performance.} Chaque politique P1 à P3 s'inscrit dans une chaîne où la prévision (Prophet, éventuellement recalibrée) alimente un plan de réapprovisionnement par famille, ce plan est exécuté par la simulation multi-produit selon les mécanismes DataCo et AutoCommande déjà décrits (section~\ref{sec:autocommande}), et la performance résultante n'est mesurable qu'à la condition terminale du run, telle que définie plus haut. Comparer des politiques sur un état intermédiaire biaiserait l'évaluation du coût total \(C_{\text{total}}\), notamment sa composante rupture \(B_{p,t}\), qui dépend de l'historique complet du run.
 
 \subsection{Plan de validation}
 
@@ -993,7 +1006,7 @@ Cette chaîne permet d'étudier la capacité d'une prévision initiale à rester
 
 \section{Résumé}
 
-Le module ajouté à SCONTO-SVU repose sur trois rôles complémentaires : \textbf{Prophet} fournit la prévision mensuelle de référence ; \textbf{DataCo} exécute la demande sous forme de commandes clientes journalières qui traversent le pipeline normal ; \textbf{Recalibrator} ajuste progressivement la prévision à partir du réel observé. Sur la campagne DataCo 2017, l'erreur absolue totale est réduite de 94,9\,\%, la MAE mensuelle passe de 2\,439 à 125 unités et le MAPE passe de 44,1\,\% à 2,0\,\%.
+Le module ajouté à SCONTO-SVU repose sur trois rôles complémentaires : \textbf{Prophet} fournit la prévision mensuelle de référence ; \textbf{DataCo} exécute la demande sous forme de commandes clientes journalières qui traversent le pipeline normal ; \textbf{Recalibrator} ajuste progressivement la prévision à partir du réel observé. Sur la campagne DataCo 2017 (RUN 1, \code{simToRealSeconds = 3600}), l'erreur absolue totale est réduite de 95,1\,\%, la MAE mensuelle passe de 2\,492 à 123 unités et le MAPE passe de 45,8\,\% à 1,9\,\%.
 
 La vue dédiée rend ces mécanismes observables en temps réel grâce à trois courbes principales, deux courbes d'écarts dynamiques et une horloge simulée synchronisée avec l'échelle temporelle du modèle, ce qui fournit une base cohérente pour l'analyse prévisionnelle, l'étude des écarts et les expérimentations de pilotage de la supply chain.
 
@@ -1019,6 +1032,9 @@ Brown, R. G. (1956). \emph{Exponential Smoothing for Predicting Demand}. Arthur 
 
 \bibitem{holtwinters1960}
 Holt, C. C. (1957/2004 réédition). Forecasting seasonals and trends by exponentially weighted moving averages. \emph{International Journal of Forecasting}, 20(1), 5--10 ; Winters, P. R. (1960). Forecasting Sales by Exponentially Weighted Moving Averages. \emph{Management Science}, 6(3), 324--342.
+
+\bibitem{hadleywhitin1963}
+Hadley, G., \& Whitin, T. M. (1963). \emph{Analysis of Inventory Systems}. Prentice-Hall, Englewood Cliffs, N.J.
 
 \end{thebibliography}
 

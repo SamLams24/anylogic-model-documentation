@@ -51,7 +51,7 @@
 \end{center}
 \vspace{0.3cm}
 
-\noindent Ce document répond à trois questions : comment Prophet est-il construit, utilisé et intégré à DataCo ; comment justifier le facteur de recalibration $\alpha_j=\sqrt{j/N}$ ; comment la démarche d'optimisation de SCONTO-SVU est-elle conduite et validée. Les résultats numériques cités proviennent du run de référence RUN 1 (\code{simToRealSeconds = 3600}).
+\noindent Le module DataCo de SCONTO-SVU articule trois volets : la construction de la prévision Prophet, la recalibration adaptative par $\alpha_j$, et la formulation des expérimentations d'optimisation E4/E5. Les résultats numériques cités proviennent du run de référence RUN 1 (\code{simToRealSeconds = 3600}).
 
 \section{Prévision de la demande avec Prophet}
 
@@ -73,7 +73,7 @@ Année & Lignes & Produits & Rôle \\
 \end{tabular}
 \end{center}
 
-2015 et 2016 servent à l'apprentissage de Prophet. 2017 contient des observations sur les douze mois, un volume représentatif d'environ 53\,000 lignes valides et un catalogue élargi à 118 produits, le double des deux années précédentes : c'est l'année cible retenue pour la prévision et pour l'exécution de la campagne. Le dernier trimestre de cette année cible présente une forte contraction du volume de commandes par rapport aux neuf premiers mois ; cette contraction est une caractéristique de la campagne 2017, pas une saisonnalité structurelle reproductible d'une année sur l'autre, et constitue le cas le plus exigeant pour l'algorithme de recalibration. 2018 ne couvre que 2\,123 lignes et 10 produits sur l'année et n'est pas retenue.
+2015 et 2016 servent à l'apprentissage de Prophet. 2017 contient des observations sur les douze mois, 53\,196 lignes observées et un catalogue élargi à 118 produits, le double des deux années précédentes : c'est l'année cible retenue pour la prévision et pour l'exécution de la campagne. Le dernier trimestre de cette année cible présente une forte contraction du volume de commandes par rapport aux neuf premiers mois ; cette contraction est une caractéristique de la campagne 2017, pas une saisonnalité structurelle reproductible d'une année sur l'autre, et constitue le cas le plus exigeant pour l'algorithme de recalibration. 2018 ne couvre que 2\,123 lignes et 10 produits sur l'année et n'est pas retenue.
 
 \subsection{Préparation des données}
 
@@ -198,7 +198,7 @@ La réduction de l'erreur absolue totale atteint environ 95,06\,\%, soit environ
 
 \subsection{Interprétation}
 
-Le dernier trimestre illustre le rôle du Recalibrator. En octobre, Prophet maintient une anticipation d'environ 10\,910 unités alors que la demande réelle s'établit à 4\,471 unités : la prévision initiale reste proche du régime appris sur 2015--2016 et ne peut pas, par construction, anticiper un changement de régime survenant en cours d'année. Le Recalibrator ramène la prévision à environ 4\,655 unités, soit une erreur résiduelle d'environ 183,71 unités contre environ 6\,438,6 unités pour Prophet seul. Le mécanisme ne remplace pas Prophet ; il transfère progressivement le poids de la prévision vers la demande observée à mesure que celle-ci devient disponible, ce qui est précisément l'objet de la section suivante.
+Le dernier trimestre illustre le rôle du Recalibrator. En octobre, Prophet maintient une anticipation d'environ 10\,910 unités alors que la demande réelle s'établit à 4\,471 unités. La baseline Prophet est calculée avant le run à partir des données d'apprentissage et reste figée pendant la campagne : elle ne se réentraîne donc pas en cours d'année à partir de la demande 2017 observée. Lorsque le régime de demande se contracte fortement au dernier trimestre, la baseline reste proche de la trajectoire apprise, tandis que le Recalibrator incorpore progressivement les observations nouvelles. Le Recalibrator ramène ainsi la prévision à environ 4\,655 unités, soit une erreur résiduelle d'environ 183,71 unités contre environ 6\,438,6 unités pour Prophet seul. Le mécanisme ne remplace pas Prophet ; il transfère progressivement le poids de la prévision vers la demande observée à mesure que celle-ci devient disponible, ce qui est précisément l'objet de la section suivante.
 
 \section{Justification du facteur de confiance \texorpdfstring{$\alpha_j$}{alpha\_j}}
 
@@ -208,11 +208,11 @@ Le Recalibrator combine deux informations à chaque cycle : la prévision Prophe
 
 \subsection{Projection run-rate}
 
-Le rythme moyen observé jusqu'au jour $j$ s'écrit $r_j = R_j/j$, où $R_j$ est la demande cumulée observée au jour $j$. La projection de fin de mois prolonge ce rythme sur les $N-j$ jours restants :
+Pour $j=1,\dots,N$, le rythme moyen observé jusqu'au jour $j$ s'écrit $r_j = R_j/j$, où $R_j$ est la demande cumulée observée au jour $j$. La projection de fin de mois prolonge ce rythme sur les $N-j$ jours restants :
 \[
-F_{proj}(j) = R_j + r_j\,(N-j) = R_j\times\frac{N}{j}
+F_{proj}(j) = R_j + r_j\,(N-j) = R_j\times\frac{N}{j}, \qquad j=1,\dots,N
 \]
-Exemple : pour $R_j=4\,500$ au jour $j=10$ d'un mois de $N=30$ jours, $r_{10}=450$ unités par jour et $F_{proj}(10)=4\,500\times30/10=13\,500$ unités.
+Cette expression n'est pas définie en $j=0$, faute d'observation. Exemple : pour $R_j=4\,500$ au jour $j=10$ d'un mois de $N=30$ jours, $r_{10}=450$ unités par jour et $F_{proj}(10)=4\,500\times30/10=13\,500$ unités.
 
 \subsection{Forme générale du facteur de pondération}
 
@@ -220,23 +220,24 @@ Le facteur de confiance appartient à la famille générale $\alpha_j=(j/N)^{\ga
 \[
 \boxed{\alpha_j = \sqrt{\frac{j}{N}}}
 \]
-Ce choix est présenté comme un choix de conception motivé par les propriétés développées ci-dessous, et non comme un théorème établissant un optimum universel.
+Les propriétés développées ci-dessous justifient la cohérence de la famille $\alpha_j=(j/N)^{\gamma}$ et, pour $0<\gamma<1$, son comportement concave ; elles ne démontrent pas à elles seules que $\gamma=1/2$ est le meilleur choix parmi toutes les valeurs possibles. Le choix $\gamma=1/2$ constitue donc un choix de conception heuristique et transparent : il produit une montée de confiance plus rapide que la loi linéaire tout en conservant une progression concave. Sa valeur optimale éventuelle doit être évaluée par analyse de sensibilité.
 
 \subsection{Propriétés mathématiques}
 
 \paragraph{A. Bornage.} Pour $0\le j\le N$, $0\le j/N\le1$, donc $0\le\alpha_j\le1$.
 
-\paragraph{B. Extrémités.} $\alpha_0=0$ et $\alpha_N=1$ : en début de mois, Prophet porte la prévision ; en fin de mois, la projection issue du réel la porte entièrement.
+\paragraph{B. Extrémités.} $\alpha_N=1$, et $\alpha_0=0$ par continuité / extension naturelle de $\alpha_j$ à $j=0$ : en début de mois, Prophet porte la prévision ; en fin de mois, la projection issue du réel la porte entièrement.
 
-\paragraph{C. Monotonie.}
+\paragraph{C. Monotonie, pour $j>0$.}
 \[
 \frac{d\alpha}{dj} = \frac{\gamma}{N}\left(\frac{j}{N}\right)^{\gamma-1} > 0
 \]
 
-\paragraph{D. Concavité pour $\gamma=1/2$.}
+\paragraph{D. Concavité pour $\gamma=1/2$ et $j>0$.}
 \[
 \frac{d^2\alpha}{dj^2} = \frac{\gamma(\gamma-1)}{N^2}\left(\frac{j}{N}\right)^{\gamma-2} < 0
 \]
+Ces deux dérivées ne sont pas définies en $j=0$, où $(j/N)^{\gamma-1}$ diverge pour $0<\gamma<1$ ; elles sont annoncées pour $j>0$, cohérent avec le domaine de définition de $F_{proj}$.
 
 La confiance dans le réel augmente rapidement lorsqu'arrivent les premières observations, puis les gains marginaux diminuent à mesure que le mois avance.
 
@@ -287,7 +288,7 @@ Pour parler d'optimisation, six éléments doivent être définis : des variable
 
 \subsection{E4 -- optimisation ZENER}
 
-E4 prend pour baseline le scénario perturbé E2. Les variables de décision couvrent la capacité du poste critique $x_1\in\{1,2,3\}$, la taille des sous-lots $x_2\in\{25,50,100,200\}$, la règle de priorité $x_3\in\{\text{FIFO, EDD, priorité ordinaire, hybride}\}$ et la politique de stock $x_4\in\{\text{actuel},+25\%,+50\%\}$, soit $3\times4\times4\times3=144$ configurations candidates. Cinq objectifs sont poursuivis simultanément : minimiser le nombre de commandes en retard, minimiser le WIP moyen, minimiser le délai de traitement (OFCT), minimiser le coût total, et maximiser le Performance Index. Les contraintes imposent un stock non négatif, une charge inférieure ou égale à la capacité installée, la satisfaction de la demande dans les limites définies par le modèle, un budget lorsqu'il est activé, un niveau de service minimal, et une condition terminale commune à toutes les configurations comparées.
+E4 est le protocole expérimental proposé pour démontrer la capacité de simulation-optimisation de SCONTO-SVU. Cette campagne d'exploration des 144 configurations n'a pas encore été exécutée. E4 prend pour baseline le scénario perturbé E2. Les variables de décision couvrent la capacité du poste critique $x_1\in\{1,2,3\}$, la taille des sous-lots $x_2\in\{25,50,100,200\}$, la règle de priorité $x_3\in\{\text{FIFO, EDD, priorité ordinaire, hybride}\}$ et la politique de stock $x_4\in\{\text{actuel},+25\%,+50\%\}$, soit $3\times4\times4\times3=144$ configurations candidates. Cinq objectifs sont poursuivis simultanément : minimiser le nombre de commandes en retard, minimiser le WIP moyen, minimiser le délai de traitement (OFCT), minimiser le coût total, et maximiser le Performance Index. Les contraintes imposent un stock non négatif, une charge inférieure ou égale à la capacité installée, la satisfaction de la demande dans les limites définies par le modèle, un budget lorsqu'il est activé, un niveau de service minimal, et une condition terminale commune à toutes les configurations comparées.
 
 \subsection{E5 -- optimisation DataCo fondée sur la prévision}
 
@@ -307,7 +308,7 @@ P3 & Pilotée par Prophet, Recalibrator et paramètres de planification et de st
 \end{tabularx}
 \end{center}
 
-Pour chaque famille simulée $p$, le vecteur de décision est $x_p=(SS_p,\,s_p,\,Q_p,\,f_p)$, où $SS_p$ est le stock de sécurité, $s_p$ le point de commande, $Q_p$ la quantité de réapprovisionnement et $f_p$ la fréquence de révision du plan. $Q_p$ n'est pas qualifié de quantité économique : dans le protocole E5, c'est une variable de décision à optimiser, pas une couverture fixe.
+Pour chaque famille simulée $p$, le vecteur de décision est $x_p=(SS_p,\,s_p,\,Q_p,\,f_p)$, où $SS_p$ est le stock de sécurité, $s_p$ le point de commande, $Q_p$ la quantité de réapprovisionnement et $f_p$ la fréquence de révision du plan. $SS_p$ et $s_p$ peuvent être initialisés à partir des formules de Hadley et Whitin \cite{hadleywhitin1963}, qui relient stock de sécurité et point de commande aux statistiques de demande et de délai ; E5 les traite ensuite comme des variables de décision à optimiser plutôt que comme des valeurs fixées une fois pour toutes. $Q_p$ n'est pas qualifié de quantité économique : dans le protocole E5, c'est également une variable de décision à optimiser, pas une couverture fixe.
 
 \subsection{Fonction objective et contraintes}
 
@@ -347,7 +348,7 @@ La formulation retenue pour toute configuration issue de ce protocole est « mei
 
 \section{Synthèse}
 
-Prophet fournit une prévision mensuelle de référence entraînée sur 2015--2016 et appliquée à 2017 ; DataCo exécute la demande sous forme de commandes clientes journalières qui traversent le pipeline Source, Make, Deliver ; le Recalibrator combine cette prévision à la demande observée au moyen d'un facteur $\alpha_j=\sqrt{j/N}$ dont les propriétés de bornage, de monotonie et de concavité justifient la forme, et dont l'efficacité empirique est mesurée sur le RUN 1 par une réduction de l'erreur absolue totale d'environ 95,06\,\%. La démarche d'optimisation de SCONTO-SVU s'appuie sur E4, déjà mené selon un protocole complet d'exploration factorielle, de front de Pareto et de sélection AHP, et sur E5, un protocole formalisé pour la planification multi-produit fondée sur la prévision, dont l'exécution et la validation statistique restent à mener une fois la condition terminale atteinte et la graine aléatoire exposée.
+Prophet fournit une prévision mensuelle de référence entraînée sur 2015--2016 et appliquée à 2017 ; DataCo exécute la demande sous forme de commandes clientes journalières qui traversent le pipeline Source, Make, Deliver ; le Recalibrator combine cette prévision à la demande observée au moyen d'un facteur $\alpha_j=\sqrt{j/N}$ dont les propriétés de bornage, de monotonie et de concavité justifient la forme, et dont l'efficacité empirique est mesurée sur le RUN 1 par une réduction de l'erreur absolue totale d'environ 95,06\,\%. E4 formalise le protocole d'optimisation opérationnelle à exécuter sur le cas ZENER, selon une exploration factorielle, un front de Pareto et une sélection AHP ; E5 formalise, sur le même principe, un protocole pour la planification multi-produit fondée sur la prévision. L'exécution et la validation statistique de ces deux protocoles restent à mener, une fois la condition terminale atteinte et la graine aléatoire exposée.
 
 \begin{thebibliography}{9}
 \small

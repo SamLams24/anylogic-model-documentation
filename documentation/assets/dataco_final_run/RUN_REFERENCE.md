@@ -4,17 +4,17 @@
 
 - Identifiant runtime : `RUN_1483228800000_1790184225857`
 - `simToRealSeconds` : 3600 (confirmé par le dialogue « Paramètres Simulation & Budgets », capture AIM04)
-- Modèle exécuté : `SCONTO_SVU_FINAL_VSM_FIX_CANDIDATE.alp`
+- Modèle exécuté : non identifiable avec certitude par nom de fichier. Le manifeste déclare `modeleCandidate = SCONTO_SVU_FINAL_VSM_FIX_CANDIDATE.alp`, mais ce champ s'est avéré être une étiquette codée en dur dans le générateur de manifeste (identique dans plusieurs variantes du dépôt), et non le nom réel du fichier chargé. Le fichier `sources/model/SCONTO_SVU_FINAL_VSM_FIX_CANDIDATE.alp` ne contient aucune des fonctions DataCo/Prophet/Recalibrator utilisées par ce run ; par inventaire fonctionnel, le modèle exécuté correspond à la lignée `SCONTO_SVU_FINAL_VALIDATED_FORECAST_DATACO_MULTIPRODUCT_CONCURRENT_FIX` (voir la note « Identification du modèle exécuté » du document principal).
 - Date simulée de départ : 2017-01-01 00:00:00
 - Date simulée de l'export de clôture : 2018-03-14T10:06:00 (`timestampCloture`, feuille Manifeste Run)
 - Commandes clientes générées : 365 (122 DATACO_SPORTS + 122 DATACO_CLOTHING + 121 DATACO_ELECTRONICS)
 - Demande totale : 99 896 unités (33 539 + 33 294 + 33 063)
 - Commandes closes au snapshot : 79 / 365, dont 20 closes en retard (toutes sur DATACO_SPORTS)
-- Commandes encore EN_ATTENTE : 286 / 365
+- Commandes encore EN_ATTENTE : 286 / 365, réparties sur les trois familles : 79 sur DATACO_SPORTS (22 964 unités), 104 sur DATACO_CLOTHING (27 308 unités), 103 sur DATACO_ELECTRONICS (27 155 unités)
 - Quantité livrée au snapshot : 22 469 unités (part de la demande totale : 22,49 %)
 - Réapprovisionnements autonomes : 4 (REAPPRO_1 = 49 SERVIE ; REAPPRO_2 = 261 SERVIE ; REAPPRO_3 = 2 212 SERVIE ; REAPPRO_4 = 19 770 EN_COURS, sur DATACO_SPORTS)
 - PI au snapshot : 8,871 / 10 (feuille Dashboard Global ; 8,8708 dans `export_DataCo Global.csv`)
-- Statut : NON TERMINAL. Le backlog du réapprovisionnement autonome REAPPRO_4 (19 770 unités, statut EN_COURS) explique la faible part livrée sur DATACO_SPORTS malgré 122 commandes générées.
+- Statut : NON TERMINAL. Les retards clôturés (20 commandes) et le réapprovisionnement REAPPRO_4 encore EN_COURS (19 770 unités) sont concentrés sur DATACO_SPORTS ; le backlog client EN_ATTENTE, en revanche, est réparti sur les trois familles et n'est pas expliqué par REAPPRO_4 seul.
 
 ### Métriques Prophet (sur la demande réelle 2017, disponible sur les douze mois)
 
@@ -38,7 +38,7 @@
 
 Réduction de l'erreur absolue totale : 1 - 1476,68 / 29902,69 ~= 95,06 % (~20,25 fois moins d'erreur absolue cumulée).
 
-Ces métriques ont été recalculées indépendamment à partir des valeurs mensuelles Prophet / Réel / Recalibrator lues sur la capture `screenshots/05_reference_dashboard_3600.png` (source AIM01) et croisées avec la demande totale de la feuille « Performance par produit » du RESULTS RUN 1 (99 896 = somme des douze mois de demande réelle). Elles confirment les points de contrôle fournis pour cette passe, sans divergence constatée.
+Provenance des séries mensuelles : la demande réelle mensuelle est en principe reconstructible directement depuis les commandes clientes (`core:CustomerOrder`) de l'ABox RUN 1, à partir de leur date de création et de leur quantité (`core:hasQuantity`, `createdAtSimulationSecond`) ; les exports tabulaires (RESULTS xlsx) ne contiennent cependant pas les séries Prophet et Recalibrator mensuelles sous forme de feuille dédiée. Ces deux séries ont donc été lues sur le tableau de bord de la capture `screenshots/05_reference_dashboard_3600.png` (source AIM01, légendes numériques explicites par mois), qui est le seul artefact runtime fournissant ces deux séries pour RUN 1. Les métriques d'erreur (MAE, RMSE, MAPE, biais, erreur absolue totale) ont ensuite été recalculées indépendamment à partir de ces séries mensuelles, et la demande totale qui en résulte (99 896) a été croisée avec la feuille « Performance par produit » du RESULTS RUN 1, qui donne le même total par sommation des trois familles. Les métriques recalculées confirment les points de contrôle fournis pour cette passe, sans divergence constatée.
 
 ### Fichiers sources utilisés (RUN 1)
 
@@ -62,4 +62,4 @@ Ces métriques ont été recalculées indépendamment à partir des valeurs mens
 - PI au snapshot : 8,834 / 10
 - Statut : NON TERMINAL, pour les mêmes raisons que le RUN 1.
 
-Utilisé principalement pour les captures d'évolution de l'interface (activation DataCo, génération AutoCommande, progression de campagne, contraction d'octobre-novembre) ; ne constitue pas la source quantitative de référence. Les valeurs numériques de cette campagne divergent de celles du RUN 1 (démonstration que l'échelle temporelle modifie la trajectoire de demande simulée, et non une simple accélération graphique) et ne doivent jamais être mélangées avec les tableaux et métriques du RUN 1.
+Utilisé principalement pour les captures d'évolution de l'interface (activation DataCo, génération AutoCommande, progression de campagne, contraction d'octobre-novembre) ; ne constitue pas la source quantitative de référence. Les deux campagnes présentent des trajectoires différentes. Le changement d'échelle modifie l'ordonnancement temporel relatif des événements et, en l'absence de graine aléatoire explicitement contrôlée (le manifeste indique `graineAleatoire = NON_ACCESSIBLE_DANS_MAIN`), les deux runs ne sont pas quantitativement interchangeables : la divergence observée ne peut donc pas être attribuée avec certitude au seul changement de `simToRealSeconds`. RUN 2 est utilisé uniquement comme support visuel, et ses valeurs numériques ne doivent jamais être mélangées avec les tableaux et métriques du RUN 1.

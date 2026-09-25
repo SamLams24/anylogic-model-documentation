@@ -228,7 +228,7 @@ Fichier & Taille (o) & Fonctions DataCo & Statut \\
 \code{...\_DATACO\_\allowbreak YEAR\_\allowbreak BOUNDED\_\allowbreak FINAL.alp} (migration) & 2\,237\,392 & Présentes & Étape de développement (2026-09-11) \\
 \code{...\_DATACO\_\allowbreak BARCHARTS\_\allowbreak REALISTIC\_\allowbreak RECAL.alp} (migration) & 2\,367\,526 & Présentes & Étape de développement (2026-09-11) \\
 \code{...\_DATACO\_\allowbreak MULTIPRODUCT\_\allowbreak FOUNDATION.alp} (migration) & 2\,376\,717 & Présentes & Étape de développement (2026-09-12) \\
-\code{...\_DATACO\_\allowbreak MULTIPRODUCT\_\allowbreak CONCURRENT\_\allowbreak FIX.alp} (migration, 2026-09-15) & 2\,371\,853 & Présentes & \textbf{Identique octet pour octet (hors nom interne) à \code{SCONTO\_SVU\_\allowbreak DATACO\_FINAL.alp}, voir ci-dessous} \\
+\code{...\_DATACO\_\allowbreak MULTIPRODUCT\_\allowbreak CONCURRENT\_\allowbreak FIX.alp} (migration, 2026-09-15) & 2\,371\,853 & Présentes & \textbf{Une seule différence identifiée avec \code{SCONTO\_SVU\_\allowbreak DATACO\_FINAL.alp} : le champ interne \code{<Name>}, voir ci-dessous} \\
 \code{reference/\allowbreak dataco-\allowbreak multiproduct/\allowbreak ...\_DATACO\_\allowbreak MULTIPRODUCT\_\allowbreak CONCURRENT\_\allowbreak FIX.alp} (dépôt générique, 2026-09-16) & 2\,244\,316 & Présentes & Même nom que la ligne précédente, contenu substantiellement différent (voir remarque) \\
 \code{SCONTO\_SVU\_\allowbreak LIVRAISON\_\allowbreak ENCADREMENT/\allowbreak 01\_MODELES/\allowbreak SCONTO\_SVU\_\allowbreak DATACO\_FINAL.alp} & 2\,371\,806 & Présentes & \textbf{Fichier co-localisé avec les exports RUN~1/RUN~2 ; retenu comme modèle de référence de la campagne DataCo documentée} \\
 \bottomrule
@@ -243,9 +243,17 @@ dossier de migration (datée du 2026-09-15) montre une différence unique :
 le champ interne \code{<Name>} du projet AnyLogic
 (\code{SCONTO\_SVU\_\allowbreak DATACO\_FINAL} contre
 \code{SCONTO\_SVU\_\allowbreak FINAL\_\allowbreak VALIDATED\_\allowbreak FORECAST\_\allowbreak DATACO\_\allowbreak MULTIPRODUCT\_\allowbreak CONCURRENT\_FIX}).
-Tout le reste du fichier est identique. \textbf{Conclusion démontrée, non
-supposée} : \code{SCONTO\_SVU\_\allowbreak DATACO\_FINAL.alp} est une copie renommée de
-cette variante, sans aucune autre modification.
+Après normalisation de ce seul champ, les deux fichiers sont identiques.
+\textbf{Conclusion démontrée, non supposée} : \code{SCONTO\_SVU\_\allowbreak DATACO\_FINAL.alp}
+est une copie renommée de cette variante, sans aucune autre modification.
+
+Les deux fichiers conservent néanmoins des empreintes SHA-256 distinctes,
+précisément parce que le champ \code{<Name>} diffère : un hash
+cryptographique change dès qu'un seul octet du fichier change, y compris
+pour un champ de métadonnées sans effet fonctionnel. L'identité
+fonctionnelle démontrée ci-dessus repose sur la comparaison de contenu
+après normalisation de ce champ, pas sur une égalité des empreintes
+brutes.
 
 Le fichier de même nom présent dans
 \code{reference/dataco-multiproduct/} du dépôt générique, daté du
@@ -437,7 +445,7 @@ Dépôt / branche & HEAD & Statut \\
 \midrule
 \code{sconto-svu-generic-\allowbreak anylogic-model} \newline \code{integration/\allowbreak claude-generic-merge} & \code{ba05f34} & Stable, figée, fusion terminée \\
 \code{sconto-svu-generic-\allowbreak anylogic-model} \newline \code{feature/\allowbreak experimentation-foundation} & \code{e94f5ec} & Expérimentale, en validation runtime, non fusionnée \\
-\code{anylogic-model-\allowbreak documentation} \newline \code{documentation-\allowbreak latex-rewrite} & \code{3698c14} & Documentation DataCo/Prophet/Recalibrator à jour \\
+\code{anylogic-model-\allowbreak documentation} \newline \code{documentation-\allowbreak latex-rewrite} & \code{a10652d} & HEAD après ajout de la présente note ; documents scientifiques DataCo/Prophet/Recalibrator à jour depuis le commit \code{3698c14} \\
 \bottomrule
 \end{tabularx}
 \end{center}
@@ -508,7 +516,7 @@ dans l'ordre :
 Artefact & Branche/dépôt & Commit & Rôle & Merge & Remarques \\
 \midrule
 \code{SCONTO\_SVU\_\allowbreak GENERIC\_\allowbreak MASTER.alp} & integration/claude-\allowbreak generic-merge & ba05f34 & Master générique & Oui & Stable, figé \\
-\code{SCONTO\_SVU\_\allowbreak DATACO\_FINAL.alp} & hors dépôt structuré (livraison locale) & n/d & Modèle DataCo exécuté pour RUN~1/RUN~2 & Non applicable & Identique (hors nom) à la variante migration 2026-09-15 \\
+\code{SCONTO\_SVU\_\allowbreak DATACO\_FINAL.alp} & hors dépôt structuré (livraison locale) & n/d & Modèle DataCo exécuté pour RUN~1/RUN~2 & Non applicable & Identique après normalisation du champ \code{<Name>} à la variante migration 2026-09-15 \\
 \code{...\_VSM\_FIX\_\allowbreak CANDIDATE.alp} & hors dépôt structuré & n/d & Candidat antérieur, sans DataCo & Non & Historique \\
 \code{feature/\allowbreak experimentation-\allowbreak foundation} (branche) & sconto-svu-\allowbreak generic & e94f5ec & Fondation EXP-0 & Non, en validation & Revalidation runtime requise \\
 \code{Documentation\_\allowbreak Module\_\allowbreak Prevision\_\allowbreak SCONTO\_SVU\_\allowbreak corrige.tex} & anylogic-model-\allowbreak documentation & 3698c14 & Documentation module DataCo & n/a & À jour \\

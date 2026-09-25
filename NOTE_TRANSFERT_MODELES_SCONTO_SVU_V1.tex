@@ -1,0 +1,569 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\geometry{margin=2.3cm}
+\usepackage{microtype}
+\usepackage{setspace}
+\setstretch{1.08}
+\usepackage{xcolor}
+\definecolor{cpblue}{HTML}{244A73}
+\definecolor{cpgreen}{HTML}{2E7D6E}
+\definecolor{cporange}{HTML}{C06B28}
+\definecolor{cpgray}{HTML}{F3F5F7}
+\definecolor{cpdark}{HTML}{24313B}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\setlist{itemsep=2pt,topsep=4pt,parsep=0pt}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=cpblue,urlcolor=cpblue,citecolor=cpblue}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Note de transfert SCONTO-SVU}
+\rhead{\small V1, \today}
+\cfoot{\small\thepage}
+\setlength{\headheight}{14pt}
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries\color{cpblue}}{\thesection}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{cpdark}}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{14pt}{7pt}
+\titlespacing*{\subsection}{0pt}{10pt}{5pt}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\begin{document}
+
+\begin{center}
+{\Large\bfseries\color{cpblue} Note de transfert : modèles SCONTO-SVU\par}
+\vspace{0.2cm}
+{\normalsize Version générique, variante DataCo/Prophet/Recalibrator, fondation expérimentale\par}
+\vspace{0.15cm}
+{\small Note intermédiaire V1, document de travail\par}
+\end{center}
+\vspace{0.3cm}
+
+\section{Objet du document}
+
+Cette note décrit l'état des dépôts et modèles SCONTO-SVU au moment du
+transfert, pour permettre à un développeur qui rejoint le projet de
+comprendre rapidement quelles versions existent, laquelle est stable,
+laquelle est spécialisée DataCo, laquelle est expérimentale, ce qui a été
+corrigé, ce qui reste à faire, et ce qui peut ou non être fusionné à ce
+stade.
+
+\textbf{Cette note est une version intermédiaire (V1).} Les expérimentations
+désignées EXP-0, E4 et E5 sont en cours ; aucune n'est présentée ici comme
+définitivement validée. La branche expérimentale ne doit pas être fusionnée
+dans le master stable avant les validations décrites section~\ref{sec:merge}.
+
+\section{Cartographie des versions}
+\label{sec:cartographie}
+
+Deux dépôts Git et un ensemble de variantes locales du modèle DataCo sont
+concernés.
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{p{3.0cm}p{3.4cm}p{1.5cm}X}
+\toprule
+Dépôt & Branche & Commit & Rôle \\
+\midrule
+\code{sconto-svu-\allowbreak generic-\allowbreak anylogic-model} & \code{integration/\allowbreak claude-\allowbreak generic-merge} & \code{ba05f34} & Master générique stable, fusion figée \\
+\code{sconto-svu-\allowbreak generic-\allowbreak anylogic-model} & \code{feature/\allowbreak experimentation-\allowbreak foundation} & \code{e94f5ec} & Fondation expérimentale (EXP-0), en validation \\
+\code{anylogic-\allowbreak model-\allowbreak documentation} & \code{documentation-\allowbreak latex-\allowbreak rewrite} & \code{3698c14} & Documentation technique DataCo/Prophet/Recalibrator \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Le modèle générique et la variante DataCo ne sont \textbf{pas} le même
+artefact : le noyau générique ne contient ni Prophet, ni Recalibrator, ni
+AutoCommande DataCo (section~\ref{sec:dataco-version}). Les variantes
+DataCo identifiées dans l'espace de travail local sont cartographiées à la
+section~\ref{sec:dataco-identite}.
+
+\section{Version générique stable}
+
+\textbf{Branche} : \code{integration/\allowbreak claude-generic-merge}. \textbf{Commit} :
+\code{ba05f348\allowbreak 729ec607\allowbreak ae4716ab\allowbreak f97db1f7\allowbreak b4a7cce6}. \textbf{Artefact} :
+\code{model/\allowbreak SCONTO\_SVU\_\allowbreak GENERIC\_MASTER.alp}.
+
+\textbf{Statut} : fusion terminée, validée par build et runs utilisateur,
+figée avant toute expérimentation. Ce commit est le point de départ exact
+de la branche expérimentale décrite section~\ref{sec:exp0} ; aucun
+changement n'y a été apporté depuis.
+
+Les blocs suivants ont été intégrés et validés (build AnyLogic et runs
+utilisateur) au cours de la fusion :
+
+\begin{itemize}
+  \item architecture générique pilotée par scénarios JSON (aucune
+        configuration métier codée en dur dans le moteur) ;
+  \item hiérarchie SCOR (processus Source, Make, Deliver, Return, niveaux
+        P1 à P5) ;
+  \item cartographie VSM des micro-activités et des flux ;
+  \item architecture multi-agents holonique (ADACOR/PROSA) : agents
+        stratégique, tactiques, coordinateurs, opérationnels ;
+  \item hiérarchie ISA-95 et messagerie AER (tableau noir partagé) ;
+  \item pipeline de Performance Index (méthode Theeranuphattana/Chan-Qi
+        adaptée, agrégation floue) et indicateurs KPI par poste ;
+  \item politiques de stock MTS, MTO et ETO ;
+  \item gestion multi-commandes et multi-produit ;
+  \item réapprovisionnement autonome par produit (ordres \code{REAPPRO\_*}) ;
+  \item ordonnancement réel par insertion FIFO dans \code{actionsMetierDifferees}
+        (section~\ref{sec:corrections}) ;
+  \item exports Excel et ontologiques (ABox RDF/Turtle).
+\end{itemize}
+
+E4 et E5 (section~\ref{sec:e4e5}) ne sont \textbf{pas} implémentées dans
+cette version : aucune variable de décision, aucun espace de configurations,
+aucune boucle Pareto/AHP de campagne d'optimisation n'existe dans ce
+commit.
+
+\section{Version DataCo / Prophet / Recalibrator}
+\label{sec:dataco-version}
+
+La variante DataCo est une extension spécialisée du modèle générique,
+maintenue comme un artefact distinct. Elle contient notamment :
+
+\begin{itemize}
+  \item Prophet, prévision mensuelle de référence entraînée sur la période 2015 à 2016 ;
+  \item l'AutoCommande DataCo, qui rejoue la demande 2017 sous forme de
+        commandes clientes journalières ;
+  \item le Recalibrator, qui combine Prophet et la demande observée via un
+        facteur de confiance $\alpha_j = \sqrt{j/N}$ (confirmé dans le code :
+        \code{double alpha = Math.sqrt(Math.max(0.0, Math.min(1.0,
+        (double) jour / (double) dernierJour)));}) ;
+  \item le fonctionnement multi-produit DataCo (familles \code{DATACO\_\allowbreak SPORTS},
+        \code{DATACO\_\allowbreak CLOTHING}, \code{DATACO\_\allowbreak ELECTRONICS}, configurées par
+        scénario JSON, non codées en dur dans le moteur générique) ;
+  \item les prévisions mensuelles et la recalibration hebdomadaire ;
+  \item les exports de résultats (Excel, ABox) associés aux campagnes
+        DataCo.
+\end{itemize}
+
+\textbf{Le modèle générique ne contient pas Prophet ni Recalibrator.} Cette
+séparation est volontaire et documentée dans les instructions de fusion du
+dépôt : le noyau générique peut recevoir des capacités génériques utiles à
+DataCo (multi-produit générique, stocks par produit, interfaces
+d'extension), mais aucune connaissance métier DataCo codée en dur. Les
+fonctions \code{genererCommandeDataCoPourDate()},
+\code{recalibrerPrevisionPourDate()} et les structures
+\code{prophetForecastsOriginal} sont absentes du master générique
+(\code{ba05f34}) ; elles n'existent que dans les variantes DataCo
+répertoriées section~\ref{sec:dataco-identite}.
+
+\textbf{Ne pas injecter Prophet/Recalibrator dans le master générique
+pendant une opération de fusion sans décision architecturale explicite.}
+
+\subsection{Résultats DataCo de référence}
+
+Les valeurs suivantes proviennent du run de référence RUN~1
+(\code{simToRealSeconds = 3600}), documenté dans
+\code{documentation/assets/dataco\_final\_run/RUN\_REFERENCE.md} du dépôt
+de documentation.
+
+\begin{center}
+\small
+\begin{tabular}{lr}
+\toprule
+Indicateur & Valeur \\
+\midrule
+Commandes générées & 365 \\
+Demande totale & 99\,896 \\
+Commandes closes & 79 \\
+dont closes en retard & 20 \\
+Commandes EN\_ATTENTE & 286 \\
+Quantité livrée au snapshot & 22\,469 \\
+Performance Index au snapshot & 8,871/10 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\small
+\begin{tabular}{lrr}
+\toprule
+Métrique & Prophet & Recalibrator \\
+\midrule
+MAE & 2\,491,89 & 123,06 \\
+MAPE & 45,75\,\% & 1,91\,\% \\
+RMSE & 3\,441,15 & 180,71 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Réduction de l'erreur absolue totale entre Prophet et Recalibrator :
+environ 95,06\,\%.
+
+\textbf{RUN~1 n'est pas terminal.} 286 commandes restent EN\_ATTENTE au
+snapshot ; le Performance Index de 8,871/10 est un indicateur intermédiaire,
+pas une performance logistique terminale. Ces valeurs ne doivent pas être
+présentées comme un résultat final de la campagne.
+
+\section{Identification de la variante DataCo réellement exécutée}
+\label{sec:dataco-identite}
+
+Onze fichiers \code{.alp} liés à DataCo/Prophet/Recalibrator ont été
+localisés dans l'espace de travail. Pour chacun : chemin, taille, SHA-256,
+présence des fonctions \code{genererCommandeDataCoPourDate()} et
+\code{recalibrerPrevisionPourDate()}, et statut.
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{p{4.0cm}rp{1.3cm}X}
+\toprule
+Fichier & Taille (o) & Fonctions DataCo & Statut \\
+\midrule
+\code{sources/\allowbreak model/\allowbreak SCONTO\_\allowbreak SVU\_FINAL\_\allowbreak VSM\_FIX\_\allowbreak CANDIDATE.alp} & 2\,237\,244 & Absentes & Candidat VSM antérieur à l'intégration DataCo ; ne contient ni Prophet ni AutoCommande DataCo \\
+\code{...\_DATACO\_\allowbreak COMPLETE.alp} (migration) & 2\,338\,928 & Présentes & Étape de développement DataCo (2026-09-09) \\
+\code{...\_DATACO\_\allowbreak AUTOMATED.alp} (migration) & 2\,336\,084 & Présentes & Étape de développement (2026-09-09) \\
+\code{...\_DATACO\_\allowbreak AUTOMATED\_\allowbreak CLOCK.alp} (migration) & 2\,338\,176 & Présentes & Étape de développement (2026-09-09) \\
+\code{...\_DATACO\_\allowbreak DYNAMIC\_\allowbreak GRAPHS.alp} (migration) & 2\,334\,561 & Présentes & Étape de développement (2026-09-11) \\
+\code{...\_DATACO\_\allowbreak YEAR\_\allowbreak BOUNDED\_\allowbreak FINAL.alp} (migration) & 2\,237\,392 & Présentes & Étape de développement (2026-09-11) \\
+\code{...\_DATACO\_\allowbreak BARCHARTS\_\allowbreak REALISTIC\_\allowbreak RECAL.alp} (migration) & 2\,367\,526 & Présentes & Étape de développement (2026-09-11) \\
+\code{...\_DATACO\_\allowbreak MULTIPRODUCT\_\allowbreak FOUNDATION.alp} (migration) & 2\,376\,717 & Présentes & Étape de développement (2026-09-12) \\
+\code{...\_DATACO\_\allowbreak MULTIPRODUCT\_\allowbreak CONCURRENT\_\allowbreak FIX.alp} (migration, 2026-09-15) & 2\,371\,853 & Présentes & \textbf{Identique octet pour octet (hors nom interne) à \code{SCONTO\_SVU\_\allowbreak DATACO\_FINAL.alp}, voir ci-dessous} \\
+\code{reference/\allowbreak dataco-\allowbreak multiproduct/\allowbreak ...\_DATACO\_\allowbreak MULTIPRODUCT\_\allowbreak CONCURRENT\_\allowbreak FIX.alp} (dépôt générique, 2026-09-16) & 2\,244\,316 & Présentes & Même nom que la ligne précédente, contenu substantiellement différent (voir remarque) \\
+\code{SCONTO\_SVU\_\allowbreak LIVRAISON\_\allowbreak ENCADREMENT/\allowbreak 01\_MODELES/\allowbreak SCONTO\_SVU\_\allowbreak DATACO\_FINAL.alp} & 2\,371\,806 & Présentes & \textbf{Fichier co-localisé avec les exports RUN~1/RUN~2 ; retenu comme modèle de référence de la campagne DataCo documentée} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Résultat de la comparaison}
+
+La comparaison octet par octet entre \code{SCONTO\_SVU\_\allowbreak DATACO\_FINAL.alp}
+et la variante \code{...\_DATACO\_\allowbreak MULTIPRODUCT\_\allowbreak CONCURRENT\_FIX.alp} du
+dossier de migration (datée du 2026-09-15) montre une différence unique :
+le champ interne \code{<Name>} du projet AnyLogic
+(\code{SCONTO\_SVU\_\allowbreak DATACO\_FINAL} contre
+\code{SCONTO\_SVU\_\allowbreak FINAL\_\allowbreak VALIDATED\_\allowbreak FORECAST\_\allowbreak DATACO\_\allowbreak MULTIPRODUCT\_\allowbreak CONCURRENT\_FIX}).
+Tout le reste du fichier est identique. \textbf{Conclusion démontrée, non
+supposée} : \code{SCONTO\_SVU\_\allowbreak DATACO\_FINAL.alp} est une copie renommée de
+cette variante, sans aucune autre modification.
+
+Le fichier de même nom présent dans
+\code{reference/dataco-multiproduct/} du dépôt générique, daté du
+lendemain (2026-09-16), est en revanche substantiellement différent
+(taille inférieure d'environ 127\,Ko, différences réparties sur l'ensemble
+du fichier) : il s'agit d'un artefact distinct malgré le nom identique.
+Cette homonymie est une source de confusion à corriger (renommage ou
+suppression d'une des deux copies) avant toute reprise du projet.
+
+\textbf{Le champ runtime \code{modeleCandidate}}, présent dans le manifeste
+exporté par les campagnes DataCo, est une étiquette codée en dur dans le
+générateur de manifeste (confirmée identique dans plusieurs variantes du
+dépôt) et \textbf{ne constitue pas une preuve} du fichier réellement
+exécuté ; il ne doit pas être utilisé comme tel. L'identification
+ci-dessus repose exclusivement sur la comparaison de contenu et sur la
+co-localisation du fichier avec les exports RUN~1/RUN~2.
+
+\section{Principales évolutions du modèle}
+
+\subsection{Ligne générique}
+
+Fusion progressive de \code{model/SCONTO\_SVU\_GENERIC\_MASTER.alp} avec
+les apports du modèle collègue, en six blocs fonctionnels (A, M, B, C, D,
+E), chacun audité, corrigé, validé statiquement puis par build et run
+utilisateur avant de passer au suivant. Clôture du dernier bloc (E,
+ordonnancement) et gel du master au commit \code{ba05f34}.
+
+\subsection{Ligne DataCo}
+
+Progression documentée par une suite de fichiers \code{.alp} successifs
+(2026-09-09 à 2026-09-15) : intégration initiale, automatisation de
+l'horloge, graphiques dynamiques, bornage calendaire de l'année cible,
+recalibration réaliste, fondation multi-produit, puis correction de
+concurrence multi-produit, ce dernier état étant celui effectivement
+exécuté pour produire RUN~1/RUN~2 (section~\ref{sec:dataco-identite}).
+
+\subsection{Fondation expérimentale}
+
+Trois passes successives sur la branche \code{feature/experimentation-foundation},
+détaillées section~\ref{sec:exp0}.
+
+\section{Corrections fonctionnelles importantes}
+\label{sec:corrections}
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{p{3.4cm}Xp{3.6cm}}
+\toprule
+Problème & Correction & Effet \\
+\midrule
+Commandes MTO/ETO client bloquées en boucle infinie \code{ANALYSE\_STOCK} (garde de sécurité qui ne couvrait pas ces types) & Séparation stricte MTS / MTO-ETO dans \code{analyserStockCommandeOrchestree()} : après les deux branches MTS inchangées, appel direct à \code{analyserMatiereCommandeOrchestree()}, déjà utilisée sans modification par le réapprovisionnement autonome & Les commandes MTO/ETO progressent jusqu'à clôture ; garde de réentrance étendue pour éviter une double production en cas de réveil concurrent \\
+Ordonnanceur dédié (\code{ordonnancer\allowbreak Production()}, tri priorité/EDD) jamais exécuté utilement & Audité et confirmé inactif : \code{carnetCommandesMTO} n'est jamais peuplé dans tout le master (0 appel \code{.add()}) ; clarifié comme mécanisme hérité non actif, non réactivé & La politique réelle d'ordonnancement, FIFO par insertion dans \code{actionsMetierDifferees}, est documentée comme telle plutôt que supposée \\
+Association flux/commande imprécise (\code{CMD\_4} pouvait matcher \code{CMD\_44}) & Matching strict de préfixe & Aucune confusion entre commandes aux identifiants proches \\
+Engagement client (délai promis \code{tPromise}) écrit deux fois, dont un calcul mort avant résolution complète du scénario & Écriture prématurée supprimée ; seule écriture conservée, après résolution du scénario et du type de commande ; delai par défaut et par produit rendus configurables (\code{champDelaiPromesseParDefautSec}, \code{ScenarioFlux.promisedDelaySec}) & Une seule source de vérité pour \code{tPromise}, configurable sans modification du moteur \\
+Détection des retards clients non centralisée & \code{commandeEstTerminale()} établi comme prédicat canonique unique (\code{SERVIE}/\code{EN\_RETARD}/\code{REFUSEE}/\code{BLOQUE\_*}) ; \code{retardConstate} et \code{modeEngagementClient} comme champs dédiés, détection continue via événement périodique & Une seule définition de la terminalité et du retard, réutilisée par tous les compteurs (KPI, exports, diagnostics) \\
+Compteur de commandes ouvertes potentiellement ambigu (client vs réapprovisionnement) & Vérifié par lecture directe : exclut déjà les ordres \code{REAPPRO\_*} via \code{estOrdreStockAutonome()} & Compteur \code{nombreCommandesOuvertes()} correct pour un usage \og commandes clientes uniquement\fg{} sans modification nécessaire \\
+Incohérences RL/RS du pipeline SCOR vers PI (proxies non calibrés, métrique retournant 0 malgré stock non nul, warm-up affichant PI=0) & Corrections ciblées bloc par bloc (B.1 à B.3-FIX2), sources et unités alignées, proxies explicitement documentés comme tels & Pipeline PI/SCOR revalidé par build et runs utilisateur, clôturé et figé \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Architecture SCOR / VSM / SMA conservée}
+
+L'architecture retenue à l'issue de la fusion reste inchangée par les
+travaux EXP-0 :
+
+\begin{itemize}
+  \item \textbf{SCOR} : processus Source, Make, Deliver, Return, codes de
+        niveau 1 à 3, catalogue de métriques associé à chaque code ;
+  \item \textbf{VSM} : micro-activités et flux physiques/informationnels
+        cartographiés par scénario JSON ;
+  \item \textbf{SMA holonique (ADACOR/PROSA)} : un agent stratégique
+        (\code{StrategicAgent}), quatre agents tactiques (un par
+        macro-processus SCOR principal, \code{TacticalAgent}), des
+        coordinateurs dédiés par macro-processus (\code{CoordinatorAgent})
+        et des agents opérationnels par poste (\code{OperationalAgent}) ;
+  \item \textbf{ISA-95} : hiérarchie industrielle conservée dans l'export
+        ontologique ;
+  \item \textbf{AER} : messagerie d'alerte/escalade via un tableau noir
+        partagé (\code{BlackboardAgent}), remontée opérationnel $\to$
+        tactique $\to$ supervision ;
+  \item \textbf{Performance Index} : méthode Theeranuphattana/Chan-Qi
+        adaptée, agrégation floue des cinq attributs (RL, RS, AG, CO, AM).
+\end{itemize}
+
+\section{Expérimentations et instrumentation}
+\label{sec:exp0}
+
+Branche \code{feature/experimentation-foundation}, créée à partir de
+\code{ba05f34}. Trois commits, chacun documenté dans
+\code{EXPERIMENTATION\_FOUNDATION.md} :
+
+\begin{itemize}
+  \item \textbf{\code{56f763f}}, fondation initiale : audit exhaustif des
+        sources d'aléatoire (toutes passent par
+        \code{getDefault\allowbreak RandomGenerator()}) ; paramètre
+        \code{seedExperiment} appliqué en tête de \code{demarrer\allowbreak Simulation()} ;
+        distinction entre fin de génération de la demande et état terminal
+        opérationnel ; diagnostic terminal structuré ; champs de
+        traçabilité additifs dans l'export ontologique.
+  \item \textbf{\code{82f60d2}}, vérification de trois ambiguïtés :
+        confirmation que le compteur de commandes ouvertes exclut déjà les
+        ordres de réapprovisionnement ; confirmation que la définition de
+        fin de génération couvre le scénario de choc de demande utilisé
+        comme référence pour une future campagne d'optimisation ;
+        correction de la persistance de la graine dans le scénario JSON
+        (sérialisation en chaîne plutôt qu'en nombre à virgule flottante,
+        pour éviter une perte de précision).
+  \item \textbf{\code{e94f5ec}}, correction d'un défaut de
+        reproductibilité réel, mis en évidence par un test runtime à
+        graine identique : plusieurs événements métier cycliques étaient
+        phasés sur le temps absolu du moteur AnyLogic plutôt que sur le
+        début logique du run. Huit événements rephasés via l'API standard
+        \code{restart()}, sans modification d'aucune règle métier, période
+        ou paramètre de panne.
+\end{itemize}
+
+\textbf{Statut : en cours de validation runtime. Ne pas fusionner dans le
+master stable à ce stade.}
+
+\section{Reproductibilité}
+
+Le test runtime effectué après le commit \code{56f763f} a montré que,
+même avec \code{seedExperiment=1001} identique sur deux runs, les
+trajectoires divergeaient à partir du traitement d'un ordre de
+réapprovisionnement autonome. La cause exacte, confirmée par lecture du
+code, est un événement cyclique (\code{cycleArbitrage}, agent tactique)
+configuré pour se déclencher sur une grille de temps absolue du moteur,
+indépendamment de l'instant où l'utilisateur démarre la campagne.
+
+La correction appliquée au commit \code{e94f5ec} rephase huit événements
+métier identifiés comme pertinents (mutation d'état ou décision affectant
+le flux) relativement au début logique du run.
+
+\textbf{Point de vigilance explicite} : cette correction n'a pas encore été
+validée par un nouveau test runtime à deux graines identiques après
+\code{e94f5ec}. Statut exact : \textbf{implémentée, build à valider,
+runtime à revalider.}
+
+\section{Travaux encore en cours}
+
+\begin{itemize}
+  \item Revalidation runtime de la correction de rephasage
+        (section précédente) : deux runs à \code{seedExperiment} identique
+        doivent produire des trajectoires identiques après normalisation
+        au début du run.
+  \item Un état latent distinct a été identifié sans être corrigé :
+        \code{tProchainePanne} et \code{enPanne} (par poste) ne sont pas
+        explicitement réinitialisés entre plusieurs runs successifs dans
+        une même session AnyLogic. Non observé dans le test effectué,
+        probablement parce que la valeur initiale restait à son défaut
+        avant le premier run ; à surveiller si une session enchaîne
+        plusieurs runs sans rouvrir le modèle.
+  \item Le problème \code{demandGenerationFinished} observé à la clôture
+        finale du run (\code{RUN\_FINALIZED}) a été signalé par
+        l'utilisateur mais n'a pas encore été investigué : aucune
+        dépendance technique avec la correction de rephasage n'a été
+        démontrée, traitement reporté à une passe distincte.
+  \item E4 et E5 (section~\ref{sec:e4e5}) ne sont pas exécutées.
+\end{itemize}
+
+\section{E4 et E5, travaux futurs}
+\label{sec:e4e5}
+
+\textbf{Aucune de ces campagnes n'est exécutée à ce jour.} Elles sont
+présentées ici uniquement comme protocoles formalisés dans la
+documentation, à titre de travaux futurs s'appuyant sur la fondation
+expérimentale EXP-0.
+
+\textbf{E4, optimisation ZENER.} Variables de décision : $x_1$ (capacité
+du poste critique), $x_2$ (taille des sous-lots), $x_3$ (règle de
+priorité), $x_4$ (politique de stock), soit 144 configurations candidates.
+Méthode : exploration factorielle, front de Pareto, puis sélection AHP
+parmi les solutions Pareto-efficaces.
+
+\textbf{E5, optimisation DataCo fondée sur la prévision.} Compare quatre
+politiques : P0 (réactive, sans prévision), P1 (Prophet seul), P2 (Prophet
+et Recalibrator), P3 (Prophet, Recalibrator et paramètres de planification
+optimisés). Variables de décision par famille simulée :
+$x_p = (SS_p, s_p, Q_p, f_p)$.
+
+\section{État actuel des branches Git}
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{p{4.6cm}p{4.2cm}X}
+\toprule
+Dépôt / branche & HEAD & Statut \\
+\midrule
+\code{sconto-svu-generic-\allowbreak anylogic-model} \newline \code{integration/\allowbreak claude-generic-merge} & \code{ba05f34} & Stable, figée, fusion terminée \\
+\code{sconto-svu-generic-\allowbreak anylogic-model} \newline \code{feature/\allowbreak experimentation-foundation} & \code{e94f5ec} & Expérimentale, en validation runtime, non fusionnée \\
+\code{anylogic-model-\allowbreak documentation} \newline \code{documentation-\allowbreak latex-rewrite} & \code{3698c14} & Documentation DataCo/Prophet/Recalibrator à jour \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Instructions de merge pour le collègue}
+\label{sec:merge}
+
+\textbf{A. Pour récupérer le modèle générique stable} : \code{checkout}
+\code{integration/\allowbreak claude-\allowbreak generic-merge} au commit \code{ba05f34}.
+Artefact : \code{model/\allowbreak SCONTO\_SVU\_\allowbreak GENERIC\_\allowbreak MASTER.alp}.
+
+\textbf{B. Ne pas fusionner} \code{feature/experimentation-foundation}
+pour l'instant : le runtime est encore en cours de validation
+(section~\ref{sec:exp0}).
+
+\textbf{C. Conserver la variante DataCo séparée} du master générique.
+
+\textbf{D. Ne pas injecter} Prophet ni Recalibrator dans le master
+générique pendant une opération de fusion sans décision architecturale
+explicite.
+
+\textbf{E. Avant tout merge futur de la branche expérimentale}, valider
+dans l'ordre :
+
+\begin{enumerate}
+  \item build AnyLogic 8.9.5 sans erreur ;
+  \item reproductibilité à \code{seedExperiment=1001} (deux runs, mêmes
+        trajectoires après normalisation) ;
+  \item divergence attendue à \code{seedExperiment=1002} ;
+  \item les trois cas de terminalité (génération en cours, génération
+        terminée avec encours, terminal atteint) ;
+  \item réinitialisation de l'état des pannes entre runs successifs ;
+  \item non-régression des scénarios MTS, MTO, ETO, multi-commandes,
+        multi-produit déjà validés sur le master.
+\end{enumerate}
+
+\section{Points de vigilance}
+
+\begin{itemize}
+  \item Deux fichiers portent le même nom (\code{...\_DATACO\_MULTIPRODUCT\_CONCURRENT\_FIX.alp})
+        dans deux emplacements différents, avec un contenu substantiellement
+        différent (section~\ref{sec:dataco-identite}) : à clarifier avant
+        toute reprise.
+  \item Le champ runtime \code{modeleCandidate} ne doit jamais être utilisé
+        comme preuve d'identité d'un fichier exécuté.
+  \item Les exports runtime volumineux (ABox TTL jusqu'à plusieurs Mo) ne
+        sont pas committés dans le dépôt de documentation ; ils restent
+        disponibles dans le dossier de livraison local et sont nommés dans
+        \code{RUN\_REFERENCE.md}.
+  \item Le champ exporté \code{entitiesInProcessAtPosts} (EXP-0) compte des
+        occupations dans les structures de traitement des postes, pas
+        garanti comme un nombre d'agents métier uniques.
+  \item Le modèle utilise un seul flux aléatoire partagé pour tous les
+        mécanismes stochastiques : deux configurations qui consomment un
+        nombre différent de tirages avant un point donné désynchronisent le
+        flux au-delà de ce point, même à graine identique. Une séparation
+        en générateurs dédiés par mécanisme resterait à faire pour un
+        appariement strict des nombres aléatoires communs, si les
+        campagnes E4/E5 le requièrent.
+\end{itemize}
+
+\section{Tableau de traçabilité des artefacts}
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{p{3.2cm}p{2.6cm}p{1.6cm}Xcp{1.6cm}}
+\toprule
+Artefact & Branche/dépôt & Commit & Rôle & Merge & Remarques \\
+\midrule
+\code{SCONTO\_SVU\_\allowbreak GENERIC\_\allowbreak MASTER.alp} & integration/claude-\allowbreak generic-merge & ba05f34 & Master générique & Oui & Stable, figé \\
+\code{SCONTO\_SVU\_\allowbreak DATACO\_FINAL.alp} & hors dépôt structuré (livraison locale) & n/d & Modèle DataCo exécuté pour RUN~1/RUN~2 & Non applicable & Identique (hors nom) à la variante migration 2026-09-15 \\
+\code{...\_VSM\_FIX\_\allowbreak CANDIDATE.alp} & hors dépôt structuré & n/d & Candidat antérieur, sans DataCo & Non & Historique \\
+\code{feature/\allowbreak experimentation-\allowbreak foundation} (branche) & sconto-svu-\allowbreak generic & e94f5ec & Fondation EXP-0 & Non, en validation & Revalidation runtime requise \\
+\code{Documentation\_\allowbreak Module\_\allowbreak Prevision\_\allowbreak SCONTO\_SVU\_\allowbreak corrige.tex} & anylogic-model-\allowbreak documentation & 3698c14 & Documentation module DataCo & n/a & À jour \\
+\code{REPONSES\_\allowbreak ENCADREMENT\_\allowbreak PROPHET\_ALPHA\_\allowbreak OPTIMISATION.tex} & anylogic-model-\allowbreak documentation & 3698c14 & Synthèse académique Prophet/\allowbreak$\alpha_j$/\allowbreak optimisation & n/a & À jour \\
+\code{RUN\_\allowbreak REFERENCE.md} & anylogic-model-\allowbreak documentation & 3698c14 & Traçabilité RUN~1/RUN~2 & n/a & À jour \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Recommandations pour la reprise par le collègue}
+
+\begin{enumerate}
+  \item Partir du master générique (\code{ba05f34}) pour toute nouvelle
+        fonctionnalité générique ; ne pas repartir de la branche
+        expérimentale tant qu'elle n'est pas revalidée.
+  \item Ne pas modifier \code{model/SCONTO\_SVU\_GENERIC\_MASTER.alp}
+        directement sans créer une branche dédiée, conformément au
+        workflow déjà établi dans le dépôt.
+  \item Pour toute reprise du travail DataCo, utiliser
+        \code{SCONTO\_SVU\_DATACO\_FINAL.alp} comme référence, en gardant à
+        l'esprit qu'il s'agit d'une copie renommée de la variante de
+        migration datée du 2026-09-15, et non d'un artefact distinct.
+  \item Avant de fusionner \code{feature/experimentation-foundation},
+        exécuter le protocole de validation de la section~\ref{sec:merge}.E
+        dans son intégralité.
+  \item Clarifier l'homonymie signalée section~\ref{sec:dataco-identite}
+        avant toute automatisation qui se fierait au nom de fichier plutôt
+        qu'à son contenu.
+  \item Ne pas exécuter E4 ou E5 avant que la reproductibilité et la
+        condition terminale de EXP-0 soient entièrement validées.
+\end{enumerate}
+
+\section*{Annexe : chronologie des principales évolutions}
+\addcontentsline{toc}{section}{Annexe : chronologie des principales évolutions}
+
+\begin{itemize}
+  \item Fusion générique, blocs A (corrections sûres) et M (fondation
+        multi-produit).
+  \item Bloc B : refonte du pipeline Performance Index / SCOR.
+  \item Bloc C : détection continue des retards, engagement client
+        configurable.
+  \item Bloc D : audit du moteur d'exécution et des exports.
+  \item Bloc E : audit et correction de l'ordonnancement, raccordement du
+        chemin de production MTO/ETO.
+  \item Clôture et gel du master générique (\code{ba05f34}).
+  \item Développement DataCo : Prophet, AutoCommande, Recalibrator,
+        multi-produit DataCo (progression de fichiers \code{.alp}
+        successifs, 2026-09-09 à 2026-09-15).
+  \item Documentation technique DataCo/Prophet/Recalibrator (dépôt de
+        documentation, plusieurs passes de rigueur scientifique).
+  \item EXP-0 : graine expérimentale, condition terminale, diagnostic.
+  \item EXP-0.1 : vérification de trois ambiguïtés (commandes ouvertes,
+        couverture E4, précision du round-trip JSON de la graine).
+  \item EXP-0.2 : correction de la reproductibilité runtime (rephasage des
+        événements métier cycliques).
+\end{itemize}
+
+\end{document}

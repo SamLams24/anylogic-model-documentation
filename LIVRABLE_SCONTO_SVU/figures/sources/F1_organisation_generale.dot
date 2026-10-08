@@ -1,15 +1,20 @@
 // F1 — organisation générale de SCONTO-SVU, source Graphviz (preuve de concept)
 // Rendu : dot -Tsvg F1_organisation_generale.dot -o F1_organisation_generale_dot.svg
+// Sens des flèches corrigé (étape 5 bis) : owl:imports va de l'ontologie IMPORTEUSE
+// vers l'ontologie IMPORTÉE, conformément à TABLE_CONTROLE_IMPORTS.md. Génération
+// antérieure représentée en trois boîtes séparées (Core/Agent/AER v antérieure),
+// pas une seule boîte fusionnée, pour ne pas suggérer qu'ISA-95 importe les trois
+// alors qu'elle n'importe que Core 4.1.0.
 // Avantage sur le SVG dessiné à la main : le graphe et les libellés sont déclarés
 // comme données (nœuds/arêtes), pas comme coordonnées — faire évoluer une classe,
 // une relation ou une version ne demande pas de recalculer de positions.
 // Limite : la disposition manuelle (SVG) permet un contrôle fin du placement des
-// libellés hors du tracé des flèches (nécessaire pour la densité de F2/F3a/F3b) que
-// l'algorithme de disposition automatique de Graphviz ne reproduit pas à l'identique ;
-// voir la discussion complète dans registre_figures.md, section « Sources éditables ».
+// libellés hors du tracé des flèches (nécessaire pour la densité de F2/F3a/F3b/F3c)
+// que l'algorithme de disposition automatique de Graphviz ne reproduit pas à
+// l'identique ; voir la discussion complète dans registre_figures.md.
 
 digraph F1 {
-  rankdir=TB;
+  rankdir=BT;
   fontname="Arial";
   node [shape=box, fontname="Arial", style=rounded];
   edge [fontname="Arial", fontsize=10];
@@ -18,8 +23,8 @@ digraph F1 {
     label="Ontologies SCONTO tierces (2014)";
     style=dashed;
     SCOBE; SCOME; SCOPRO;
-    SCOBE -> SCOME [label="imports"];
-    SCOME -> SCOPRO [label="imports"];
+    SCOBE -> SCOME [label="owl:imports"];
+    SCOME -> SCOPRO [label="owl:imports"];
   }
 
   Core [label="Core SCONTO-SVU\nv4.3.0\nligne courante"];
@@ -29,17 +34,24 @@ digraph F1 {
   subgraph cluster_old {
     label="Génération antérieure — non revalidée";
     style=dashed;
-    OldGen [label="Core v4.1.0 + Agent v1.0.0 + AER v1.0.0", shape=box, style="dashed,rounded"];
+    CoreOld [label="Core v4.1.0", shape=box, style="dashed,rounded"];
+    AgentOld [label="Agent v1.0.0", shape=box, style="dashed,rounded"];
+    AEROld [label="AER v1.0.0", shape=box, style="dashed,rounded"];
     Forecast [label="Forecast / MTS\nv1.0.0\nchapitre expérimental"];
     ISA95 [label="ISA-95\nv1.0.0\nchapitre 4"];
-    Forecast -> OldGen [label="owl:imports"];
-    ISA95 -> OldGen [label="owl:imports (Core seul)"];
+    Forecast -> CoreOld [label="owl:imports"];
+    Forecast -> AgentOld [label="owl:imports"];
+    Forecast -> AEROld [label="owl:imports"];
+    ISA95 -> CoreOld [label="owl:imports (Core seul)"];
   }
 
-  SCOPRO -> Core [label="owl:imports"];
-  Core -> Agent [label="owl:imports"];
-  Core -> AER [label="owl:imports"];
-  Agent -> AER [label="owl:imports"];
+  // importeur -> importé
+  Core -> SCOPRO [label="owl:imports"];
+  Core -> SCOME [label="owl:imports"];
+  Core -> SCOBE [label="owl:imports"];
+  Agent -> Core [label="owl:imports"];
+  AER -> Core [label="owl:imports"];
+  AER -> Agent [label="owl:imports"];
 
   // AHP volontairement absente (exclusion scientifique du périmètre)
 }

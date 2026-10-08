@@ -31,17 +31,23 @@ Chargement de `SCOBE.owl` avec `rdflib.Graph().parse(..., format="xml")` (486 tr
 | `...SCOBE#Benchmarking_Project` (P majuscule) | `owl:Class` | 6 | 7 |
 | `...SCOBE#Benchmarking_project` (p minuscule) | **aucun — ressource non typée** | **0** | **0** |
 
-`Benchmarking_Project` (P majuscule) est une classe réelle, pleinement déclarée : elle porte notamment un `owl:equivalentClass` vers une expression de classe anonyme et un `rdfs:subClassOf owl:Thing`. `Benchmarking_project` (p minuscule) **n'existe nulle part** dans le graphe SCOBE — ni comme sujet, ni comme objet d'aucun triple.
+`Benchmarking_Project` (P majuscule) est une classe réelle, pleinement déclarée : elle porte notamment un `owl:equivalentClass` vers une expression de classe anonyme et un `rdfs:subClassOf owl:Thing`. `Benchmarking_project` (p minuscule), à l'intérieur du seul fichier `SCOBE.owl`, **n'existe nulle part** — ni comme sujet, ni comme objet d'aucun triple de ce fichier.
 
 ### 1.3 Résolution dans le graphe fusionné (Core + SCOBE, tel que chargé ensemble)
 
+**Précision terminologique corrigée** : l'IRI minuscule n'est pas totalement absente du graphe fusionné. Elle y figure exactement une fois, comme **objet** du triple `rdfs:subClassOf` que le Core lui-même déclare — c'est cet axiome qui l'introduit. Elle n'apparaît en revanche **jamais comme sujet** d'aucun triple, dans aucun des deux fichiers : aucune déclaration `rdf:type`, aucun `rdfs:label`, aucun axiome propre ne lui est attaché nulle part.
+
 ```
 Triples charges (fusion) : 1980
-Cible de rdfs:subClassOf = http://www.semanticweb.org/indonto/ontologies/2014/0/SCOBE#Benchmarking_project
-Cette IRI est-elle declaree owl:Class dans le graphe fusionne ? False
+IRI minuscule (Benchmarking_project) :
+  comme SUJET dans le graphe fusionne : 0 triple
+  comme OBJET dans le graphe fusionne : 1 triple, exactement :
+    core:SCORPerformanceEvaluation rdfs:subClassOf scobe:Benchmarking_project .
+  rdf:type assertee pour cette IRI ? Non (aucun)
+IRI majuscule (Benchmarking_Project) : 6 triples en sujet, 7 en objet (classe pleinement declaree)
 ```
 
-**Conclusion technique, démontrée par le parseur et non par une simple lecture textuelle** : l'axiome `:SCORPerformanceEvaluation rdfs:subClassOf scobe:Benchmarking_project` crée bel et bien une référence vers une IRI distincte de la classe réellement visée (`scobe:Benchmarking_Project`). Ce n'est pas une similarité trompeuse à l'œil : ce sont, au sens strict du W3C RDF 1.1 (comparaison de caractères, sensible à la casse), deux ressources différentes. La première (minuscule) n'est typée nulle part dans les deux fichiers chargés ; elle n'a donc aucune des propriétés, restrictions ou relations que porte la véritable classe `Benchmarking_Project`.
+**Conclusion technique, démontrée par le parseur et non par une simple lecture textuelle** : l'axiome `:SCORPerformanceEvaluation rdfs:subClassOf scobe:Benchmarking_project` référence bien une IRI distincte de la classe réellement visée (`scobe:Benchmarking_Project`). Ce n'est pas une similarité trompeuse à l'œil : ce sont, au sens strict du W3C RDF 1.1 (comparaison de caractères, sensible à la casse), deux ressources différentes. La ressource minuscule existe dans le graphe fusionné **uniquement parce que cet axiome du Core la mentionne** ; elle n'est typée nulle part et ne porte donc aucune des propriétés, restrictions ou relations que porte la véritable classe `Benchmarking_Project`. Dit autrement : l'axiome crée une référence à une ressource anonyme de fait, pas à la classe de benchmarking visée.
 
 **Ce que cela ne fait pas** : cela ne rend aucune classe insatisfaisable au sens d'un raisonneur de description logics. En RDFS/OWL, une ressource non typée peut être employée comme objet d'un triple `rdfs:subClassOf` sans qu'aucune règle de syntaxe ou de cohérence ne soit violée ; elle est simplement traitée comme une ressource anonyme sans axiome propre. Un raisonneur comme HermiT ne signale donc rien d'anormal (cohérent avec `C14_RAPPORT_ALIGNEMENT_FINAL.md`, qui rapporte 0 classe insatisfaisable) : l'anomalie est un défaut de **liaison sémantique silencieuse**, pas une inconsistance logique détectable automatiquement par les outils déjà utilisés dans ce projet.
 
@@ -77,6 +83,6 @@ Faire de `SCORPerformanceEvaluation` une **sous-classe** de `Benchmarking_Projec
 
 ---
 
-## 3. Traitement dans la figure F3b
+## 3. Traitement dans les figures (mis à jour, étape 5 bis)
 
-La figure F3b (voir `registre_figures.md`) représente désormais cet axiome avec une annotation explicite indiquant qu'il s'agit d'un **point de vigilance non résolu**, et non d'une relation ontologique validée : la flèche `rdfs:subClassOf` vers `scobe:Benchmarking_project` est tracée en pointillés avec un symbole d'avertissement, accompagnée du texte exact de l'axiome et un renvoi à la présente note, plutôt que représentée comme n'importe quelle autre spécialisation de la figure.
+Sur instruction explicite (« privilégie son exclusion du dessin principal jusqu'à ce qu'une décision ontologique soit prise »), **l'alignement SCOBE n'est plus représenté du tout dans le dessin principal** de la figure concernée (`F3c_scores_attributs.svg`, qui remplace l'ancienne `F3b_evaluation_performance.svg`). Ni la classe tierce `scobe:Benchmarking_project`, ni la flèche `rdfs:subClassOf` ne sont dessinées. À la place, la classe `SCORPerformanceEvaluation` porte un encart textuel distinct, encadré en rouge : « ⚠ Alignement SCOBE non représenté ici — volontairement exclu », qui renvoie explicitement à la présente note pour le détail technique et sémantique complet. Cette formulation ne présente donc plus cet axiome, même implicitement, comme une spécialisation validée.

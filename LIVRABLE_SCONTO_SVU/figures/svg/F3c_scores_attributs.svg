@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 620" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="7" markerHeight="7" refX="5.5" refY="2" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L5.5,2 L0,4 Z" fill="#222222"/>
+    </marker>
+    <marker id="arrowgrey" markerWidth="7" markerHeight="7" refX="5.5" refY="2" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L5.5,2 L0,4 Z" fill="#666666"/>
+    </marker>
+    <marker id="isa" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L7.5,4 L0,8 Z" fill="#ffffff" stroke="#222222" stroke-width="0.9"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="460" height="620" fill="#ffffff"/>
+
+  <text x="230" y="16" text-anchor="middle" font-size="12.5" font-weight="bold">Figure 3c — Scores, attributs et évaluation globale (Module I)</text>
+  <text x="230" y="27" text-anchor="middle" font-size="8" font-style="italic" fill="#444444">Chaîne de score/contribution, distincte de la chaîne de valeur (Figure 3b)</text>
+
+  <rect x="130" y="38" width="200" height="26" rx="4" fill="#fafafa" stroke="#999999" stroke-width="0.9" stroke-dasharray="3,2"/>
+  <text x="230" y="55" text-anchor="middle" font-size="7.6" font-style="italic" fill="#666666">Métriques SCOR (N1/N2/N3/Composite) — cf. Figure 3b</text>
+
+  <rect x="30" y="92" width="400" height="34" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="230" y="113" text-anchor="middle" font-size="9" font-weight="bold">SCORPerformanceAttribute</text>
+
+  <line x1="230" y1="64" x2="230" y2="90" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="236" y="80" font-size="7" fill="#333333">contributesToPerformanceAttribute</text>
+
+  <rect x="30" y="150" width="76" height="34" rx="4" fill="#ffffff" stroke="#333333" stroke-width="1.1"/>
+  <text x="68" y="165" text-anchor="middle" font-size="7.6" font-weight="bold">Reliability</text>
+  <text x="68" y="176" text-anchor="middle" font-size="6.3">(RL)</text>
+
+  <rect x="114" y="150" width="90" height="34" rx="4" fill="#ffffff" stroke="#333333" stroke-width="1.1"/>
+  <text x="159" y="165" text-anchor="middle" font-size="7.6" font-weight="bold">Responsiveness</text>
+  <text x="159" y="176" text-anchor="middle" font-size="6.3">(RS)</text>
+
+  <rect x="212" y="150" width="70" height="34" rx="4" fill="#ffffff" stroke="#333333" stroke-width="1.1"/>
+  <text x="247" y="165" text-anchor="middle" font-size="7.6" font-weight="bold">Agility</text>
+  <text x="247" y="176" text-anchor="middle" font-size="6.3">(AG)</text>
+
+  <rect x="290" y="150" width="66" height="34" rx="4" fill="#ffffff" stroke="#333333" stroke-width="1.1"/>
+  <text x="323" y="165" text-anchor="middle" font-size="7.6" font-weight="bold">Cost</text>
+  <text x="323" y="176" text-anchor="middle" font-size="6.3">(CO)</text>
+
+  <rect x="364" y="150" width="66" height="34" rx="4" fill="#ffffff" stroke="#333333" stroke-width="1.1"/>
+  <text x="397" y="163" text-anchor="middle" font-size="6.8">Asset Mgmt</text>
+  <text x="397" y="174" text-anchor="middle" font-size="6.3">(AM)</text>
+
+  <line x1="68" y1="150" x2="150" y2="128" stroke="#222222" stroke-width="1" marker-end="url(#isa)"/>
+  <line x1="159" y1="150" x2="195" y2="128" stroke="#222222" stroke-width="1" marker-end="url(#isa)"/>
+  <line x1="247" y1="150" x2="250" y2="128" stroke="#222222" stroke-width="1" marker-end="url(#isa)"/>
+  <line x1="323" y1="150" x2="290" y2="128" stroke="#222222" stroke-width="1" marker-end="url(#isa)"/>
+  <line x1="397" y1="150" x2="320" y2="128" stroke="#222222" stroke-width="1" marker-end="url(#isa)"/>
+
+  <rect x="30" y="198" width="400" height="40" rx="4" fill="#f7f7f7" stroke="#999999" stroke-width="0.9"/>
+  <text x="40" y="212" font-size="7" fill="#555555">contributesToPerformanceAttribute : domaine en union (5 classes de métrique).</text>
+  <text x="40" y="224" font-size="7" fill="#555555">Chaque attribut ⊂ aussi une classe scome: propre — voir matrice des relations.</text>
+  <text x="40" y="234" font-size="7" fill="#555555">hasAttributeWeight : xsd:decimal (domaine SCORPerformanceAttribute).</text>
+
+  <rect x="140" y="252" width="180" height="40" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.4"/>
+  <text x="230" y="270" text-anchor="middle" font-size="9" font-weight="bold">SCORPerformanceEvaluation</text>
+  <text x="230" y="283" text-anchor="middle" font-size="6.5" fill="#666666">(≈ PI, indice global)</text>
+
+  <polyline points="430,109 430,270 322,270" fill="none" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="436" y="190" font-size="6.8" fill="#333333" transform="rotate(-90 436,190)">contributesToEvaluation</text>
+
+  <rect x="30" y="38" width="90" height="20" rx="4" fill="#fafafa" stroke="#999999" stroke-width="0.9" stroke-dasharray="3,2"/>
+  <text x="75" y="52" text-anchor="middle" font-size="6.8" font-style="italic" fill="#666666">N1 (cf. 3b)</text>
+  <polyline points="75,58 15,110 15,195 136,258" fill="none" stroke="#666666" stroke-width="1.1" stroke-dasharray="5,3" marker-end="url(#arrowgrey)"/>
+  <text x="3" y="150" font-size="6.8" fill="#555555" transform="rotate(-90 13,150)">producesEvaluation (voie directe, depuis N1)</text>
+
+  <!-- SCOBE flag, no box/arrow drawn per consigne d'exclusion du dessin principal -->
+  <rect x="30" y="306" width="400" height="54" rx="5" fill="#ffffff" stroke="#aa3333" stroke-width="1.5"/>
+  <text x="42" y="322" font-size="7.6" font-weight="bold" fill="#aa3333">⚠ Alignement SCOBE non représenté ici — volontairement exclu</text>
+  <text x="42" y="335" font-size="7" fill="#333333">Un axiome rdfs:subClassOf lie SCORPerformanceEvaluation à une IRI SCOBE</text>
+  <text x="42" y="347" font-size="7" fill="#333333">non résolue, en attente d'arbitrage. Détail : NOTE_TECHNIQUE_ANOMALIE_SCOBE.md.</text>
+  <text x="42" y="357" font-size="7" fill="#333333">Non modifié dans le Core.</text>
+
+  <!-- Fuzzy grading -->
+  <text x="20" y="390" font-size="9" font-weight="bold">Grades flous [V4.3]</text>
+  <rect x="145" y="398" width="170" height="36" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="230" y="418" text-anchor="middle" font-size="9" font-weight="bold">FuzzyPerformanceGradeSet</text>
+  <text x="230" y="430" text-anchor="middle" font-size="6.8" fill="#666666">6 grades : A à F</text>
+
+  <rect x="30" y="448" width="400" height="30" rx="4" fill="#f7f7f7" stroke="#999999" stroke-width="0.9"/>
+  <text x="40" y="460" font-size="7" fill="#555555">hasFuzzyGradeSet : domaine en union (toute métrique, SCORPerformanceAttribute,</text>
+  <text x="40" y="471" font-size="7" fill="#555555">SCORPerformanceEvaluation). hasGradeA…F : xsd:decimal (6 propriétés).</text>
+
+  <!-- Legend -->
+  <rect x="30" y="492" width="400" height="118" rx="5" fill="#ffffff" stroke="#333333" stroke-width="1"/>
+  <text x="42" y="508" font-size="8.5" font-weight="bold">Légende</text>
+  <line x1="42" y1="521" x2="66" y2="521" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="72" y="524" font-size="7.3">propriété — chaîne de score/contribution (≠ aggregatesTo, Figure 3b)</text>
+  <line x1="42" y1="536" x2="66" y2="536" stroke="#666666" stroke-width="1.1" stroke-dasharray="5,3" marker-end="url(#arrowgrey)"/>
+  <text x="72" y="539" font-size="7.3">voie alternative documentée (producesEvaluation, depuis N1)</text>
+  <line x1="42" y1="551" x2="66" y2="551" stroke="#222222" stroke-width="1" marker-end="url(#isa)"/>
+  <text x="72" y="554" font-size="7.3">spécialisation (rdfs:subClassOf)</text>
+  <text x="42" y="572" font-size="7" fill="#333333">Le fichier distingue explicitement (rdfs:comment du Module I) cette chaîne de</text>
+  <text x="42" y="584" font-size="7" fill="#333333">celle de la Figure 3b : « ne signifie pas une agrégation de valeur physique ».</text>
+  <text x="42" y="600" font-size="6.5" font-style="italic" fill="#777777">Source : SCONTO_SVU_Core_v4.3.0.ttl, Module I — précédent : Figure 3b</text>
+</svg>

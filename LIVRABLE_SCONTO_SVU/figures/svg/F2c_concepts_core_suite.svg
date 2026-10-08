@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 560" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="7" markerHeight="7" refX="5.5" refY="2" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L5.5,2 L0,4 Z" fill="#222222"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="460" height="560" fill="#ffffff"/>
+
+  <text x="230" y="16" text-anchor="middle" font-size="12.5" font-weight="bold">SCONTO-SVU : concepts fondamentaux du Core (2/2)</text>
+  <text x="230" y="27" text-anchor="middle" font-size="8" font-style="italic" fill="#444444">Bandes 4 à 6 — indicateurs VSM, couche pivot, référentiel SCOR (suite de la Figure 2)</text>
+
+  <!-- carried-over reference -->
+  <rect x="140" y="38" width="180" height="26" rx="4" fill="#fafafa" stroke="#999999" stroke-width="0.9" stroke-dasharray="3,2"/>
+  <text x="230" y="55" text-anchor="middle" font-size="8" font-style="italic" fill="#666666">RawEvent (cf. Figure 2)</text>
+
+  <!-- Bande 4 -->
+  <text x="20" y="90" font-size="9" font-weight="bold">Bande 4 — Indicateurs VSM et contexte d'observation</text>
+  <rect x="30" y="98" width="150" height="36" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="105" y="120" text-anchor="middle" font-size="9.5" font-weight="bold">VSMIndicator</text>
+
+  <rect x="220" y="98" width="170" height="36" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="305" y="120" text-anchor="middle" font-size="9.5" font-weight="bold">ObservationContext</text>
+
+  <line x1="230" y1="64" x2="110" y2="96" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="225" y="76" font-size="7.5" fill="#333333">producesIndicator</text>
+
+  <line x1="180" y1="116" x2="218" y2="116" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="183" y="110" font-size="7" fill="#333333">hasObservationContext</text>
+
+  <text x="30" y="152" font-size="7" font-style="italic" fill="#666666">VSMIndicator : 30+ spécialisations concrètes (CycleTime, OEE, LeadTime…), non détaillées ici.</text>
+
+  <!-- Bande 5 -->
+  <text x="20" y="186" font-size="9" font-weight="bold">Bande 5 — Couche pivot (SVML / « SVU Layer »)</text>
+  <rect x="30" y="194" width="150" height="36" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.4"/>
+  <text x="105" y="216" text-anchor="middle" font-size="9.5" font-weight="bold">MicroActivity</text>
+
+  <rect x="220" y="194" width="170" height="36" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="305" y="216" text-anchor="middle" font-size="9.5" font-weight="bold">AggregationRule</text>
+
+  <line x1="105" y1="194" x2="105" y2="136" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="109" y="168" font-size="7.5" fill="#333333">measuredBy</text>
+
+  <text x="30" y="248" font-size="7" font-style="italic" fill="#666666">CorrespondenceRule, NormalizationRule : autres classes du Module J (voir Figure 3a).</text>
+
+  <!-- Bande 6 -->
+  <text x="20" y="282" font-size="9" font-weight="bold">Bande 6 — Référentiel SCOR et métriques</text>
+  <rect x="30" y="290" width="130" height="36" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="95" y="312" text-anchor="middle" font-size="9.5" font-weight="bold">SCORProcess</text>
+
+  <rect x="195" y="290" width="120" height="36" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="255" y="312" text-anchor="middle" font-size="9.5" font-weight="bold">SCORMetric</text>
+
+  <rect x="30" y="346" width="200" height="36" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="130" y="368" text-anchor="middle" font-size="10.3" font-weight="bold">SCORPerformanceAttribute</text>
+
+  <polyline points="30,210 14,210 14,308 28,308" fill="none" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="2" y="270" font-size="7.3" fill="#333333" transform="rotate(-90 12,270)">mapsToSCORN3</text>
+
+  <line x1="258" y1="230" x2="258" y2="288" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="264" y="265" font-size="7.5" fill="#333333">producesMetric</text>
+
+  <line x1="255" y1="326" x2="172" y2="349" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="195" y="340" font-size="7" fill="#333333">belongsToPerformanceAttribute</text>
+
+  <rect x="30" y="394" width="400" height="30" rx="4" fill="#fafafa" stroke="#999999" stroke-width="0.9" stroke-dasharray="3,2"/>
+  <text x="40" y="413" font-size="7" font-style="italic" fill="#555555">SCORMetricN1/N2/N3, SCORCompositeMetric, pipeline de performance : Figures 3b/3c.</text>
+
+  <!-- Vigilance Module A -->
+  <rect x="30" y="432" width="400" height="48" rx="5" fill="#fafafa" stroke="#999999" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="42" y="448" font-size="7.8" font-weight="bold" fill="#555555">Point de vigilance (Module A) — détail : Figure 2b</text>
+  <text x="42" y="461" font-size="7" fill="#555555">Les quatre classes ArchitectureLayer ne sont reliées à aucune classe de ces</text>
+  <text x="42" y="473" font-size="7" fill="#555555">figures par une assertion OWL (belongsToLayer n'est jamais assertée).</text>
+
+  <!-- Legend -->
+  <rect x="30" y="490" width="400" height="56" rx="5" fill="#ffffff" stroke="#333333" stroke-width="1"/>
+  <text x="42" y="505" font-size="8.5" font-weight="bold">Légende</text>
+  <line x1="42" y1="518" x2="66" y2="518" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="72" y="521" font-size="7.3">propriété (nom exact, Core 4.3.0) — légende complète : Figure 2</text>
+  <text x="42" y="536" font-size="6.5" font-style="italic" fill="#777777">Source : SCONTO_SVU_Core_v4.3.0.ttl (modules H, I, J) — précédent : Figure 2</text>
+</svg>

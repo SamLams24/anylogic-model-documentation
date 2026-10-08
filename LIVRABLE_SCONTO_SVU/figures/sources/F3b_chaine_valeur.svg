@@ -25,36 +25,35 @@
   <rect x="30" y="170" width="170" height="34" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
   <text x="115" y="191" text-anchor="middle" font-size="9.5" font-weight="bold">SCORMetricN2</text>
   <line x1="115" y1="144" x2="115" y2="168" stroke="#aa3333" stroke-width="1.4" marker-end="url(#arrowred)"/>
-  <text x="122" y="162" font-size="7.3" fill="#aa3333">aggregatesTo</text>
+  <text x="122" y="162" font-size="8.7" fill="#aa3333">aggregatesTo</text>
 
   <rect x="260" y="170" width="170" height="34" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
   <text x="345" y="187" text-anchor="middle" font-size="9" font-weight="bold">SCORCompositeMetric</text>
-  <text x="345" y="198" text-anchor="middle" font-size="6.3" fill="#666666">⊂ scome:Composite_Metric</text>
+  <text x="345" y="198" text-anchor="middle" font-size="8" fill="#666666">⊂ scome:Composite_Metric</text>
   <line x1="260" y1="60" x2="262" y2="168" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
-  <text x="264" y="120" font-size="7.3" fill="#333333">isAggregatedInto</text>
+  <text x="264" y="120" font-size="8.7" fill="#333333">isAggregatedInto</text>
 
   <rect x="30" y="230" width="170" height="34" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
   <text x="115" y="251" text-anchor="middle" font-size="9.5" font-weight="bold">SCORMetricN1</text>
   <line x1="115" y1="204" x2="115" y2="228" stroke="#aa3333" stroke-width="1.4" marker-end="url(#arrowred)"/>
-  <text x="122" y="222" font-size="7.3" fill="#aa3333">aggregatesTo</text>
+  <text x="122" y="222" font-size="8.7" fill="#aa3333">aggregatesTo</text>
   <line x1="115" y1="230" x2="280" y2="206" stroke="#222222" stroke-width="1.1" marker-end="url(#isa)"/>
-  <text x="195" y="224" font-size="7" fill="#333333">⊂ SCORCompositeMetric</text>
+  <text x="195" y="224" font-size="8.5" fill="#333333">⊂ SCORCompositeMetric</text>
 
   <rect x="30" y="280" width="400" height="30" rx="4" fill="#f7f7f7" stroke="#999999" stroke-width="0.9"/>
-  <text x="40" y="299" font-size="7" fill="#555555">SCORMetricN2 est aussi ⊂ SCORCompositeMetric (double spécialisation, non figurée).</text>
+  <text x="40" y="299" font-size="8.5" fill="#555555">SCORMetricN2 est aussi ⊂ SCORCompositeMetric (double spécialisation, non figurée).</text>
 
   <rect x="30" y="324" width="400" height="42" rx="4" fill="#f7f7f7" stroke="#999999" stroke-width="0.9"/>
-  <text x="40" y="340" font-size="7" fill="#555555">hasMetricValue, hasPerformanceScore, hasMetricWeight, isBenefitMetric :</text>
-  <text x="40" y="352" font-size="7" fill="#555555">xsd:decimal/boolean, domaine en union sur les 5 classes ci-dessus [Module I, V4.2].</text>
+  <text x="40" y="340" font-size="8.5" fill="#555555">hasMetricValue, hasPerformanceScore, hasMetricWeight, isBenefitMetric :</text>
+  <text x="40" y="352" font-size="8.5" fill="#555555">xsd:decimal/boolean, domaine en union sur les 5 classes ci-dessus [Module I, V4.2].</text>
 
   <!-- Legend -->
   <rect x="30" y="378" width="400" height="68" rx="5" fill="#ffffff" stroke="#333333" stroke-width="1"/>
   <text x="42" y="394" font-size="8.5" font-weight="bold">Légende</text>
   <line x1="42" y1="406" x2="66" y2="406" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
-  <text x="72" y="409" font-size="7.3">propriété (nom exact, Core 4.3.0)</text>
+  <text x="72" y="409" font-size="8.7">propriété (nom exact, Core 4.3.0)</text>
   <line x1="42" y1="420" x2="66" y2="420" stroke="#aa3333" stroke-width="1.4" marker-end="url(#arrowred)"/>
-  <text x="72" y="423" font-size="7.3">aggregatesTo — chaîne de valeur, ajoutée V4.1 (≠ chaîne de score, Figure 3c)</text>
+  <text x="72" y="423" font-size="8.7">aggregatesTo — chaîne de valeur, ajoutée V4.1 (≠ chaîne de score, Figure 3c)</text>
   <line x1="42" y1="434" x2="66" y2="434" stroke="#222222" stroke-width="1.1" marker-end="url(#isa)"/>
-  <text x="72" y="437" font-size="7.3">spécialisation (rdfs:subClassOf)</text>
-  <text x="42" y="458" font-size="6.5" font-style="italic" fill="#777777">Source : SCONTO_SVU_Core_v4.3.0.ttl, Module I — matrice des relations vérifiées</text>
+  <text x="72" y="437" font-size="8.7">spécialisation (rdfs:subClassOf)</text>
 </svg>

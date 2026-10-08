@@ -19,7 +19,7 @@
   <text x="320" y="75" text-anchor="middle" font-size="10" font-weight="bold">SupplyChainActor</text>
 
   <line x1="160" y1="71" x2="228" y2="71" stroke="#555555" stroke-width="1" stroke-dasharray="2,2" marker-end="url(#arrow)"/>
-  <text x="165" y="65" font-size="7" fill="#555555">belongsToActor</text>
+  <text x="165" y="65" font-size="8.5" fill="#555555">belongsToActor</text>
 
   <!-- Bande 2 -->
   <text x="20" y="112" font-size="9" font-weight="bold">Bande 2 — Entités opérationnelles</text>
@@ -30,11 +30,11 @@
   <text x="280" y="142" text-anchor="middle" font-size="9.5" font-weight="bold">StorageEntity</text>
 
   <polyline points="320,88 320,99 110,99 110,118" fill="none" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
-  <text x="325" y="99" font-size="7.5" fill="#333333">ownsEquipment</text>
+  <text x="325" y="99" font-size="9" fill="#333333">ownsEquipment</text>
 
   <rect x="30" y="170" width="380" height="30" rx="4" fill="#f7f7f7" stroke="#999999" stroke-width="0.9"/>
-  <text x="40" y="182" font-size="7" fill="#555555">EquipmentElement et StorageEntity sont des spécialisations indirectes</text>
-  <text x="40" y="193" font-size="7" fill="#555555">d'ObservableEntity (via PhysicalEntity) — voir matrice des relations.</text>
+  <text x="40" y="182" font-size="8.5" fill="#555555">EquipmentElement et StorageEntity sont des spécialisations indirectes</text>
+  <text x="40" y="193" font-size="8.5" fill="#555555">d'ObservableEntity (via PhysicalEntity) — voir matrice des relations.</text>
 
   <!-- Bande 3 -->
   <text x="20" y="226" font-size="9" font-weight="bold">Bande 3 — Événements bruts</text>
@@ -46,31 +46,30 @@
   <text x="320" y="260" text-anchor="middle" font-size="9.5" font-weight="bold">ObservableEntity</text>
 
   <line x1="160" y1="252" x2="228" y2="252" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
-  <text x="165" y="246" font-size="7.5" fill="#333333">generatedBy</text>
+  <text x="165" y="246" font-size="9" fill="#333333">generatedBy</text>
 
   <polyline points="95,234 95,206 14,206 14,140 28,140" fill="none" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
-  <text x="2" y="225" font-size="7.3" fill="#333333" transform="rotate(-90 12,225)">relatedToEquipment</text>
+  <text x="2" y="225" font-size="8.7" fill="#333333" transform="rotate(-90 12,225)">relatedToEquipment</text>
 
-  <text x="30" y="300" font-size="7.5" font-style="italic" fill="#666666">RawEvent produit les indicateurs VSM (producesIndicator) — suite en Figure 2c.</text>
+  <text x="30" y="300" font-size="9" font-style="italic" fill="#666666">RawEvent produit les indicateurs VSM (producesIndicator) — suite en Figure 2c.</text>
 
   <!-- Legend -->
   <rect x="30" y="322" width="400" height="140" rx="5" fill="#ffffff" stroke="#333333" stroke-width="1"/>
   <text x="42" y="340" font-size="9" font-weight="bold">Légende</text>
 
   <line x1="42" y1="354" x2="66" y2="354" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
-  <text x="72" y="357" font-size="7.5">propriété (nom exact, Core 4.3.0)</text>
+  <text x="72" y="357" font-size="9">propriété (nom exact, Core 4.3.0)</text>
 
   <line x1="42" y1="370" x2="66" y2="370" stroke="#555555" stroke-width="1" stroke-dasharray="2,2" marker-end="url(#arrow)"/>
-  <text x="72" y="373" font-size="7.5">propriété générique (domaine scopro:SC_Entity)</text>
+  <text x="72" y="373" font-size="9">propriété générique (domaine scopro:SC_Entity)</text>
 
   <rect x="42" y="380" width="26" height="16" fill="#ffffff" stroke="#555555" stroke-width="1" stroke-dasharray="3,2"/>
-  <text x="72" y="391" font-size="7.5">classe abstraite (importée ou interne)</text>
+  <text x="72" y="391" font-size="9">classe abstraite (importée ou interne)</text>
 
   <rect x="42" y="402" width="26" height="16" fill="#f7f7f7" stroke="#999999" stroke-width="0.9"/>
-  <text x="72" y="413" font-size="7.5">note de traçabilité / renvoi (pas une classe)</text>
+  <text x="72" y="413" font-size="9">note de traçabilité / renvoi (pas une classe)</text>
 
-  <text x="42" y="434" font-size="7.6" fill="#333333">Les regroupements en six bandes sont un classement éditorial, distinct des</text>
-  <text x="42" y="446" font-size="7.6" fill="#333333">quatorze modules A-N du fichier Turtle (correspondance : registre_figures.md).</text>
+  <text x="42" y="434" font-size="9" fill="#333333">Les regroupements en six bandes sont un classement éditorial, distinct des</text>
+  <text x="42" y="446" font-size="9" fill="#333333">quatorze modules A-N du fichier Turtle (correspondance : registre_figures.md).</text>
 
-  <text x="230" y="474" text-anchor="middle" font-size="6.5" font-style="italic" fill="#777777">Source : SCONTO_SVU_Core_v4.3.0.ttl (modules A-D, G) — suite : Figure 2c (bandes 4-6), Figure 2b (Module A)</text>
 </svg>

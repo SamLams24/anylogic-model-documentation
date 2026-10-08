@@ -108,8 +108,9 @@ Forecast/MTS et ISA-95 : confirmé, non présentées comme alignées sur Core 4.
 
 Correction majeure par rapport à la proposition précédente, qui plaçait à tort Agent, AER et ISA-95 dans la section 3.5. Nouvelle répartition, conforme à votre consigne :
 
-- **Chapitre 3** : Core et formalisation de l'unification SCOR-VSM. Couvre F1 (organisation générale, pour situer les extensions sans les détailler), F2 (architecture conceptuelle du Core), et la présentation des modules A à L du Core avec leurs tableaux de contraintes. Forecast/MTS n'est pas nommément couverte par votre consigne (qui mentionne explicitement Agent/AER/ISA-95 pour le chapitre 4) ; elle est une extension du Core au sens strict (prévision, pas pilotage multi-agents), donc **rattachée provisoirement au chapitre 3** par proximité fonctionnelle avec SCOR/VSM plutôt qu'avec l'architecture agents — **à confirmer avec vous**, ce n'est pas tranché par la consigne reçue.
+- **Chapitre 3** : Core et formalisation de l'unification SCOR-VSM. Couvre F1 (organisation générale, pour situer les extensions sans les détailler), F2 (architecture conceptuelle du Core), et la présentation des modules A à L du Core avec leurs tableaux de contraintes.
 - **Chapitre 4** : architecture multi-agents, Agent Extension, AER Extension, alignement ISA-95. Couvre F4 (classes Agent), F5 (classes AER), F8 (classes ISA-95).
+- **Chapitres expérimentaux** : prévision, replanification, politiques Make-to-Stock, exploitation de Forecast/MTS. **Confirmé par votre arbitrage du tour suivant** : Forecast/MTS ne figure donc pas dans le chapitre 3 par défaut — ce point, laissé ouvert dans la version précédente de ce document, est désormais tranché (voir `ETAPE3_CONSOLIDATION_MODULES_DIAGRAMMES.md`, section 2, pour la matrice de figures à jour).
 
 Conséquence sur la matrice de figures (section 9) : F4, F5 et F8 changent de chapitre cible par rapport à la version précédente de ce document. F1 doit rester suffisamment générale pour ne pas empiéter sur le détail que le chapitre 4 développera — elle montre l'existence et le statut des dépendances, pas la structure interne de chaque extension.
 

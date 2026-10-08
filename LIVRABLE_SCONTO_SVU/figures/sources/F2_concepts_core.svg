@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1260" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#222222"/>
+    </marker>
+    <marker id="isa" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#ffffff" stroke="#222222" stroke-width="1.2"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1700" height="1260" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="850" y="32" text-anchor="middle" font-size="21" font-weight="bold" fill="#111111">SCONTO-SVU : concepts fondamentaux du Core (v4.3.0)</text>
+  <text x="850" y="53" text-anchor="middle" font-size="12.5" font-style="italic" fill="#444444">Organisation en six regroupements conceptuels (base : sconto_svu_core_main_concepts.drawio) — intention comparable aux figures principales de SCOPRO (Fig. 2-7, Vegetti et al.)</text>
+  <text x="850" y="71" text-anchor="middle" font-size="11.5" fill="#666666">Figure non exhaustive : classes et relations structurantes seulement. Les six bandes sont un regroupement éditorial, distinct des quatorze modules A-N du fichier Turtle (voir légende).</text>
+
+  <!-- Caveat note: ArchitectureLayer -->
+  <rect x="1180" y="104" width="460" height="82" rx="6" fill="#fafafa" stroke="#999999" stroke-width="1.3" stroke-dasharray="5,4"/>
+  <text x="1198" y="122" font-size="11" font-weight="bold" fill="#555555">Point de vigilance (Module A)</text>
+  <text x="1198" y="138" font-size="10" fill="#555555">Le Core déclare 4 classes ArchitectureLayer (Data/VSM/</text>
+  <text x="1198" y="152" font-size="10" fill="#555555">SVML/SCOR) correspondant aux couches du SVU Framework,</text>
+  <text x="1198" y="166" font-size="10" fill="#555555">mais la propriété belongsToLayer qui les relierait au reste</text>
+  <text x="1198" y="180" font-size="10" fill="#555555">du TBox est déclarée et jamais assertée (0 occurrence).</text>
+
+  <!-- Band 1 -->
+  <text x="40" y="116" font-size="13.5" font-weight="bold" fill="#1a1a1a">Bande 1 — Architecture et réseau logistique (Modules A, B)</text>
+  <rect x="80" y="134" width="170" height="58" rx="6" fill="#ffffff" stroke="#555555" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="165" y="158" text-anchor="middle" font-size="11.5" font-style="italic" fill="#333333">«abstract»</text>
+  <text x="165" y="175" text-anchor="middle" font-size="13" font-weight="bold" font-style="italic">SC Entity</text>
+
+  <rect x="300" y="134" width="220" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="410" y="168" text-anchor="middle" font-size="14" font-weight="bold">SupplyChainActor</text>
+
+  <rect x="570" y="134" width="230" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="685" y="168" text-anchor="middle" font-size="14" font-weight="bold">SupplyChainNetwork</text>
+
+  <line x1="250" y1="163" x2="298" y2="163" stroke="#555555" stroke-width="1.4" stroke-dasharray="3,3" marker-end="url(#arrow)"/>
+  <text x="274" y="153" text-anchor="middle" font-size="9.5" fill="#555555">belongsToActor</text>
+
+  <!-- Band 2 -->
+  <text x="40" y="256" font-size="13.5" font-weight="bold" fill="#1a1a1a">Bande 2 — Entités opérationnelles (Modules C, D, E, F)</text>
+  <rect x="80" y="274" width="200" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="180" y="308" text-anchor="middle" font-size="13.5" font-weight="bold">EquipmentElement</text>
+
+  <rect x="310" y="274" width="190" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="405" y="308" text-anchor="middle" font-size="13.5" font-weight="bold">StorageEntity</text>
+
+  <rect x="530" y="274" width="200" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="630" y="308" text-anchor="middle" font-size="13.5" font-weight="bold">InformationSystem</text>
+
+  <rect x="760" y="274" width="150" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="835" y="308" text-anchor="middle" font-size="13.5" font-weight="bold">Product</text>
+
+  <rect x="940" y="274" width="160" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="1020" y="308" text-anchor="middle" font-size="13.5" font-weight="bold">WorkOrder</text>
+
+  <line x1="410" y1="192" x2="200" y2="272" stroke="#222222" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="330" y="235" text-anchor="middle" font-size="10.5" fill="#333333">ownsEquipment</text>
+
+  <!-- Band 3 -->
+  <text x="40" y="396" font-size="13.5" font-weight="bold" fill="#1a1a1a">Bande 3 — Événements bruts (Module G)</text>
+  <rect x="80" y="414" width="190" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="175" y="448" text-anchor="middle" font-size="13.5" font-weight="bold">RawEvent</text>
+
+  <rect x="310" y="414" width="180" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="400" y="448" text-anchor="middle" font-size="13.5" font-weight="bold">EventSource</text>
+
+  <line x1="175" y1="414" x2="180" y2="334" stroke="#222222" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="195" y="378" font-size="10.5" fill="#333333">relatedToEquipment</text>
+
+  <line x1="400" y1="414" x2="390" y2="334" stroke="#222222" stroke-width="1.3" marker-end="url(#arrow)"/>
+  <text x="402" y="378" font-size="10.5" fill="#333333">generatedBy</text>
+
+  <!-- Band 4 -->
+  <text x="40" y="536" font-size="13.5" font-weight="bold" fill="#1a1a1a">Bande 4 — Indicateurs VSM et contexte d'observation (Module H)</text>
+  <rect x="80" y="554" width="210" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="185" y="588" text-anchor="middle" font-size="13.5" font-weight="bold">VSMIndicator</text>
+
+  <rect x="320" y="554" width="230" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="435" y="588" text-anchor="middle" font-size="13.5" font-weight="bold">ObservationContext</text>
+
+  <line x1="175" y1="554" x2="183" y2="472" stroke="#222222" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="195" y="518" font-size="10.5" fill="#333333">producesIndicator</text>
+
+  <line x1="290" y1="582" x2="318" y2="582" stroke="#222222" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="304" y="572" text-anchor="middle" font-size="9" fill="#333333">has-</text>
+
+  <!-- subclasses of VSMIndicator -->
+  <rect x="100" y="626" width="120" height="38" rx="5" fill="#ffffff" stroke="#333333" stroke-width="1.2"/>
+  <text x="160" y="650" text-anchor="middle" font-size="10.5">CycleTime</text>
+
+  <rect x="240" y="626" width="250" height="38" rx="5" fill="#ffffff" stroke="#333333" stroke-width="1.2"/>
+  <text x="365" y="650" text-anchor="middle" font-size="9.5">OverallEquipmentEffectiveness</text>
+
+  <text x="520" y="650" font-size="10.5" font-style="italic" fill="#555555">(+ 30 autres spécialisations de VSMIndicator, non détaillées ici)</text>
+
+  <line x1="160" y1="626" x2="170" y2="614" stroke="#222222" stroke-width="1.3" marker-end="url(#isa)"/>
+  <line x1="365" y1="626" x2="230" y2="614" stroke="#222222" stroke-width="1.3" marker-end="url(#isa)"/>
+
+  <!-- Band 5 -->
+  <text x="40" y="712" font-size="13.5" font-weight="bold" fill="#1a1a1a">Bande 5 — Couche pivot SVML / « SVU Layer » (Module J)</text>
+  <rect x="80" y="730" width="190" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+  <text x="175" y="764" text-anchor="middle" font-size="13.5" font-weight="bold">MicroActivity</text>
+
+  <rect x="300" y="730" width="210" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="405" y="764" text-anchor="middle" font-size="13" font-weight="bold">CorrespondenceRule</text>
+
+  <rect x="540" y="730" width="200" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="640" y="764" text-anchor="middle" font-size="13" font-weight="bold">NormalizationRule</text>
+
+  <rect x="770" y="730" width="190" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="865" y="764" text-anchor="middle" font-size="13" font-weight="bold">AggregationRule</text>
+
+  <!-- measuredBy, routed around subclass cluster -->
+  <polyline points="175,730 175,700 40,700 40,582 78,582" fill="none" stroke="#222222" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <text x="8" y="650" font-size="10" fill="#333333" transform="rotate(-90 20,650)">measuredBy</text>
+
+  <!-- Band 6 -->
+  <text x="40" y="852" font-size="13.5" font-weight="bold" fill="#1a1a1a">Bande 6 — Référentiel SCOR et métriques (Module I)</text>
+  <rect x="80" y="870" width="180" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="170" y="904" text-anchor="middle" font-size="13.5" font-weight="bold">SCORProcess</text>
+
+  <rect x="290" y="870" width="170" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="375" y="904" text-anchor="middle" font-size="13.5" font-weight="bold">SCORMetric</text>
+
+  <rect x="490" y="870" width="230" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="605" y="904" text-anchor="middle" font-size="12.5" font-weight="bold">SCORPerformanceAttribute</text>
+
+  <rect x="750" y="870" width="220" height="58" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+  <text x="860" y="904" text-anchor="middle" font-size="12.5" font-weight="bold">SCORCompositeMetric</text>
+
+  <line x1="460" y1="899" x2="488" y2="899" stroke="#222222" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="474" y="889" text-anchor="middle" font-size="8.5" fill="#333333">belongsTo-</text>
+  <text x="474" y="917" text-anchor="middle" font-size="8.5" fill="#333333">PerformanceAttribute</text>
+
+  <!-- SCORMetricN1/N2/N3 : hiérarchie non simplifiée ici pour éviter une spécialisation inexacte -->
+  <rect x="300" y="944" width="420" height="38" rx="5" fill="#fafafa" stroke="#999999" stroke-width="1.1" stroke-dasharray="4,3"/>
+  <text x="510" y="968" text-anchor="middle" font-size="10.5" font-style="italic" fill="#555555">SCORMetricN1/N2/N3 : hiérarchie exacte non simplifiable ici (N3 ⊂ SCORMetric, N1/N2 ⊂ SCORCompositeMetric) — voir Figure 3</text>
+
+  <!-- B5 -> B6 arrows -->
+  <line x1="160" y1="788" x2="165" y2="868" stroke="#222222" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="55" y="808" font-size="10.5" fill="#333333">mapsToSCORN3</text>
+
+  <line x1="240" y1="788" x2="365" y2="868" stroke="#222222" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <text x="295" y="820" font-size="10.5" fill="#333333">feedsSCORMetric</text>
+
+  <line x1="865" y1="788" x2="860" y2="868" stroke="#222222" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="875" y="832" font-size="10.5" fill="#333333">producesMetric</text>
+
+  <!-- Legend -->
+  <rect x="40" y="1028" width="1620" height="200" rx="8" fill="#ffffff" stroke="#333333" stroke-width="1.3"/>
+  <text x="60" y="1054" font-size="14" font-weight="bold">Légende</text>
+
+  <line x1="60" y1="1074" x2="100" y2="1074" stroke="#222222" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="110" y="1078" font-size="11.5">propriété objet (association, nom exact tel que déclaré dans le fichier Turtle)</text>
+
+  <line x1="60" y1="1096" x2="100" y2="1096" stroke="#555555" stroke-width="1.4" stroke-dasharray="3,3" marker-end="url(#arrow)"/>
+  <text x="110" y="1100" font-size="11.5">propriété générique à domaine scopro:SC_Entity (s'applique potentiellement à toute entité du Core)</text>
+
+  <line x1="60" y1="1118" x2="100" y2="1118" stroke="#222222" stroke-width="1.3" marker-end="url(#isa)"/>
+  <text x="110" y="1122" font-size="11.5">spécialisation (rdfs:subClassOf) — exemples seulement, non exhaustif</text>
+
+  <rect x="60" y="1134" width="34" height="20" fill="#ffffff" stroke="#555555" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="110" y="1149" font-size="11.5">classe abstraite importée (scopro:SC_Entity)</text>
+
+  <text x="60" y="1178" font-size="12" font-weight="bold">Omissions volontaires (lisibilité)</text>
+  <text x="60" y="1196" font-size="11" fill="#333333">executedAt, performedForActor, relatedToStorage/WorkOrder, contributesToPerformanceAttribute, governedBy, usesFunction,</text>
+  <text x="60" y="1212" font-size="11" fill="#333333">usesNormalizationMethod, aggregatesIndicator — relations réelles mais non dessinées ; voir registre_figures.md pour la liste complète.</text>
+
+  <text x="900" y="1178" font-size="12" font-weight="bold">Limite de représentation</text>
+  <text x="900" y="1196" font-size="11" fill="#333333">Aucune cardinalité n'est indiquée : aucune restriction owl:cardinality / min / max n'est déclarée dans le Core (0 occurrence).</text>
+  <text x="900" y="1212" font-size="11" fill="#333333">Le pipeline de performance du Module I (hasMetricValue, scores, pondérations, grades flous) est détaillé en figure 3, pas ici.</text>
+
+  <text x="850" y="1248" text-anchor="middle" font-size="10" fill="#777777">Source : SCONTO_SVU_Core_v4.3.0.ttl (modules A-J) — toutes les relations dessinées sont vérifiées par lecture directe du fichier</text>
+</svg>

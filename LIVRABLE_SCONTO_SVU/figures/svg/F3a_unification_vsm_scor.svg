@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 560" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="7" markerHeight="7" refX="5.5" refY="2" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L5.5,2 L0,4 Z" fill="#222222"/>
+    </marker>
+    <marker id="isa" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L7.5,4 L0,8 Z" fill="#ffffff" stroke="#222222" stroke-width="0.9"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="460" height="560" fill="#ffffff"/>
+
+  <text x="230" y="16" text-anchor="middle" font-size="14" font-weight="bold">Figure 3a — Unification VSM-SCOR (Module J)</text>
+  <text x="230" y="27" text-anchor="middle" font-size="9.5" font-style="italic" fill="#444444">Micro-activités, correspondance, normalisation, et pont vers le référentiel SCOR</text>
+
+  <!-- MappingRule hierarchy -->
+  <rect x="155" y="40" width="150" height="32" rx="4" fill="#ffffff" stroke="#555555" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="230" y="61" text-anchor="middle" font-size="10.5" font-weight="bold" font-style="italic">MappingRule</text>
+
+  <rect x="30" y="100" width="190" height="34" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="125" y="121" text-anchor="middle" font-size="10.8" font-weight="bold">CorrespondenceRule</text>
+
+  <rect x="240" y="100" width="190" height="34" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="335" y="121" text-anchor="middle" font-size="10.8" font-weight="bold">NormalizationRule</text>
+
+  <line x1="125" y1="100" x2="195" y2="74" stroke="#222222" stroke-width="1.1" marker-end="url(#isa)"/>
+  <line x1="335" y1="100" x2="265" y2="74" stroke="#222222" stroke-width="1.1" marker-end="url(#isa)"/>
+
+  <rect x="80" y="160" width="300" height="52" rx="4" fill="#f7f7f7" stroke="#999999" stroke-width="0.9"/>
+  <text x="90" y="176" font-size="9.5" fill="#555555">CorrespondenceRule : « règle associant un événement brut ou une</text>
+  <text x="90" y="188" font-size="9.5" fill="#555555">micro-activité à un processus SCOR » (rdfs:comment du fichier).</text>
+  <text x="90" y="202" font-size="9.5" fill="#555555">NormalizationRule : porte hasBottomValue/hasPerfectValue (Figure 3b).</text>
+
+  <!-- MicroActivity -->
+  <rect x="140" y="236" width="180" height="40" rx="5" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="230" y="261" text-anchor="middle" font-size="12" font-weight="bold">MicroActivity</text>
+
+  <text x="230" y="290" text-anchor="middle" font-size="9.3" font-style="italic" fill="#666666">triggeredBy (RawEvent), executedAt/performedForActor, measuredBy : Figure 2.</text>
+
+  <!-- bridge to SCOR -->
+  <rect x="30" y="330" width="190" height="40" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="125" y="350" text-anchor="middle" font-size="10.5" font-weight="bold">SCORLevel3Process</text>
+  <text x="125" y="363" text-anchor="middle" font-size="8" fill="#666666">⊂ SCORProcess ; cible de mapsToSCORN3</text>
+
+  <rect x="240" y="330" width="190" height="40" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="335" y="350" text-anchor="middle" font-size="10.5" font-weight="bold">SCORMetric</text>
+  <text x="335" y="363" text-anchor="middle" font-size="8.7" fill="#666666">(+ N1/N2/N3, Composite — Figure 3b)</text>
+
+  <line x1="190" y1="276" x2="130" y2="328" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="95" y="322" font-size="9.3" fill="#333333">mapsToSCORN3</text>
+
+  <line x1="270" y1="276" x2="325" y2="328" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="275" y="322" font-size="9.3" fill="#333333">feedsSCORMetric</text>
+
+  <polyline points="335,330 440,330 440,117 432,117" fill="none" stroke="#666666" stroke-width="1.1" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+  <text x="398" y="230" font-size="9.3" fill="#555555" transform="rotate(-90 408,230)">scoredByRule</text>
+
+  <rect x="30" y="392" width="400" height="56" rx="4" fill="#fafafa" stroke="#999999" stroke-width="0.9" stroke-dasharray="3,2"/>
+  <text x="42" y="408" font-size="9.5" fill="#555555">mapsToSCORN3 : portée réelle = union(scopro:Process_Element, scopro:Task,</text>
+  <text x="42" y="420" font-size="9.5" fill="#555555">SCORLevel3Process). feedsSCORMetric : portée réelle = union(SCORMetric,</text>
+  <text x="42" y="432" font-size="9.5" fill="#555555">SCORCompositeMetric, SCORMetricN3/N2/N1). Simplifiées ici à une classe</text>
+  <text x="42" y="444" font-size="9.5" fill="#555555">représentative chacune ; liste complète : matrice des relations vérifiées.</text>
+
+  <!-- Legend -->
+  <rect x="30" y="462" width="400" height="86" rx="5" fill="#ffffff" stroke="#333333" stroke-width="1"/>
+  <text x="42" y="480" font-size="10.5" font-weight="bold">Légende</text>
+  <line x1="42" y1="494" x2="66" y2="494" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="72" y="497" font-size="9.5">propriété (nom exact, Core 4.3.0)</text>
+  <line x1="42" y1="510" x2="66" y2="510" stroke="#666666" stroke-width="1.1" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+  <text x="72" y="513" font-size="9.5">propriété de retour (métrique SCOR → NormalizationRule)</text>
+  <line x1="42" y1="526" x2="66" y2="526" stroke="#222222" stroke-width="1.1" marker-end="url(#isa)"/>
+  <text x="72" y="529" font-size="9.5">spécialisation (rdfs:subClassOf)</text>
+  <text x="42" y="542" font-size="9" fill="#777777" font-style="italic">Détail complet, sources : registre_figures.md — suite : Figure 3b</text>
+</svg>

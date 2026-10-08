@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 1130" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="7" markerHeight="7" refX="5.5" refY="2" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L5.5,2 L0,4 Z" fill="#222222"/>
+    </marker>
+    <marker id="arrowred" markerWidth="7" markerHeight="7" refX="5.5" refY="2" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L5.5,2 L0,4 Z" fill="#aa3333"/>
+    </marker>
+    <marker id="isa" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L7.5,4 L0,8 Z" fill="#ffffff" stroke="#222222" stroke-width="0.9"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="460" height="1130" fill="#ffffff"/>
+
+  <text x="230" y="16" text-anchor="middle" font-size="14" font-weight="bold">Figure 3b — Évaluation de performance (Module I)</text>
+  <text x="230" y="27" text-anchor="middle" font-size="9.5" font-style="italic" fill="#444444">Métriques N3/N2/N1, agrégation de valeur, contribution aux attributs, scores, pondérations, grades flous</text>
+
+  <!-- Chain 1 : value aggregation -->
+  <text x="20" y="46" font-size="10.5" font-weight="bold">Chaîne de valeur — aggregatesTo (ajoutée V4.1)</text>
+  <rect x="145" y="54" width="170" height="34" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="230" y="75" text-anchor="middle" font-size="11" font-weight="bold">SCORMetric</text>
+
+  <rect x="30" y="110" width="170" height="34" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="115" y="131" text-anchor="middle" font-size="11" font-weight="bold">SCORMetricN3</text>
+
+  <line x1="200" y1="88" x2="150" y2="108" stroke="#222222" stroke-width="1.1" marker-end="url(#isa)"/>
+
+  <rect x="30" y="170" width="170" height="34" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="115" y="191" text-anchor="middle" font-size="11" font-weight="bold">SCORMetricN2</text>
+
+  <line x1="115" y1="144" x2="115" y2="168" stroke="#aa3333" stroke-width="1.3" marker-end="url(#arrowred)"/>
+  <text x="122" y="162" font-size="9.3" fill="#aa3333">aggregatesTo</text>
+
+  <rect x="260" y="170" width="170" height="34" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="345" y="191" text-anchor="middle" font-size="10.5" font-weight="bold">SCORCompositeMetric</text>
+  <text x="345" y="200" text-anchor="middle" font-size="8.5" fill="#666666"> </text>
+
+  <line x1="260" y1="78" x2="262" y2="168" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="264" y="130" font-size="9.3" fill="#333333">isAggregatedInto</text>
+
+  <rect x="30" y="230" width="170" height="34" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="115" y="251" text-anchor="middle" font-size="11" font-weight="bold">SCORMetricN1</text>
+
+  <line x1="115" y1="204" x2="115" y2="228" stroke="#aa3333" stroke-width="1.3" marker-end="url(#arrowred)"/>
+  <text x="122" y="222" font-size="9.3" fill="#aa3333">aggregatesTo</text>
+
+  <line x1="115" y1="230" x2="280" y2="206" stroke="#222222" stroke-width="1.1" marker-end="url(#isa)"/>
+  <text x="200" y="222" font-size="9" fill="#333333">⊂ SCORCompositeMetric</text>
+
+  <rect x="30" y="278" width="400" height="30" rx="4" fill="#f7f7f7" stroke="#999999" stroke-width="0.9"/>
+  <text x="40" y="297" font-size="9" fill="#555555">SCORMetricN2 est aussi ⊂ SCORCompositeMetric (double spécialisation, non figurée pour lisibilité).</text>
+
+  <!-- Chain 2 : score / contribution -->
+  <text x="20" y="334" font-size="10.5" font-weight="bold">Chaîne de score / contribution</text>
+  <rect x="30" y="344" width="400" height="34" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="230" y="365" text-anchor="middle" font-size="10.5" font-weight="bold">SCORPerformanceAttribute</text>
+
+  <line x1="230" y1="314" x2="230" y2="342" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="236" y="328" font-size="9" fill="#333333">contributesToPerformanceAttribute</text>
+
+  <rect x="30" y="398" width="76" height="34" rx="4" fill="#ffffff" stroke="#333333" stroke-width="1.1"/>
+  <text x="68" y="413" text-anchor="middle" font-size="9.6" font-weight="bold">Reliability</text>
+  <text x="68" y="424" text-anchor="middle" font-size="8.3">(RL)</text>
+
+  <rect x="114" y="398" width="90" height="34" rx="4" fill="#ffffff" stroke="#333333" stroke-width="1.1"/>
+  <text x="159" y="413" text-anchor="middle" font-size="9.6" font-weight="bold">Responsiveness</text>
+  <text x="159" y="424" text-anchor="middle" font-size="8.3">(RS)</text>
+
+  <rect x="212" y="398" width="70" height="34" rx="4" fill="#ffffff" stroke="#333333" stroke-width="1.1"/>
+  <text x="247" y="413" text-anchor="middle" font-size="9.6" font-weight="bold">Agility</text>
+  <text x="247" y="424" text-anchor="middle" font-size="8.3">(AG)</text>
+
+  <rect x="290" y="398" width="66" height="34" rx="4" fill="#ffffff" stroke="#333333" stroke-width="1.1"/>
+  <text x="323" y="413" text-anchor="middle" font-size="9.6" font-weight="bold">Cost</text>
+  <text x="323" y="424" text-anchor="middle" font-size="8.3">(CO)</text>
+
+  <rect x="364" y="398" width="66" height="34" rx="4" fill="#ffffff" stroke="#333333" stroke-width="1.1"/>
+  <text x="397" y="411" text-anchor="middle" font-size="9">Asset Mgmt</text>
+  <text x="397" y="422" text-anchor="middle" font-size="8.3">(AM)</text>
+
+  <line x1="68" y1="398" x2="150" y2="380" stroke="#222222" stroke-width="1" marker-end="url(#isa)"/>
+  <line x1="159" y1="398" x2="195" y2="380" stroke="#222222" stroke-width="1" marker-end="url(#isa)"/>
+  <line x1="247" y1="398" x2="250" y2="380" stroke="#222222" stroke-width="1" marker-end="url(#isa)"/>
+  <line x1="323" y1="398" x2="290" y2="380" stroke="#222222" stroke-width="1" marker-end="url(#isa)"/>
+  <line x1="397" y1="398" x2="320" y2="380" stroke="#222222" stroke-width="1" marker-end="url(#isa)"/>
+
+  <rect x="30" y="446" width="400" height="42" rx="4" fill="#f7f7f7" stroke="#999999" stroke-width="0.9"/>
+  <text x="40" y="460" font-size="8.3" fill="#555555">contributesToPerformanceAttribute : domaine en union (5 classes de métrique).</text>
+  <text x="40" y="474" font-size="8.3" fill="#555555">Chaque attribut ⊂ aussi une classe scome: propre — voir matrice des relations.</text>
+
+  <rect x="140" y="502" width="180" height="34" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.4"/>
+  <text x="230" y="517" text-anchor="middle" font-size="10.5" font-weight="bold">SCORPerformanceEvaluation</text>
+  <text x="230" y="530" text-anchor="middle" font-size="8.7" fill="#666666">(≈ PI, indice global)</text>
+
+  <line x1="230" y1="378" x2="230" y2="500" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="236" y="445" font-size="9.3" fill="#333333">contributesToEvaluation</text>
+
+  <!-- producesEvaluation routed via the left margin, clear of the attribute row -->
+  <polyline points="30,248 8,248 8,519 138,519" fill="none" stroke="#666666" stroke-width="1.1" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+  <text x="2" y="400" font-size="9" fill="#555555" transform="rotate(-90 12,400)">producesEvaluation (depuis N1)</text>
+
+  <!-- SCOBE caveat -->
+  <rect x="140" y="574" width="180" height="34" rx="4" fill="#f0f0f0" stroke="#777777" stroke-width="1.3" stroke-dasharray="4,3"/>
+  <text x="230" y="590" text-anchor="middle" font-size="10.3" font-weight="bold" fill="#444444">scobe:Benchmarking_project</text>
+  <text x="230" y="602" text-anchor="middle" font-size="8.7" fill="#666666">(ontologie tierce SCOBE)</text>
+
+  <line x1="230" y1="536" x2="230" y2="572" stroke="#aa3333" stroke-width="1.2" stroke-dasharray="3,2" marker-end="url(#arrowred)"/>
+  <text x="236" y="558" font-size="9.3" fill="#aa3333">rdfs:subClassOf ⚠</text>
+
+  <rect x="30" y="628" width="400" height="92" rx="5" fill="#ffffff" stroke="#aa3333" stroke-width="1.6"/>
+  <text x="42" y="646" font-size="9.8" font-weight="bold" fill="#aa3333">⚠ Point de vigilance — non résolu, non modifié</text>
+  <text x="42" y="661" font-size="9.3" fill="#333333">L'axiome référence « scobe:Benchmarking_project » (p minuscule). SCOBE.owl ne</text>
+  <text x="42" y="673" font-size="9.3" fill="#333333">déclare que « Benchmarking_Project » (P majuscule) — IRI distincte, non résolue</text>
+  <text x="42" y="685" font-size="9.3" fill="#333333">(vérifié par analyse structurée du graphe RDF, 0 triple pour la forme minuscule).</text>
+  <text x="42" y="697" font-size="9.3" fill="#333333">L'alignement affiché n'est donc pas techniquement établi. Analyse technique et</text>
+  <text x="42" y="709" font-size="9.3" fill="#333333">sémantique complète : NOTE_TECHNIQUE_ANOMALIE_SCOBE.md.</text>
+
+  <!-- Fuzzy grading + weights -->
+  <text x="20" y="752" font-size="10.5" font-weight="bold">Grades flous et pondérations [V4.2/V4.3]</text>
+  <rect x="145" y="760" width="170" height="36" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.3"/>
+  <text x="230" y="780" text-anchor="middle" font-size="10.5" font-weight="bold">FuzzyPerformanceGradeSet</text>
+  <text x="230" y="792" text-anchor="middle" font-size="8.7" fill="#666666">6 grades : A à F</text>
+
+  <rect x="30" y="806" width="400" height="30" rx="4" fill="#f7f7f7" stroke="#999999" stroke-width="0.9"/>
+  <text x="40" y="818" font-size="8.3" fill="#555555">hasFuzzyGradeSet : domaine en union (toute métrique,</text>
+  <text x="40" y="829" font-size="8.3" fill="#555555">SCORPerformanceAttribute, SCORPerformanceEvaluation).</text>
+
+  <rect x="30" y="846" width="400" height="60" rx="4" fill="#f7f7f7" stroke="#999999" stroke-width="0.9"/>
+  <text x="40" y="862" font-size="9.3" fill="#333333">hasMetricValue, hasPerformanceScore, hasMetricWeight, isBenefitMetric :</text>
+  <text x="40" y="875" font-size="9.3" fill="#333333">xsd:decimal/boolean, domaine en union sur les 5 classes de métrique [V4.2].</text>
+  <text x="40" y="888" font-size="9.3" fill="#333333">hasAttributeWeight : xsd:decimal (SCORPerformanceAttribute). hasGradeA…F :</text>
+  <text x="40" y="900" font-size="9.3" fill="#333333">xsd:decimal (FuzzyPerformanceGradeSet, 6 propriétés) [V4.3].</text>
+
+  <!-- Legend -->
+  <rect x="30" y="922" width="400" height="190" rx="5" fill="#ffffff" stroke="#333333" stroke-width="1"/>
+  <text x="42" y="940" font-size="10.5" font-weight="bold">Légende</text>
+  <line x1="42" y1="954" x2="66" y2="954" stroke="#222222" stroke-width="1.1" marker-end="url(#arrow)"/>
+  <text x="72" y="957" font-size="9.5">propriété (chaîne de score/contribution)</text>
+  <line x1="42" y1="970" x2="66" y2="970" stroke="#aa3333" stroke-width="1.3" marker-end="url(#arrowred)"/>
+  <text x="72" y="973" font-size="9.5">aggregatesTo (chaîne de valeur, V4.1) — distincte de la précédente</text>
+  <line x1="42" y1="986" x2="66" y2="986" stroke="#666666" stroke-width="1.1" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+  <text x="72" y="989" font-size="9.5">voie alternative documentée (producesEvaluation)</text>
+  <line x1="42" y1="1002" x2="66" y2="1002" stroke="#222222" stroke-width="1.1" marker-end="url(#isa)"/>
+  <text x="72" y="1005" font-size="9.5">spécialisation (rdfs:subClassOf)</text>
+  <rect x="42" y="1012" width="26" height="16" fill="#f0f0f0" stroke="#777777" stroke-width="1.1" stroke-dasharray="3,2"/>
+  <text x="72" y="1023" font-size="9.5">classe d'une ontologie tierce</text>
+
+  <text x="42" y="1044" font-size="8.3" fill="#333333">Le fichier distingue explicitement (rdfs:comment du Module I) la chaîne</text>
+  <text x="42" y="1055" font-size="8.3" fill="#333333">de valeur (aggregatesTo) et la chaîne de score (contributesToPerformance-</text>
+  <text x="42" y="1066" font-size="8.3" fill="#333333">Attribute → contributesToEvaluation) : « elle ne signifie pas une</text>
+  <text x="42" y="1077" font-size="8.3" fill="#333333">agrégation de valeur physique N3→N1 ». Aucune cardinalité UML déclarée.</text>
+
+  <text x="230" y="1100" text-anchor="middle" font-size="7.5" font-style="italic" fill="#777777">Détail des sources, versions, vérifications : registre_figures.md et matrice des relations vérifiées</text>
+  <text x="230" y="1111" text-anchor="middle" font-size="7.5" font-style="italic" fill="#777777">Précédent : Figure 3a</text>
+</svg>

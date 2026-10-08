@@ -1,57 +1,86 @@
-# Registre des figures — premier lot (F1, F2, F3)
+# Registre des figures — premier lot, version corrigée (étape 5)
 
-Dossier : `LIVRABLE_SCONTO_SVU/figures/{sources,svg,png}/`. Les fichiers `sources/` et `svg/` sont identiques (SVG hand-codé, directement éditable dans un éditeur de texte ou un outil vectoriel acceptant le SVG — « équivalent » Draw.io au sens de la consigne, aucun outil Draw.io disponible dans cet environnement). Les `png/` sont des rendus à échelle 2x (chrome headless, fond blanc, sans transparence), adaptés à l'impression.
+Dossier : `LIVRABLE_SCONTO_SVU/figures/{sources,svg,png}/`. Remplace la version précédente (étape 4) : F1 corrigée (AHP retirée), F2 corrigée (hiérarchie ObservableEntity rectifiée) et accompagnée d'une figure dédiée au Module A (F2b), et F3 scindée en F3a (unification VSM-SCOR) et F3b (évaluation de performance) pour rester lisible à la largeur de composition réelle. L'ancienne F3 (fichier unique) a été retirée du livrable.
 
-Ce premier lot est une version éditable, soumise à revue scientifique et visuelle avant la suite (modules restants, extensions, figure d'instanciation).
+**Échelle de composition.** Toutes les figures sont dessinées dans un système de coordonnées où 1 unité SVG = 1 point PostScript à l'insertion en pleine largeur de texte (`\includegraphics[width=\textwidth]`, testé à 455,24 pt soit 160 mm). Les tailles de police déclarées dans chaque SVG sont donc directement les tailles d'impression finales. Un test de rendu dans un document LaTeX minimal (`pdflatex`, `article`, marges 2,5 cm) a été exécuté pour chaque figure et le PDF obtenu relu page par page.
 
 ---
 
 ## F1 — Organisation générale de SCONTO-SVU
 
-- **Fichier** : `F1_organisation_generale.{svg,png}`
-- **Objectif** : situer le Core et les quatre extensions retenues (Agent, AER, Forecast/MTS, ISA-95), en distinguant les dépendances revalidées de celles qui ne le sont pas. AHP volontairement absent.
-- **Emplacement proposé** : chapitre 3, section d'ouverture de la présentation ontologique.
-- **Éléments représentés** : SCOPRO/SCOME/SCOBE (ontologies tierces, groupées) ; Core SCONTO-SVU v4.3.0 ; Agent Extension v1.1.2 ; AER Extension v1.1.2 ; Forecast/MTS v1.0.0 ; ISA-95 v1.0.0 ; six relations `owl:imports`, toutes vérifiées directement dans l'en-tête de chaque fichier source (aucune supposée).
-- **Omissions volontaires** : détail interne des classes (hors périmètre de cette figure, demandé explicitement) ; versions intermédiaires du Core (4.0/4.1/4.2/4.2.1), regroupées sous l'étiquette unique « génération antérieure » puisque seules deux générations comptent pour la lecture (courante vs antérieure) ; AHP (exclusion scientifique, non un oubli).
-- **Limites de représentation** : aucun test de cohérence conjoint (chargement par raisonneur) entre Forecast/MTS ou ISA-95 et le Core 4.3.0 n'a été réalisé — la figure ne représente donc qu'une absence d'alignement de version constatée, pas une incompatibilité logique démontrée (légende explicite sur la figure).
-- **Sources ontologiques** : `SCONTO_SVU_Core_v4.3.0.ttl`, `SCONTO_VSM_Agent_Extension_v1.1.2.ttl`, `SCONTO_VSM_AER_Extension_v1.1.2.ttl`, `sconto-vsm-forecast-mts-extension_1.ttl`, `sconto-vsm-isa95-extension-v1.0.ttl`, `SCOPRO.owl`, `SCOME.owl`, `SCOBE.owl` (chemins et SHA-256 : voir `ETAPE4_FIGURES_F1_F2_F3.md`, section 2).
+- **Fichier** : `F1_organisation_generale.{svg,dot,png}`
+- **Correction imposée appliquée** : toute mention d'AHP a été retirée du dessin (sous-titre et note de périmètre) ; `registre_figures.md` et les rapports d'audit conservent seuls la trace de cette exclusion, conformément à la consigne (« les documents internes d'audit peuvent conserver l'historique »).
+- **Annotations allégées** : la légende ne porte plus que l'essentiel (convention de trait, convention de boîte, renvoi au registre) ; le détail des tests de raisonneur et des générations de version a été déplacé ici.
+- **Lisibilité** : testée à 160 mm (`\textwidth`) — toutes les annotations ≥ 8 pt, texte principal 9,5-13,5 pt. Aucun chevauchement, aucune flèche traversant une boîte (deux croisements corrigés : libellés `owl:imports` déplacés hors du tracé des flèches Core→Agent/AER et Forecast-MTS/ISA-95→génération antérieure).
+- **Source alternative** : `F1_organisation_generale.dot` (Graphviz), preuve de concept — voir section « Sources éditables ».
 
 ## F2 — Concepts fondamentaux du Core
 
-- **Fichier** : `F2_concepts_core.{svg,png}`
-- **Objectif** : présenter les classes structurantes du Core organisées en six regroupements conceptuels, dans l'esprit des figures principales de SCOPRO (Fig. 2-7 de l'article de référence).
-- **Emplacement proposé** : chapitre 3, section d'architecture conceptuelle du Core.
-- **Classes représentées (22)** : SC Entity (abstraite, importée) ; SupplyChainActor, SupplyChainNetwork ; EquipmentElement, StorageEntity, InformationSystem, Product, WorkOrder ; RawEvent, EventSource ; VSMIndicator, ObservationContext, CycleTime, OverallEquipmentEffectiveness (ces deux dernières à titre d'exemple de spécialisation) ; MicroActivity, CorrespondenceRule, NormalizationRule, AggregationRule ; SCORProcess, SCORMetric, SCORPerformanceAttribute, SCORCompositeMetric.
-- **Relations représentées (12)** : belongsToActor, ownsEquipment, relatedToEquipment, generatedBy, producesIndicator, hasObservationContext, measuredBy, mapsToSCORN3, feedsSCORMetric, producesMetric, belongsToPerformanceAttribute, et deux spécialisations exemple de VSMIndicator.
-- **Omissions volontaires (listées sur la figure même)** : executedAt, performedForActor, relatedToStorage, relatedToWorkOrder, contributesToPerformanceAttribute, governedBy, usesFunction, usesNormalizationMethod, aggregatesIndicator — relations réelles, non dessinées pour la lisibilité. Environ 25 classes additionnelles du Core non représentées (Machine, WorkCell, Warehouse, Buffer, Supermarket, ERP, MES, WMS, APS, CustomerOrder, ProductionOrder, 28 autres spécialisations de VSMIndicator, etc.).
-- **Correction apportée pendant la production** : une première version montrait `SCORMetricN1`, `SCORMetricN2` et `SCORMetricN3` comme sous-classes directes de `SCORMetric`. Vérification faite dans le fichier : seule `SCORMetricN3` l'est ; `SCORMetricN1` et `SCORMetricN2` sont sous-classes de `SCORCompositeMetric`. La figure a été corrigée pour ne pas afficher une spécialisation inexacte ; le détail correct est renvoyé à la Figure 3.
-- **Limite de représentation signalée sur la figure** : le Core déclare quatre classes `ArchitectureLayer` (Module A) correspondant aux couches du SVU Framework, mais la propriété `belongsToLayer` qui les relierait au reste du TBox n'est jamais assertée (0 occurrence) — la correspondance bandes/couches reste une lecture conceptuelle documentée, pas une assertion OWL.
-- **Sources ontologiques** : `SCONTO_SVU_Core_v4.3.0.ttl`, modules A à J (lignes 74 à 1265).
+- **Fichier** : `F2_concepts_core.svg`/`.png`
+- **Correction majeure appliquée** : la relation `generatedBy` reliait à tort `RawEvent` à une classe `EventSource` présentée comme sa portée. Vérification structurée (rdflib) : la portée réelle de `generatedBy` est `ObservableEntity` ; `EventSource` est une spécialisation (`rdfs:subClassOf`) d'`ObservableEntity`, au même titre que `PhysicalEntity`, `InformationSystem`, `HumanResource`, `MaterialEntity` — pas une classe reliée par une propriété. La figure montre désormais `ObservableEntity` comme cible réelle de `generatedBy`, avec une note renvoyant à la hiérarchie exacte plutôt que de la redessiner intégralement (lisibilité).
+- **Vérification des liens B-J (demandée)** : chaque flèche de cette figure (`belongsToActor`, `ownsEquipment`, `relatedToEquipment`, `generatedBy`, `producesIndicator`, `hasObservationContext`, `measuredBy`, `mapsToSCORN3`, `producesMetric`, `belongsToPerformanceAttribute`) a été confrontée à son domaine/sa portée exacts via `rdflib` — détail : `MATRICE_RELATIONS_VERIFIEES.md`. Aucune direction ni aucun domaine n'a dû être corrigé au-delà du cas `generatedBy`/`ObservableEntity`.
+- **Module A traité séparément** : les quatre classes `ArchitectureLayer` ne sont plus esquissées ici ; un encart de vigilance renvoie à F2b.
+- **Lisibilité** : testée à 160 mm, annotations ≥ 8,3 pt. Quatre corrections de routage après la première passe (libellés `ownsEquipment`, `relatedToEquipment`, `mapsToSCORN3`, `hasObservationContext` déplacés hors des tracés et des titres de bande).
 
-## F3 — Modules I et J : référentiel SCOR, pipeline de performance et couche pivot
+## F2b — Module A : typologie des couches architecturales *(nouvelle figure)*
 
-- **Fichier** : `F3_modules_I_J_pipeline_performance.{svg,png}`
-- **Objectif** : détailler l'articulation entre processus SCOR, métriques, attributs de performance et couche pivot, en couvrant spécifiquement les apports V4.2/V4.3 (valeurs, scores, pondérations, grades flous) absents de F2.
-- **Emplacement proposé** : chapitre 3, sous-section dédiée au référentiel SCOR et au pipeline de performance (après la présentation générale du Module J en lien avec F2).
-- **Classes représentées (19)** : SCORProcess, SCORLevel1Process, SCORLevel2Process, SCORLevel3Process ; SCORMetric, SCORMetricN3, SCORCompositeMetric, SCORMetricN2, SCORMetricN1 ; SCORPerformanceAttribute, Reliability, Responsiveness, Agility, Cost, AssetManagement, SCORPerformanceEvaluation ; FuzzyPerformanceGradeSet ; `scobe:Benchmarking_project` (classe tierce, représentée pour montrer le point de vigilance) ; rappel du Module J (MicroActivity, NormalizationRule, AggregationRule).
-- **Relations représentées (14)** : mapsToSCORN3, feedsSCORMetric, scoredByRule, producesMetric (pont Module J ↔ Module I) ; isAggregatedInto, aggregatesTo ×2 (chaîne de valeur N3→N2→N1) ; contributesToPerformanceAttribute, contributesToEvaluation, producesEvaluation (chaîne de score/attribut — voie alternative) ; belongsToPerformanceAttribute (implicite via contributesToPerformanceAttribute, non dupliqué) ; hasFuzzyGradeSet ×2 (représentatifs, domaine en union à 7 classes) ; rdfs:subClassOf ×9 (spécialisations) + 1 (SCORPerformanceEvaluation → scobe:Benchmarking_project).
-- **Attributs listés en compartiment, non dessinés individuellement** : hasMetricValue, hasPerformanceScore, hasMetricWeight, isBenefitMetric (domaine en union sur les 5 classes de métrique) ; hasAttributeWeight (SCORPerformanceAttribute) ; hasGradeA à hasGradeF (FuzzyPerformanceGradeSet).
-- **Omissions volontaires** : hasMetricCode, hasMetricUnit, hasFormulaRef, hasSCORLevel, hasProcessCode, hasAggregationMethod (propriétés descriptives, non liées au pipeline récent) ; détail complet du Module J (renvoyé à F2).
-- **Point de vigilance mis en évidence sur la figure (non corrigé, conformément à la consigne de ne pas modifier l'ontologie)** : l'axiome `:SCORPerformanceEvaluation rdfs:subClassOf scobe:Benchmarking_project` (ligne 910 du fichier) référence une IRI (`scobe:Benchmarking_project`, p minuscule) qui ne correspond à aucune classe déclarée dans `SCOBE.owl` — celui-ci ne déclare que `Benchmarking_Project` (P majuscule). Les deux IRI sont distinctes en RDF. L'alignement sémantique visé par cet axiome n'est donc pas techniquement établi tel qu'écrit. Ce n'est pas une inconsistance logique (un résolveur RDF tolère une référence à une ressource non typée comme superclasse), ce qui explique pourquoi les validations par raisonneur déjà publiées (`C14_RAPPORT_ALIGNEMENT_FINAL.md`, 0 classe insatisfaisable) n'ont pas signalé le problème : une classe non résolue par erreur de casse ne rend rien insatisfaisable, elle rend simplement l'alignement inopérant.
-- **Sources ontologiques** : `SCONTO_SVU_Core_v4.3.0.ttl`, Module I (lignes 770-1076) et Module J (lignes 1077-1265) ; `SCOBE.owl` (vérification de la classe `Benchmarking_Project`).
+- **Fichier** : `F2b_module_a_layers.svg`/`.png`
+- **Contenu** : les quatre classes réelles `OperationalDataLayer`, `VSMLayer`, `SVMLLayer`, `SCORReferenceLayer`, toutes `rdfs:subClassOf ArchitectureLayer` — hiérarchie OWL exacte, pas une reconstruction.
+- **Aucun lien `belongsToLayer` inventé** : la figure ne dessine aucune flèche entre ces classes et le reste du Core, et l'encart de vigilance répète explicitement que cette propriété existe mais n'est jamais assertée (0 occurrence, vérifié `rdflib`).
+- **Correspondances fonctionnelles** : présentées sous forme de texte (« ↔ Data Layer », etc.), explicitement qualifiées de « correspondance conceptuelle documentée (manuscrit §3.4), non assertée dans l'OWL » — pas un trait de relation, pour ne pas laisser croire à une assertion OWL.
+- **Lisibilité** : testée à 160 mm, annotations ≥ 9,3 pt, aucun chevauchement.
+
+## F3a — Unification VSM-SCOR (Module J)
+
+- **Fichier** : `F3a_unification_vsm_scor.svg`/`.png`
+- **Contenu** : `MappingRule` → `CorrespondenceRule`/`NormalizationRule` ; `MicroActivity` ; pont vers `SCORLevel3Process` (`mapsToSCORN3`) et `SCORMetric` (`feedsSCORMetric`) ; retour `scoredByRule`.
+- **Relations vérifiées** : les quatre propriétés de pont sont vérifiées par `rdflib` avec leurs domaines/portées exacts (unions de classes) — voir `MATRICE_RELATIONS_VERIFIEES.md`. Les unions complètes sont données en toutes lettres dans un encart plutôt que simplifiées en une seule classe sans avertissement.
+- **Lisibilité** : testée à 160 mm, annotations ≥ 8 pt. Corrections : le tracé `scoredByRule` traversait initialement `MicroActivity` et l'encart de définitions ; routé par la marge droite. Sous-titre de `SCORLevel3Process` raccourci (débordait du cadre de la boîte).
+
+## F3b — Évaluation de performance (Module I)
+
+- **Fichier** : `F3b_evaluation_performance.svg`/`.png`
+- **Contenu** : deux chaînes explicitement distinguées, conformément au `rdfs:comment` du fichier source :
+  1. **Chaîne de valeur** (`aggregatesTo`, rouge) : `SCORMetricN3` → `SCORMetricN2` → `SCORMetricN1`/`SCORCompositeMetric`, plus `isAggregatedInto` (`SCORMetric` → `SCORCompositeMetric`).
+  2. **Chaîne de score/contribution** (noir) : toute métrique → `contributesToPerformanceAttribute` → `SCORPerformanceAttribute` (+ 5 spécialisations RL/RS/AG/CO/AM) → `contributesToEvaluation` → `SCORPerformanceEvaluation`, avec la voie alternative documentée `producesEvaluation` (depuis N1) tracée en pointillés distincts.
+  3. Grades flous (`FuzzyPerformanceGradeSet`, 6 grades) et pondérations (`hasMetricWeight`, `hasAttributeWeight`), avec domaines en union donnés en toutes lettres.
+- **Traitement de l'anomalie SCOBE** : l'axiome `SCORPerformanceEvaluation rdfs:subClassOf scobe:Benchmarking_project` est représenté par une flèche rouge en pointillés vers une boîte tierce grisée, accompagnée d'un encart « Point de vigilance — non résolu, non modifié » qui cite l'axiome exact et renvoie à `NOTE_TECHNIQUE_ANOMALIE_SCOBE.md`. **Ce lien n'est jamais présenté comme une spécialisation validée.**
+- **Lisibilité** : testée à 160 mm, annotations ≥ 8,3 pt. Trois débordements de texte hors cadre corrigés après la première passe (lignes de domaine en union trop longues, raccourcies ou reformatées sur deux lignes ; légende finale scindée en deux lignes).
 
 ---
 
-## Vérifications effectuées (séparées par type, conformément à la consigne)
+## Matrice des relations vérifiées
+
+Table complète (IRI, domaine, portée exacts, `owl:inverseOf`, spécialisations) : `../MATRICE_RELATIONS_VERIFIEES.md`. Contient aussi l'explication de l'écart de décompte des restrictions Agent (54 lignes `grep` ↔ 27 nœuds `owl:Restriction` réels).
+
+## Anomalie SCORPerformanceEvaluation / SCOBE
+
+Analyse technique (vérification IRI par `rdflib`, démonstration que l'IRI référencée n'est déclarée nulle part) et analyse sémantique (quatre alternatives de modélisation, non tranchées) : `../NOTE_TECHNIQUE_ANOMALIE_SCOBE.md`. Aucun fichier OWL n'a été modifié.
+
+## Sources éditables — choix du format
+
+**SVG dessiné à la main (format retenu pour toutes les figures).** Chaque figure reste un fichier `.svg` texte, éditable dans tout éditeur ou outil vectoriel. Avantage décisif ici : contrôle précis du placement de chaque libellé hors des tracés de flèches, nécessaire à la densité de F2/F3a/F3b et à la contrainte de lisibilité à 160 mm — un algorithme de disposition automatique ne garantit pas cela.
+
+**Graphviz DOT — évalué, fourni en complément pour F1 (`F1_organisation_generale.dot`).** Avantage réel : le graphe est déclaré comme données (nœuds/arêtes), pas comme coordonnées — ajouter un nœud ou une arête ne demande aucun recalcul de position. Limite constatée en le testant sur F1 : la disposition automatique ne respecte pas la convention graphique déjà retenue (couloir dédié pour les libellés de pont, boîtes de légende positionnées librement) sans un travail de réglage des contraintes de rang comparable à celui du SVG manuel — gain net surtout pour des graphes simples comme F1, pas démontré pour F2/F3a/F3b dans le temps disponible pour cette étape.
+
+**PlantUML — non retenu.** Pertinent pour des diagrammes de classes UML stricts, mais les figures F2/F2b/F3a/F3b mêlent diagrammes de classes, notes de traçabilité positionnées, et encarts de vigilance : un rendu PlantUML standard ne reproduit pas cette mise en page sans détournement important de la syntaxe.
+
+**Draw.io — non testé.** Aucun outil Draw.io (CLI ou application) n'est disponible dans cet environnement d'exécution pour produire ou vérifier un export ; resterait l'option la plus proche des conventions déjà utilisées dans `ONTOLOGIES_DIAGRAMMES_SUPERVISION/DRAWIO/`, à évaluer si une édition interactive (hors ligne de commande) est souhaitée pour la suite.
+
+**Recommandation** : conserver le SVG manuel comme format de source pour ce lot (déjà produit et vérifié) ; envisager Graphviz DOT pour les futures figures simples de type dépendance (comme F1) si le volume de figures à produire augmente, lorsque pouvoir ajouter un nœud ou une arête sans retoucher les coordonnées devient un gain net.
+
+---
+
+## Vérifications effectuées (séparées par type)
 
 ### Vérification syntaxique
-Chaque fichier SVG a été ouvert et rendu par un moteur de rendu web standard (Chromium/Edge en mode headless) sans erreur de analyse (parsing) XML. Les trois fichiers sont des documents SVG 1.1 valides (un seul élément racine `<svg>`, espaces de noms corrects, pas de balise non fermée).
+Chaque SVG rendu sans erreur par Chromium (headless) ; `F1_organisation_generale.dot` validé par `dot -Tsvg` (Graphviz 14.1.2) sans erreur.
 
-### Contrôle de correspondance graphique (figure ↔ fichiers ontologiques)
-Chaque classe et chaque relation dessinée a été vérifiée par recherche directe (`grep` du nom exact) dans le fichier `.ttl`/`.owl` source avant d'être intégrée à la figure ; aucune relation n'a été dessinée par analogie ou par supposition. Le tableau ci-dessus (listes « classes représentées » / « relations représentées ») constitue cette traçabilité pour chaque figure. Une erreur détectée pendant cette vérification (hiérarchie N1/N2/N3 en F2) a été corrigée avant livraison plutôt que découverte a posteriori.
+### Contrôle de correspondance graphique
+Chaque classe et relation vérifiée par analyse structurée du graphe RDF (`rdflib` 7.5.0), pas par recherche textuelle seule — voir `MATRICE_RELATIONS_VERIFIEES.md`. Deux erreurs détectées et corrigées avant livraison : la relation `generatedBy`/`EventSource` (F2) et la hiérarchie `SCORMetricN1/N2` (détectée à l'étape précédente, reconfirmée ici).
 
 ### Validation logique par raisonneur
-**Aucune n'a été exécutée dans cette passe.** Les figures sont des diagrammes de présentation, pas des fichiers OWL ; leur production ne nécessite pas de passage par un raisonneur. La validation par raisonneur déjà disponible est celle, antérieure, des fichiers ontologiques eux-mêmes (`C14_RAPPORT_ALIGNEMENT_FINAL.md`, HermiT, 0 classe insatisfaisable) — elle est citée en F1 mais n'a pas été relancée ici. Le point de vigilance relevé en F3 (casse `Benchmarking_project`/`Benchmarking_Project`) est un défaut d'alignement sémantique, pas une inconsistance logique détectable par un raisonneur standard tel qu'actuellement configuré dans ce projet ; une vérification par raisonneur dédiée à cette question précise n'a pas été tentée (hors périmètre technique de cette étape, qui exclut toute modification ou nouvelle exécution sur les artefacts ontologiques).
+Aucune nouvelle exécution dans cette passe. Le point de vigilance SCOBE (F3b) est documenté comme un défaut d'alignement sémantique non détectable par un raisonneur standard (argumenté dans `NOTE_TECHNIQUE_ANOMALIE_SCOBE.md`), pas comme une inconsistance logique.
 
-### Vérification visuelle
-Chaque figure a été rendue en PNG (échelle 2x) et inspectée visuellement avant livraison : lisibilité du texte, absence de chevauchement de libellés, orientation correcte des flèches, cohérence des regroupements. Deux corrections ont été faites à ce titre : chevauchement de deux libellés en F2 (`mapsToSCORN3`/`feedsSCORMetric`) et réorganisation complète du routage des flèches de pont en F3 (les quatre relations Module J ↔ Module I traversaient initialement les boîtes du référentiel SCOR ; elles sont désormais routées dans un couloir dédié au-dessus des colonnes).
+### Vérification de lisibilité à l'échelle réelle
+Chaque figure incluse dans un document LaTeX minimal (`pdflatex`, `\includegraphics[width=\textwidth]`, 160 mm) et relue page par page. Toutes les annotations ≥ 8 pt (cible 9-10 pt largement atteinte pour le texte principal). Aucune flèche ne traverse une classe dans la version finale ; chevauchements et débordements détectés lors de cette relecture ont été corrigés avant livraison (détail par figure ci-dessus).
